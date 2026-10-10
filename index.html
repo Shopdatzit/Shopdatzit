@@ -532,6 +532,13 @@
                     { name: 'Thẻ Garena 500.000', price: 486000 }
                 ]
             },
+            'robux120h': {
+                name: 'Robux 120h',
+                realImg: 'https://lh3.googleusercontent.com/d/1SLqz0SUZwgGle5Y5fwZ9WppbqhQGUvYS',
+                sold: '0',
+                note: 'Dự Kiến Sắp Có',
+                packages: []
+            },
             'aniimo': { 
                 name: 'Aniimo', 
                 realImg: 'https://lh3.googleusercontent.com/d/1traVmsawVmnJ8EAx7wzRnHqbv0hTOnBJ', sold: '447', 
@@ -705,7 +712,7 @@
                     { name: 'Thẻ tháng', price: calcPrice(61253) },
                     { name: '65 Pha Lê', price: calcPrice(13049) },
                     { name: '330 Pha Lê', price: calcPrice(61253) },
-                    { name: '660 Pha Lê', price: calcPrice(122834) },
+                    { name: '660 Pha Lê', file_gen: true, price: calcPrice(122834) },
                     { name: '1320 Pha Lê', price: calcPrice(244398) },
                     { name: '3300 Pha Lê', price: calcPrice(611206) },
                     { name: '6600 Pha Lê', price: calcPrice(1219698) },
@@ -814,16 +821,14 @@
             if (!container) return;
             container.innerHTML = '';
             for (const [key, game] of Object.entries(gamesData)) {
+                let noteHtml = game.note ? `<div class="text-[11px] text-yellow-400 font-bold mt-0.5">${game.note}</div>` : `<div class="flex items-center space-x-1.5 mt-1"><span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span><span class="text-[11px] text-accentBlue font-medium">Giao ngay</span><span class="text-[10px] text-gray-400 ml-auto">Đã bán: ${getGameSold(key)}</span></div>`;
+                
                 container.innerHTML += `
                     <div data-game="${key}" class="game-card bg-cardBg hover:bg-cardHover p-3.5 rounded-xl border border-gray-800 cursor-pointer transition flex items-center space-x-3 shadow group">
                         <img src="${game.realImg}" alt="${game.name}" class="w-14 h-14 rounded-lg object-cover border border-gray-700 group-hover:border-accentBlue transition" onerror="this.src='https://images.unsplash.com/photo-1534447677768-be436bb09401?w=150'">
                         <div class="flex-grow">
                             <h4 class="font-bold text-sm text-white line-clamp-1">${game.name}</h4>
-                            <div class="flex items-center space-x-1.5 mt-1">
-                                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                                <span class="text-[11px] text-accentBlue font-medium">Giao ngay</span>
-                                <span class="text-[10px] text-gray-400 ml-auto">Đã bán: ${getGameSold(key)}</span>
-                            </div>
+                            ${noteHtml}
                         </div>
                     </div>
                 `;
@@ -1143,17 +1148,22 @@
 
             const pkgGrid = document.getElementById('package-grid');
             pkgGrid.innerHTML = '';
-            currentGame.packages.forEach((pkg, index) => {
-                pkgGrid.innerHTML += `
-                    <div onclick="selectPkg('${gameKey}', '${index}')" id="pkg-card-${index}" class="pkg-card bg-gray-900 border border-gray-700 p-3.5 rounded-xl cursor-pointer transition hover:border-accentBlue flex flex-col justify-between group">
-                        <div><p class="text-xs font-bold text-gray-200 mb-1 group-hover:text-white">${pkg.name}</p></div>
-                        <div class="flex items-center justify-between mt-3">
-                            <span class="text-accentBlue font-bold text-sm">${pkg.price.toLocaleString('vi-VN')} đ</span>
-                            <span class="text-[10px] bg-blue-900/60 text-blue-300 px-2 py-0.5 rounded border border-blue-700">+ Thêm</span>
+            
+            if (!currentGame.packages || currentGame.packages.length === 0) {
+                pkgGrid.innerHTML = `<div class="col-span-full text-center text-gray-400 py-6 text-xs">⚠️ Gói nạp đang cập nhật giá cụ thể. Vui lòng quay lại sau!</div>`;
+            } else {
+                currentGame.packages.forEach((pkg, index) => {
+                    pkgGrid.innerHTML += `
+                        <div onclick="selectPkg('${gameKey}', '${index}')" id="pkg-card-${index}" class="pkg-card bg-gray-900 border border-gray-700 p-3.5 rounded-xl cursor-pointer transition hover:border-accentBlue flex flex-col justify-between group">
+                            <div><p class="text-xs font-bold text-gray-200 mb-1 group-hover:text-white">${pkg.name}</p></div>
+                            <div class="flex items-center justify-between mt-3">
+                                <span class="text-accentBlue font-bold text-sm">${pkg.price.toLocaleString('vi-VN')} đ</span>
+                                <span class="text-[10px] bg-blue-900/60 text-blue-300 px-2 py-0.5 rounded border border-blue-700">+ Thêm</span>
+                            </div>
                         </div>
-                    </div>
-                `;
-            });
+                    `;
+                });
+            }
             
             renderCart();
             window.scrollTo(0, 0);
@@ -1161,7 +1171,7 @@
 
         function selectPkg(gameKey, index) {
             const game = gamesData[gameKey];
-            if (!game) return;
+            if (!game || !game.packages || game.packages.length === 0) return;
             const pkg = game.packages[index];
             if (!pkg) return;
 
@@ -1347,7 +1357,6 @@
                 clearCart();
                 renderGameList();
 
-                // Tạo chuỗi Base64 ngay cho đơn hàng vừa tạo để hiện lên thông báo
                 let base64Token = '';
                 try {
                     base64Token = btoa(unescape(encodeURIComponent(JSON.stringify(newOrder))));
@@ -1638,51 +1647,48 @@
                             </div>
                         </div>
                         <div class="pt-2 border-t border-gray-800/60 flex justify-end">
-                            <button onclick="openOrderDetail('${ord.owner}', '${ord.id}')" class="bg-gray-800 hover:bg-gray-700 text-accentBlue px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer border border-gray-700 flex items-center"><i class="fa-solid fa-eye mr-1.5"></i> Chi tiết đơn & Mật khẩu</button>
+                            <button onclick="openOrderDetail('${ord.owner}', '${ord.id}')" class="bg-gray-800 hover:bg-gray-700 text-accentBlue px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer border border-gray-700 flex items-center"><i class="fa-solid fa-eye mr-1.5"></i> Xem Chi Tiết</button>
                         </div>
                     </div>
                 `;
             });
         }
 
-        function adminConfirmOrder(username, orderId) {
+        function adminConfirmOrder(owner, orderId) {
             let accounts = getAccounts();
-            if (accounts[username] && accounts[username].history) {
-                let order = accounts[username].history.find(o => o.id === orderId);
-                if (order) { 
-                    order.status = 'Đã Nạp Thành Công'; 
-                    saveAccounts(accounts); 
+            if (accounts[owner] && accounts[owner].history) {
+                let ord = accounts[owner].history.find(o => o.id === orderId);
+                if (ord) {
+                    ord.status = 'Đã Nạp Thành Công';
+                    saveAccounts(accounts);
                     renderAdminOrders();
-                    renderGameList();
+                    alert('Đã duyệt đơn hàng thành công!');
                 }
             }
         }
 
-        function adminRejectOrder(username, orderId) {
-            if(confirm("Xác nhận hủy đơn hàng này?")) {
-                let accounts = getAccounts();
-                if (accounts[username] && accounts[username].history) {
-                    let order = accounts[username].history.find(o => o.id === orderId);
-                    if (order) { 
-                        order.status = 'Đã Hủy'; 
-                        saveAccounts(accounts); 
-                        renderAdminOrders();
-                        renderGameList();
-                    }
+        function adminRejectOrder(owner, orderId) {
+            let accounts = getAccounts();
+            if (accounts[owner] && accounts[owner].history) {
+                let ord = accounts[owner].history.find(o => o.id === orderId);
+                if (ord) {
+                    ord.status = 'Đã Hủy';
+                    saveAccounts(accounts);
+                    renderAdminOrders();
+                    alert('Đã hủy đơn hàng!');
                 }
             }
         }
 
         function resetAdminOrders() {
-            if(confirm("Bạn có chắc chắn muốn xóa sạch toàn bộ lịch sử đơn hàng trên thiết bị này?")) {
+            if (confirm("Xác nhận xóa sạch toàn bộ lịch sử đơn hàng trên hệ thống?")) {
                 let accounts = getAccounts();
-                for (let username in accounts) {
-                    accounts[username].history = [];
+                for (let u in accounts) {
+                    accounts[u].history = [];
                 }
                 saveAccounts(accounts);
                 renderAdminOrders();
-                renderGameList();
-                alert("Đã xóa sạch lịch sử đơn hàng!");
+                alert('Đã làm sạch toàn bộ đơn hàng.');
             }
         }
     </script>
