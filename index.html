@@ -29,7 +29,8 @@
                         darkBg: '#121212',
                         cardBg: '#1e1e1e',
                         cardHover: '#2a2a2a',
-                        accentBlue: '#3b82f6'
+                        accentBlue: '#3b82f6',
+                        adminYellow: '#eab308'
                     }
                 }
             }
@@ -48,6 +49,8 @@
     </script>
 
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
         /* Ẩn triệt để huy hiệu Powered by Netlify */
         #netlify-badge, 
         a[href*="netlify.com/?utm_source"],
@@ -58,6 +61,22 @@
             pointer-events: none !important;
         }
 
+        :root {
+            --nav-bg: #1e1e1e;
+            --body-bg: #121212;
+            --indicator-bg: #3b82f6;
+            --icon-active: #ffffff;
+            --text-color: #ffffff;
+        }
+
+        html.light {
+            --nav-bg: #ffffff;
+            --body-bg: #f3f4f6;
+            --indicator-bg: #3b82f6;
+            --icon-active: #ffffff;
+            --text-color: #1f2937;
+        }
+
         html.light body { background-color: #f3f4f6 !important; color: #1f2937 !important; }
         html.light .bg-cardBg { background-color: #ffffff !important; border-color: #e5e7eb !important; color: #1f2937 !important; }
         html.light .bg-gray-900 { background-color: #f9fafb !important; color: #1f2937 !important; border-color: #e5e7eb !important; }
@@ -65,11 +84,99 @@
         html.light .text-gray-100, html.light .text-white { color: #111827 !important; }
         html.light .text-gray-400 { color: #6b7280 !important; }
         html.light input, html.light select { background-color: #ffffff !important; color: #111827 !important; border-color: #d1d5db !important; }
+        
         .loader { border: 2px solid #f3f3f3; border-top: 2px solid #3b82f6; border-radius: 50%; width: 14px; height: 14px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 5px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* --- TÙY CHỈNH MOBILE BOTTOM NAVIGATION --- */
+        .mobile-nav-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            background: var(--nav-bg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 50;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.25);
+            transition: background 0.3s;
+        }
+
+        .navigation-ul {
+            position: relative;
+            display: flex;
+            width: 100%;
+            max-width: 450px;
+            justify-content: space-around;
+        }
+
+        .navigation-ul li {
+            position: relative;
+            list-style: none;
+            flex-grow: 1;
+            height: 70px;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .navigation-ul li a {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+            text-decoration: none;
+        }
+
+        .navigation-ul li a .icon {
+            position: relative;
+            display: block;
+            line-height: 75px;
+            font-size: 1.3em;
+            text-align: center;
+            transition: 0.5s;
+            color: #9ca3af;
+        }
+
+        .navigation-ul li.active a .icon {
+            transform: translateY(-28px);
+            color: var(--icon-active);
+        }
+
+        /* Ẩn triệt để cục bóng tròn màu xanh dương mặc định */
+        .indicator-ball {
+            display: none !important;
+        }
+
+        .navigation-ul li a .text {
+            position: absolute;
+            color: var(--text-color);
+            font-weight: 600;
+            font-size: 0.65em;
+            letter-spacing: 0.02em;
+            transition: 0.5s;
+            opacity: 0;
+            transform: translateY(20px);
+            white-space: nowrap;
+        }
+
+        .navigation-ul li.active a .text {
+            opacity: 1;
+            transform: translateY(12px);
+        }
+
+        /* Khi active nút Admin thì đổi màu chữ Admin sang vàng */
+        .navigation-ul li#nav-admin-item.active a .text {
+            color: #eab308 !important;
+        }
     </style>
 </head>
-<body class="bg-darkBg text-gray-100 font-sans min-h-screen flex flex-col pb-24 md:pb-12 select-none transition-colors duration-300">
+<body class="bg-darkBg text-gray-100 font-sans min-h-screen flex flex-col pb-28 md:pb-12 select-none transition-colors duration-300">
 
     <header class="bg-cardBg border-b border-gray-800 sticky top-0 z-40 transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -99,10 +206,6 @@
                         <a href="#" onclick="switchView('profile')" class="block px-4 py-2.5 hover:bg-gray-800 text-gray-300 transition"><i class="fa-solid fa-user mr-2 text-accentBlue"></i> Thông tin chung</a>
                         <a href="#" onclick="switchView('history')" class="block px-4 py-2.5 hover:bg-gray-800 text-gray-300 transition"><i class="fa-solid fa-clock-rotate-left mr-2 text-accentBlue"></i> Lịch sử mua hàng</a>
                         
-                        <div id="admin-menu-item" class="hidden">
-                            <a href="#" onclick="switchView('admin')" class="block px-4 py-2.5 hover:bg-yellow-950/40 text-yellow-400 font-bold transition"><i class="fa-solid fa-shield-halved mr-2"></i> Quản Lý Shop (Admin)</a>
-                        </div>
-
                         <div class="border-t border-gray-800 my-1"></div>
                         <a href="#" onclick="handleLogout()" class="block px-4 py-2.5 hover:bg-red-950/40 text-red-400 transition font-bold"><i class="fa-solid fa-right-from-bracket mr-2"></i> Đăng xuất</a>
                     </div>
@@ -229,7 +332,7 @@
                     </div>
                     <div class="flex justify-between pb-1">
                         <span class="text-gray-400">Nhóm tài khoản</span>
-                        <span id="profile-role" class="bg-blue-950 text-accentBlue px-2.5 py-0.5 rounded text-xs border border-blue-800 font-bold">Thành viên</span>
+                        <span id="profile-role" class="bg-yellow-950 text-yellow-400 px-2.5 py-0.5 rounded text-xs border border-yellow-700 font-bold">Chủ Shop (Admin)</span>
                     </div>
                 </div>
             </div>
@@ -239,6 +342,30 @@
         <div id="history-view" class="view-section hidden max-w-2xl mx-auto space-y-4">
             <h1 class="text-xl font-bold flex items-center"><i class="fa-solid fa-clock-rotate-left mr-2 text-accentBlue"></i> Lịch Sử Đơn Hàng</h1>
             <div id="history-container" class="space-y-3"></div>
+        </div>
+
+        <!-- TRANG CHĂM SÓC KHÁCH HÀNG (CSKH) -->
+        <div id="cskh-view" class="view-section hidden max-w-md mx-auto space-y-4">
+            <div class="bg-cardBg p-6 rounded-2xl border border-gray-800 shadow-xl space-y-4 text-center">
+                <div class="w-14 h-14 bg-blue-950 text-accentBlue rounded-full flex items-center justify-center mx-auto text-2xl border border-blue-800">
+                    <i class="fa-solid fa-headset"></i>
+                </div>
+                <h3 class="text-lg font-bold text-white">Hỗ Trợ Khách Hàng 24/7</h3>
+                
+                <div class="bg-blue-950/50 p-3.5 rounded-xl border border-blue-800 text-xs text-blue-200 text-left space-y-1.5">
+                    <span class="font-bold text-accentBlue block"><i class="fa-solid fa-circle-info mr-1"></i> Lưu ý quan trọng:</span>
+                    <p>Khách hàng hãy vào <b>Lịch sử đơn hàng</b>, bấm vào <b>Chi tiết đơn & Mã đồng bộ</b> rồi copy <b>Mã đồng bộ đơn hàng</b> gửi cho Admin qua tin nhắn bên dưới để được duyệt đơn nhanh chóng!</p>
+                </div>
+
+                <div class="space-y-3 pt-2">
+                    <a href="https://www.facebook.com/share/1eUqgvpGFf/" target="_blank" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl flex items-center justify-center space-x-2 shadow-md cursor-pointer transition">
+                        <i class="fa-brands fa-facebook text-base"></i><span>Nhắn tin qua Facebook</span>
+                    </a>
+                    <a href="https://zalo.me/0358108139" target="_blank" class="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 rounded-xl flex items-center justify-center space-x-2 shadow-md cursor-pointer transition">
+                        <i class="fa-solid fa-comment-sms text-base"></i><span>Nhắn tin Zalo (0358108139)</span>
+                    </a>
+                </div>
+            </div>
         </div>
 
         <!-- QUẢN LÝ ADMIN -->
@@ -390,28 +517,6 @@
         </div>
     </div>
 
-    <div id="cskh-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-cardBg max-w-sm w-full p-6 rounded-2xl border border-gray-800 relative space-y-4 shadow-2xl text-center">
-            <button onclick="closeCskhModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer text-lg"><i class="fa-solid fa-xmark"></i></button>
-            <h3 class="font-bold text-base text-white">Hỗ Trợ Khách Hàng 24/7</h3>
-            
-            <div class="bg-blue-950/50 p-3 rounded-xl border border-blue-800 text-[11px] text-blue-200 text-left space-y-1">
-                <span class="font-bold text-accentBlue block"><i class="fa-solid fa-circle-info mr-1"></i> Lưu ý quan trọng:</span>
-                <p>Khách hàng hãy vào <b>Lịch sử đơn hàng</b>, bấm vào <b>Chi tiết đơn & Mã đồng bộ</b> rồi copy <b>Mã đồng bộ đơn hàng</b> gửi cho Admin qua tin nhắn bên dưới để được duyệt đơn nhanh chóng!</p>
-            </div>
-
-            <div class="space-y-3 pt-2">
-                <a href="https://www.facebook.com/share/1eUqgvpGFf/" target="_blank" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl flex items-center justify-center space-x-2 shadow-md cursor-pointer">
-                    <i class="fa-brands fa-facebook text-base"></i><span>Nhắn tin qua Facebook</span>
-                </a>
-                <a href="https://zalo.me/0358108139" target="_blank" class="w-full bg-sky-500 text-white font-bold py-3 rounded-xl flex items-center justify-center space-x-2 shadow-md cursor-pointer">
-                    <i class="fa-solid fa-comment-sms text-base"></i><span>Nhắn tin Zalo (0358108139)</span>
-                </a>
-            </div>
-            <button onclick="closeCskhModal()" class="w-full bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold py-2.5 rounded-xl text-xs border border-gray-700 cursor-pointer">Đóng</button>
-        </div>
-    </div>
-
     <!-- Auth Modals -->
     <div id="auth-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-sm w-full p-6 rounded-2xl border border-gray-800 relative space-y-4 shadow-2xl">
@@ -482,18 +587,42 @@
         </div>
     </div>
 
-    <!-- FLOAT BUTTONS -->
-    <button onclick="openCskhModal()" class="fixed bottom-20 right-4 md:bottom-6 md:right-6 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2.5 rounded-full shadow-2xl flex items-center space-x-2 z-50 text-xs font-bold cursor-pointer border border-blue-500 transition hover:scale-105">
-        <i class="fa-solid fa-headset text-base"></i><span>CSKH</span>
-    </button>
-
-    <!-- MOBILE NAV -->
-    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-cardBg border-t border-gray-800 flex justify-around py-3 z-40 text-[11px] transition-colors">
-        <button onclick="switchView('home')" class="flex flex-col items-center text-accentBlue cursor-pointer w-1/4"><i class="fa-solid fa-house text-base mb-0.5"></i> Trang chủ</button>
-        <button onclick="switchView('history')" class="flex flex-col items-center text-gray-400 hover:text-white cursor-pointer w-1/4"><i class="fa-solid fa-clock-rotate-left text-base mb-0.5"></i> Lịch sử</button>
-        <button onclick="switchView('profile')" class="flex flex-col items-center text-gray-400 hover:text-white cursor-pointer w-1/4"><i class="fa-solid fa-user text-base mb-0.5"></i> Hồ sơ</button>
-        <button onclick="toggleUserDropdown()" class="flex flex-col items-center text-gray-400 hover:text-white cursor-pointer w-1/4"><i class="fa-solid fa-bars text-base mb-0.5"></i> Menu</button>
-    </nav>
+    <!-- MOBILE NAVIGATION (ĐÃ HOÀN THIỆN MÀU VÀNG ĐỘC QUYỀN CHO ADMIN) -->
+    <div class="mobile-nav-container md:hidden">
+        <ul class="navigation-ul" id="mobile-nav-list">
+            <li class="list active" onclick="navClick(this, 'home')">
+                <a href="javascript:void(0)">
+                    <span class="icon"><i class="fa-solid fa-house"></i></span>
+                    <span class="text">Trang chủ</span>
+                </a>
+            </li>
+            <li class="list" onclick="navClick(this, 'history')">
+                <a href="javascript:void(0)">
+                    <span class="icon"><i class="fa-solid fa-clock-rotate-left"></i></span>
+                    <span class="text">Lịch sử</span>
+                </a>
+            </li>
+            <li class="list" onclick="navClick(this, 'profile')">
+                <a href="javascript:void(0)">
+                    <span class="icon"><i class="fa-solid fa-user"></i></span>
+                    <span class="text">Hồ sơ</span>
+                </a>
+            </li>
+            <li class="list" onclick="navClick(this, 'cskh')">
+                <a href="javascript:void(0)">
+                    <span class="icon"><i class="fa-solid fa-headset"></i></span>
+                    <span class="text">CSKH</span>
+                </a>
+            </li>
+            <!-- NÚT ADMIN ĐỘC QUYỀN MÀU VÀNG -->
+            <li id="nav-admin-item" class="list hidden" onclick="navClick(this, 'admin')">
+                <a href="javascript:void(0)">
+                    <span class="icon text-yellow-400"><i class="fa-solid fa-shield-halved text-yellow-400"></i></span>
+                    <span class="text text-yellow-400 font-bold">Admin</span>
+                </a>
+            </li>
+        </ul>
+    </div>
 
     <script>
         const STORAGE_KEY = 'shopdatzit_v10_local_data';
@@ -734,6 +863,27 @@
             updateAuthUI();
         };
 
+        function navClick(element, target) {
+            const listItems = document.querySelectorAll('.navigation-ul li');
+            listItems.forEach((item) => item.classList.remove('active'));
+            element.classList.add('active');
+
+            switchView(target);
+        }
+
+        function syncNavActive(viewName) {
+            const navMap = { 'home': 0, 'history': 1, 'profile': 2, 'cskh': 3, 'admin': 4 };
+            if (navMap[viewName] !== undefined) {
+                const listItems = document.querySelectorAll('.navigation-ul li');
+                listItems.forEach((item) => item.classList.remove('active'));
+                
+                const targetLi = listItems[navMap[viewName]];
+                if (targetLi && !targetLi.classList.contains('hidden')) {
+                    targetLi.classList.add('active');
+                }
+            }
+        }
+
         function getAccounts() { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
         function saveAccounts(accs) { localStorage.setItem(STORAGE_KEY, JSON.stringify(accs)); }
         function isAdmin() { return currentUsername === 'ngocdiemdang90@gmail.com'; }
@@ -846,7 +996,7 @@
             const profileEmail = document.getElementById('profile-email');
             const profileUid = document.getElementById('profile-uid');
             const profileRole = document.getElementById('profile-role');
-            const adminMenuItem = document.getElementById('admin-menu-item');
+            const navAdminItem = document.getElementById('nav-admin-item');
             
             const avatars = [document.getElementById('header-user-avatar'), document.getElementById('dropdown-user-avatar'), document.getElementById('profile-user-avatar')];
             const accounts = getAccounts();
@@ -866,10 +1016,10 @@
 
                 if (isAdmin()) {
                     if (profileRole) profileRole.innerHTML = 'Chủ Shop (Admin)';
-                    if (adminMenuItem) adminMenuItem.classList.remove('hidden');
+                    if (navAdminItem) navAdminItem.classList.remove('hidden');
                 } else {
                     if (profileRole) profileRole.innerHTML = 'Thành viên';
-                    if (adminMenuItem) adminMenuItem.classList.add('hidden');
+                    if (navAdminItem) navAdminItem.classList.add('hidden');
                 }
             } else {
                 disp.innerText = 'Đăng Nhập';
@@ -879,7 +1029,7 @@
                 if (profileEmail) profileEmail.innerText = 'Chưa đăng nhập';
                 if (profileUid) profileUid.innerText = '---';
                 if (profileRole) profileRole.innerHTML = 'Khách';
-                if (adminMenuItem) adminMenuItem.classList.add('hidden');
+                if (navAdminItem) navAdminItem.classList.add('hidden');
                 avatars.forEach(el => { if(el) el.src = 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=150'; });
             }
             renderHistory();
@@ -1126,13 +1276,17 @@
         function switchView(viewName) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
             document.getElementById('user-dropdown').classList.add('hidden');
+            
             if (viewName === 'home') {
                 renderGameList();
                 document.getElementById('home-view').classList.remove('hidden');
             }
             else if (viewName === 'profile') { if (!currentUsername) { openAuthModal(); return; } document.getElementById('profile-view').classList.remove('hidden'); }
             else if (viewName === 'history') { if (!currentUsername) { openAuthModal(); return; } document.getElementById('history-view').classList.remove('hidden'); renderHistory(); }
+            else if (viewName === 'cskh') { document.getElementById('cskh-view').classList.remove('hidden'); }
             else if (viewName === 'admin') { if (!isAdmin()) { alert('Không có quyền Admin!'); switchView('home'); return; } document.getElementById('admin-view').classList.remove('hidden'); renderAdminOrders(); }
+            
+            syncNavActive(viewName);
             window.scrollTo(0, 0);
         }
 
@@ -1551,9 +1705,6 @@
         function closeOrderDetailModal() {
             document.getElementById('order-detail-modal').classList.add('hidden');
         }
-
-        function openCskhModal() { document.getElementById('cskh-modal').classList.remove('hidden'); }
-        function closeCskhModal() { document.getElementById('cskh-modal').classList.add('hidden'); }
 
         function renderHistory() {
             const container = document.getElementById('history-container');
