@@ -153,7 +153,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- LIQUID FLOATING NAVIGATION (ĐÃ GỠ BỎ HOÀN TOÀN THANH DƯỚI) --- */
+        /* --- MOBILE NAVIGATION --- */
         .mobile-nav-container {
             position: fixed;
             bottom: 12px;
@@ -236,8 +236,6 @@
             transform: translateY(8px);
         }
 
-        /* ĐÃ XÓA HOÀN TOÀN THANH INDICATOR (THANH XANH DƯƠNG) */
-
         #user-dropdown {
             transform-origin: top right;
             animation: dropdownScale 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
@@ -260,7 +258,8 @@
                         </div>
                         <div class="flex flex-col leading-none">
                             <span class="font-extrabold text-xs tracking-wide text-white">SHOP<span class="text-yellow-400">DATZIT</span></span>
-                            <span class="text-[8px] text-amber-300 font-bold tracking-tighter uppercase mt-0.5">Nạp Game 24/7</span>
+                            <!-- ĐÃ ĐỔI DÒNG CHỮ Ở ĐÂY THÀNH BÁ KHÍ 24/7 -->
+                            <span class="text-[8px] text-amber-300 font-bold tracking-tighter uppercase mt-0.5">BÁ KHÍ 24/7</span>
                         </div>
                     </div>
                 </div>
@@ -409,16 +408,16 @@
                         <span id="profile-uid" class="font-bold text-white">60742</span>
                     </div>
 
-                    <!-- TÊN ĐĂNG NHẬP (CÓ THỂ SỬA TRỰC TIẾP) -->
+                    <!-- TÊN ĐĂNG NHẬP (ĐÃ CHO PHÉP IN HOA & KÝ TỰ ĐẶC BIỆT, ĐỘC LẬP VỚI EMAIL) -->
                     <div class="flex justify-between items-center border-b border-gray-800/50 pb-2.5">
                         <span class="text-gray-400">Tên Đăng Nhập</span>
                         <div class="flex items-center space-x-2">
-                            <input type="text" id="profile-username-input" class="bg-gray-900 border border-gray-700 rounded px-2 py-1 text-xs text-white text-right font-bold w-36 outline-none focus:border-accentBlue">
+                            <input type="text" id="profile-username-input" class="bg-gray-900 border border-gray-700 rounded px-2 py-1 text-xs text-white text-right font-bold w-40 outline-none focus:border-accentBlue" placeholder="Nhập tên tài khoản">
                             <button onclick="saveNewUsername()" class="bg-accentBlue hover:bg-blue-600 text-white px-2.5 py-1 rounded text-[11px] font-bold cursor-pointer transition">Lưu</button>
                         </div>
                     </div>
 
-                    <!-- EMAIL (CÓ TÍNH NĂNG ĐỔI QUA MÃ OTP) -->
+                    <!-- EMAIL BẢO MẬT (RIÊNG BIỆT) -->
                     <div class="flex justify-between items-center border-b border-gray-800/50 pb-2.5">
                         <span class="text-gray-400">Email</span>
                         <div class="flex items-center space-x-2">
@@ -716,7 +715,7 @@
         </div>
     </div>
 
-    <!-- LIQUID FLOATING MOBILE NAVIGATION (ĐÃ XOÁ HOÀN TOÀN THANH XANH DƯƠNG) -->
+    <!-- MOBILE NAVIGATION -->
     <div class="mobile-nav-container md:hidden">
         <ul class="navigation-ul" id="mobile-nav-list">
             <li class="list active" onclick="navClick(this, 'home')">
@@ -769,7 +768,6 @@
         let targetForgotUser = null;
 
         let changeEmailOTP = null;
-        let targetNewEmail = null;
 
         function calcPrice(p) {
             if (p === 0) return 0;
@@ -1017,7 +1015,10 @@
 
         function getAccounts() { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
         function saveAccounts(accs) { localStorage.setItem(STORAGE_KEY, JSON.stringify(accs)); }
-        function isAdmin() { return currentUsername === 'ngocdiemdang90@gmail.com'; }
+        function isAdmin() { 
+            let accounts = getAccounts();
+            return currentUsername && accounts[currentUsername] && (accounts[currentUsername].email === 'ngocdiemdang90@gmail.com' || currentUsername === 'ngocdiemdang90@gmail.com'); 
+        }
 
         function getGameSold(gameKey) {
             const game = gamesData[gameKey];
@@ -1054,6 +1055,8 @@
             let accounts = getAccounts();
             if (!accounts['ngocdiemdang90@gmail.com']) {
                 accounts['ngocdiemdang90@gmail.com'] = {
+                    username: 'Chủ Shop Admin',
+                    email: 'ngocdiemdang90@gmail.com',
                     password: 'Lolkchi2020k',
                     uid: '10000',
                     avatar: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=150',
@@ -1061,6 +1064,8 @@
                 };
             } else {
                 accounts['ngocdiemdang90@gmail.com'].password = 'Lolkchi2020k';
+                if (!accounts['ngocdiemdang90@gmail.com'].username) accounts['ngocdiemdang90@gmail.com'].username = 'Chủ Shop Admin';
+                if (!accounts['ngocdiemdang90@gmail.com'].email) accounts['ngocdiemdang90@gmail.com'].email = 'ngocdiemdang90@gmail.com';
             }
             saveAccounts(accounts);
         }
@@ -1134,17 +1139,21 @@
             const accounts = getAccounts();
 
             if (currentUsername && accounts[currentUsername]) {
-                disp.innerText = currentUsername;
-                if (dropdownName) dropdownName.innerText = currentUsername;
+                const userAcc = accounts[currentUsername];
+                const displayName = userAcc.username || currentUsername;
+                const displayEmail = userAcc.email || currentUsername;
+
+                disp.innerText = displayName;
+                if (dropdownName) dropdownName.innerText = displayName;
                 
-                let userUid = accounts[currentUsername].uid || '10000';
+                let userUid = userAcc.uid || '10000';
                 if (dropdownUid) dropdownUid.innerText = userUid;
-                if (profileName) profileName.innerText = currentUsername;
-                if (profileUsernameInput) profileUsernameInput.value = currentUsername;
-                if (profileEmailText) profileEmailText.innerText = currentUsername; // Email lưu trùng với username tài khoản
+                if (profileName) profileName.innerText = displayName;
+                if (profileUsernameInput) profileUsernameInput.value = displayName; // Giữ nguyên chữ hoa & ký tự đặc biệt
+                if (profileEmailText) profileEmailText.innerText = displayEmail; // Độc lập với Username
                 if (profileUid) profileUid.innerText = userUid;
 
-                let userAvatar = accounts[currentUsername].avatar || 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=150';
+                let userAvatar = userAcc.avatar || 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=150';
                 avatars.forEach(el => { if(el) el.src = userAvatar; });
 
                 if (isAdmin()) {
@@ -1170,27 +1179,19 @@
             renderAdminOrders();
         }
 
+        /* LƯU TÊN ĐĂNG NHẬP (CHO PHÉP CHỮ IN HOA & KÝ TỰ ĐẶC BIỆT, KHÔNG ĐỔI EMAIL) */
         function saveNewUsername() {
             if (!currentUsername) { openAuthModal(); return; }
-            const newName = document.getElementById('profile-username-input').value.trim().toLowerCase();
+            const newName = document.getElementById('profile-username-input').value.trim(); // GIỮ NGUYÊN HOA/THƯỜNG/ĐẶC BIỆT
             if (!newName) { alert('Tên đăng nhập không được để trống!'); return; }
-            if (newName === currentUsername) { alert('Tên đăng nhập không thay đổi.'); return; }
 
             let accounts = getAccounts();
-            if (accounts[newName]) {
-                alert('Tên đăng nhập này đã tồn tại trên hệ thống!');
-                return;
+            if (accounts[currentUsername]) {
+                accounts[currentUsername].username = newName; // Chỉ đổi tên hiển thị / username
+                saveAccounts(accounts);
+                updateAuthUI();
+                alert('Cập nhật tên đăng nhập thành công!');
             }
-
-            // Chuyển dữ liệu tài khoản sang tên mới
-            accounts[newName] = accounts[currentUsername];
-            delete accounts[currentUsername];
-            saveAccounts(accounts);
-
-            currentUsername = newName;
-            localStorage.setItem(USER_KEY, newName);
-            updateAuthUI();
-            alert('Cập nhật tên đăng nhập thành công!');
         }
 
         function openChangeEmailModal() {
@@ -1207,10 +1208,16 @@
             document.getElementById('change-email-modal').classList.add('hidden');
         }
 
+        /* GỬI OTP XÁC THỰC EMAIL CŨ */
         function sendEmailChangeOTP() {
             const oldEmailInput = document.getElementById('change-old-email').value.trim().toLowerCase();
             if (!oldEmailInput) { alert('Vui lòng nhập Email cũ!'); return; }
-            if (oldEmailInput !== currentUsername) {
+
+            let accounts = getAccounts();
+            const currentAcc = accounts[currentUsername];
+            const actualEmail = (currentAcc && currentAcc.email) ? currentAcc.email.toLowerCase() : currentUsername.toLowerCase();
+
+            if (oldEmailInput !== actualEmail) {
                 alert('Email cũ không khớp với tài khoản hiện tại của bạn!');
                 return;
             }
@@ -1248,6 +1255,7 @@
                 });
         }
 
+        /* XÁC THỰC OTP VÀ ĐỔI EMAIL ĐỘC LẬP */
         function verifyAndChangeEmail() {
             const otpInput = document.getElementById('change-email-otp').value.trim();
             const newEmailInput = document.getElementById('change-new-email').value.trim().toLowerCase();
@@ -1263,21 +1271,13 @@
             }
 
             let accounts = getAccounts();
-            if (accounts[newEmailInput]) {
-                alert('Email mới này đã được sử dụng bởi tài khoản khác!');
-                return;
+            if (accounts[currentUsername]) {
+                accounts[currentUsername].email = newEmailInput; // Chỉ cập nhật Email
+                saveAccounts(accounts);
+                updateAuthUI();
+                closeChangeEmailModal();
+                alert('Thay đổi Email thành công!');
             }
-
-            // Đổi tên đăng nhập/email thành email mới
-            accounts[newEmailInput] = accounts[currentUsername];
-            delete accounts[currentUsername];
-            saveAccounts(accounts);
-
-            currentUsername = newEmailInput;
-            localStorage.setItem(USER_KEY, newEmailInput);
-            updateAuthUI();
-            closeChangeEmailModal();
-            alert('Đổi email thành công!');
         }
 
         function toggleUserDropdown() {
@@ -1368,13 +1368,20 @@
             if (!emailInput) { alert('Vui lòng nhập Email / Tên đăng nhập!'); return; }
 
             let accounts = getAccounts();
-            if (!accounts[emailInput]) {
+            let foundKey = null;
+            for (let k in accounts) {
+                if (k.toLowerCase() === emailInput || (accounts[k].email && accounts[k].email.toLowerCase() === emailInput)) {
+                    foundKey = k; break;
+                }
+            }
+
+            if (!foundKey) {
                 alert('Tài khoản / Email này chưa từng đăng ký trên hệ thống!');
                 return;
             }
 
             generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
-            targetForgotUser = emailInput;
+            targetForgotUser = foundKey;
 
             const btn = document.getElementById('btn-send-otp');
             const originalText = btn.innerHTML;
@@ -1436,18 +1443,26 @@
         }
 
         function handleRegister() {
-            const u = document.getElementById('reg-user').value.trim().toLowerCase();
+            const u = document.getElementById('reg-user').value.trim();
             const p = document.getElementById('reg-pass').value.trim();
             if (!u || !p) { alert('Vui lòng điền đầy đủ Email/Tài khoản và Mật khẩu!'); return; }
             let accounts = getAccounts();
-            if (accounts[u]) { alert('Email/Tài khoản này đã tồn tại trên thiết bị!'); return; }
+            if (accounts[u.toLowerCase()]) { alert('Tài khoản này đã tồn tại trên thiết bị!'); return; }
             
             const btn = document.getElementById('btn-register');
             btn.innerHTML = '<span class="loader"></span> Đang xử lý...';
             
             setTimeout(() => {
                 const randomUid = Math.floor(10000 + Math.random() * 90000).toString();
-                accounts[u] = { password: p, uid: randomUid, avatar: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=150', history: [] };
+                const key = u.toLowerCase();
+                accounts[key] = { 
+                    username: u, 
+                    email: u.includes('@') ? u : `${key}@gmail.com`, 
+                    password: p, 
+                    uid: randomUid, 
+                    avatar: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=150', 
+                    history: [] 
+                };
                 saveAccounts(accounts);
                 alert('Đăng ký tài khoản thành công! Bạn có thể đăng nhập ngay.');
                 btn.innerHTML = 'ĐĂNG KÝ NGAY';
@@ -1457,26 +1472,34 @@
         }
 
         function handleLogin() {
-            const u = document.getElementById('login-user').value.trim().toLowerCase();
+            const u = document.getElementById('login-user').value.trim();
             const p = document.getElementById('login-pass').value.trim();
             if (!u || !p) { alert('Vui lòng điền đầy đủ tài khoản và mật khẩu!'); return; }
 
             let accounts = getAccounts();
+            const key = u.toLowerCase();
 
-            if (u === 'ngocdiemdang90@gmail.com' && p === 'Lolkchi2020k') {
-                pendingAdminData = { user: u };
+            if (key === 'ngocdiemdang90@gmail.com' && p === 'Lolkchi2020k') {
+                pendingAdminData = { user: 'ngocdiemdang90@gmail.com' };
                 closeAuthModal();
                 openAdmin2FAModal();
                 return;
             }
 
-            if (!accounts[u] || accounts[u].password !== p) {
+            let foundKey = null;
+            for (let k in accounts) {
+                if (k === key || (accounts[k].email && accounts[k].email.toLowerCase() === key) || (accounts[k].username && accounts[k].username === u)) {
+                    foundKey = k; break;
+                }
+            }
+
+            if (!foundKey || accounts[foundKey].password !== p) {
                 alert('Sai tài khoản hoặc mật khẩu!');
                 return;
             }
             
-            currentUsername = u;
-            localStorage.setItem(USER_KEY, u);
+            currentUsername = foundKey;
+            localStorage.setItem(USER_KEY, foundKey);
             updateAuthUI();
             closeAuthModal();
             alert('Đăng nhập thành công!');
@@ -1828,7 +1851,6 @@
         function openOrderDetail(username, orderId) {
             let accounts = getAccounts();
             let order = null;
-            let targetOwner = username;
 
             if (accounts[username] && accounts[username].history) {
                 order = accounts[username].history.find(o => o.id === orderId);
@@ -1837,7 +1859,7 @@
                 for (let u in accounts) {
                     if (accounts[u].history) {
                         let found = accounts[u].history.find(o => o.id === orderId);
-                        if (found) { order = found; targetOwner = u; break; }
+                        if (found) { order = found; break; }
                     }
                 }
             }
