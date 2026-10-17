@@ -64,16 +64,14 @@
         :root {
             --nav-bg: #1e1e1e;
             --body-bg: #121212;
-            --indicator-color: #ffffff;
-            --icon-active: #121212;
+            --icon-active: #3b82f6;
             --text-color: #ffffff;
         }
 
         html.light {
             --nav-bg: #ffffff;
             --body-bg: #f3f4f6;
-            --indicator-color: #121212;
-            --icon-active: #ffffff;
+            --icon-active: #3b82f6;
             --text-color: #1f2937;
         }
 
@@ -155,7 +153,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- LIQUID NAVIGATION VỚI HIỆU ỨNG MÓP MÉO MÀU ĐEN CHUẨN MẪU --- */
+        /* --- LIQUID FLOATING NAVIGATION (ĐÃ GỠ BỎ HOÀN TOÀN THANH DƯỚI) --- */
         .mobile-nav-container {
             position: fixed;
             bottom: 12px;
@@ -217,7 +215,7 @@
         }
 
         .navigation-ul li.active a .icon {
-            transform: translateY(-28px);
+            transform: translateY(-26px);
             color: var(--icon-active);
         }
 
@@ -238,55 +236,7 @@
             transform: translateY(8px);
         }
 
-        /* KHỐI INDICATOR VỚI HIỆU ỨNG MÓP MÉO MÀU ĐEN (ĐỒNG MÀU NỀN TRANG) */
-        .indicator {
-            position: absolute;
-            top: -30px;
-            left: 0;
-            width: 60px;
-            height: 60px;
-            background: var(--indicator-color);
-            border-radius: 50%;
-            border: 5px solid var(--body-bg);
-            transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            pointer-events: none;
-        }
-
-        .indicator::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: -19px;
-            width: 18px;
-            height: 18px;
-            background: transparent;
-            border-top-right-radius: 18px;
-            box-shadow: 1px -8px 0 0 #121212; /* Màu đen tạo hiệu ứng móp lõm */
-        }
-
-        .indicator::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            right: -19px;
-            width: 18px;
-            height: 18px;
-            background: transparent;
-            border-top-left-radius: 18px;
-            box-shadow: -1px -8px 0 0 #121212; /* Màu đen tạo hiệu ứng móp lõm */
-        }
-
-        /* TÍNH TOÁN % TỰ ĐỘNG CHÍNH XÁC TÂM */
-        body.has-admin .navigation-ul li:nth-child(1).active ~ .indicator { transform: translateX(calc(20% * 0 + (20% - 60px) / 2)); }
-        body.has-admin .navigation-ul li:nth-child(2).active ~ .indicator { transform: translateX(calc(20% * 1 + (20% - 60px) / 2)); }
-        body.has-admin .navigation-ul li:nth-child(3).active ~ .indicator { transform: translateX(calc(20% * 2 + (20% - 60px) / 2)); }
-        body.has-admin .navigation-ul li:nth-child(4).active ~ .indicator { transform: translateX(calc(20% * 3 + (20% - 60px) / 2)); }
-        body.has-admin .navigation-ul li:nth-child(5).active ~ .indicator { transform: translateX(calc(20% * 4 + (20% - 60px) / 2)); }
-
-        body:not(.has-admin) .navigation-ul li:nth-child(1).active ~ .indicator { transform: translateX(calc(25% * 0 + (25% - 60px) / 2)); }
-        body:not(.has-admin) .navigation-ul li:nth-child(2).active ~ .indicator { transform: translateX(calc(25% * 1 + (25% - 60px) / 2)); }
-        body:not(.has-admin) .navigation-ul li:nth-child(3).active ~ .indicator { transform: translateX(calc(25% * 2 + (25% - 60px) / 2)); }
-        body:not(.has-admin) .navigation-ul li:nth-child(4).active ~ .indicator { transform: translateX(calc(25% * 3 + (25% - 60px) / 2)); }
+        /* ĐÃ XÓA HOÀN TOÀN THANH INDICATOR (THANH XANH DƯƠNG) */
 
         #user-dropdown {
             transform-origin: top right;
@@ -454,15 +404,30 @@
                     </div>
                 </div>
                 <div class="space-y-3 text-xs">
-                    <div class="flex justify-between border-b border-gray-800/50 pb-2.5">
+                    <div class="flex justify-between items-center border-b border-gray-800/50 pb-2.5">
                         <span class="text-gray-400">UID</span>
                         <span id="profile-uid" class="font-bold text-white">60742</span>
                     </div>
-                    <div class="flex justify-between border-b border-gray-800/50 pb-2.5">
-                        <span class="text-gray-400">Tên đăng nhập / Email</span>
-                        <span id="profile-email" class="font-bold text-white">Chưa đăng nhập</span>
+
+                    <!-- TÊN ĐĂNG NHẬP (CÓ THỂ SỬA TRỰC TIẾP) -->
+                    <div class="flex justify-between items-center border-b border-gray-800/50 pb-2.5">
+                        <span class="text-gray-400">Tên Đăng Nhập</span>
+                        <div class="flex items-center space-x-2">
+                            <input type="text" id="profile-username-input" class="bg-gray-900 border border-gray-700 rounded px-2 py-1 text-xs text-white text-right font-bold w-36 outline-none focus:border-accentBlue">
+                            <button onclick="saveNewUsername()" class="bg-accentBlue hover:bg-blue-600 text-white px-2.5 py-1 rounded text-[11px] font-bold cursor-pointer transition">Lưu</button>
+                        </div>
                     </div>
-                    <div class="flex justify-between pb-1">
+
+                    <!-- EMAIL (CÓ TÍNH NĂNG ĐỔI QUA MÃ OTP) -->
+                    <div class="flex justify-between items-center border-b border-gray-800/50 pb-2.5">
+                        <span class="text-gray-400">Email</span>
+                        <div class="flex items-center space-x-2">
+                            <span id="profile-email-text" class="font-bold text-white truncate max-w-[150px]">Chưa đăng nhập</span>
+                            <button onclick="openChangeEmailModal()" class="bg-yellow-600 hover:bg-yellow-500 text-white px-2 py-1 rounded text-[10px] font-bold cursor-pointer transition">Đổi Email</button>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-center pb-1">
                         <span class="text-gray-400">Nhóm tài khoản</span>
                         <span id="profile-role" class="bg-yellow-950 text-yellow-400 px-2 py-0.5 rounded text-[11px] border border-yellow-700 font-bold">Chủ Shop (Admin)</span>
                     </div>
@@ -529,6 +494,38 @@
             </div>
         </div>
     </main>
+
+    <!-- MODAL ĐỔI EMAIL XÁC THỰC OTP -->
+    <div id="change-email-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-cardBg max-w-sm w-full p-5 rounded-2xl border border-gray-800 relative space-y-4 shadow-2xl">
+            <button onclick="closeChangeEmailModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-base font-bold text-white tracking-wide text-center">THAY ĐỔI EMAIL TÀI KHOẢN</h3>
+            
+            <!-- BƯỚC 1: XÁC NHẬN EMAIL CŨ VÀ GỬI OTP -->
+            <div id="email-step-1" class="space-y-3">
+                <p class="text-xs text-gray-300 text-center">Nhập chính xác Email cũ hiện tại để nhận mã OTP xác thực.</p>
+                <div>
+                    <label class="text-[10px] text-gray-400 block mb-1">Email cũ hiện tại:</label>
+                    <input type="text" id="change-old-email" placeholder="Nhập email cũ" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white outline-none focus:border-accentBlue">
+                </div>
+                <button onclick="sendEmailChangeOTP()" id="btn-send-email-otp" class="w-full bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow">GỬI MÃ OTP XÁC THỰC</button>
+            </div>
+
+            <!-- BƯỚC 2: NHẬP MÃ OTP VÀ EMAIL MỚI -->
+            <div id="email-step-2" class="hidden space-y-3">
+                <p class="text-xs text-green-400 text-center font-bold">Mã OTP đã được gửi đến email cũ của bạn!</p>
+                <div>
+                    <label class="text-[10px] text-gray-400 block mb-1">Mã xác thực OTP (6 chữ số):</label>
+                    <input type="text" id="change-email-otp" placeholder="Nhập mã OTP 6 số" maxlength="6" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-xs text-white text-center font-mono text-sm tracking-widest outline-none focus:border-accentBlue">
+                </div>
+                <div>
+                    <label class="text-[10px] text-gray-400 block mb-1">Email mới muốn đổi:</label>
+                    <input type="text" id="change-new-email" placeholder="Nhập email mới" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white outline-none focus:border-accentBlue">
+                </div>
+                <button onclick="verifyAndChangeEmail()" id="btn-confirm-new-email" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow">XÁC NHẬN ĐỔI EMAIL</button>
+            </div>
+        </div>
+    </div>
 
     <!-- MODAL THANH TOÁN (QUÉT QR) -->
     <div id="payment-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
@@ -719,7 +716,7 @@
         </div>
     </div>
 
-    <!-- LIQUID MOBILE NAVIGATION -->
+    <!-- LIQUID FLOATING MOBILE NAVIGATION (ĐÃ XOÁ HOÀN TOÀN THANH XANH DƯƠNG) -->
     <div class="mobile-nav-container md:hidden">
         <ul class="navigation-ul" id="mobile-nav-list">
             <li class="list active" onclick="navClick(this, 'home')">
@@ -752,7 +749,6 @@
                     <span class="text text-yellow-400 font-bold">Admin</span>
                 </a>
             </li>
-            <div class="indicator"></div>
         </ul>
     </div>
 
@@ -771,6 +767,9 @@
 
         let generatedOTP = null;
         let targetForgotUser = null;
+
+        let changeEmailOTP = null;
+        let targetNewEmail = null;
 
         function calcPrice(p) {
             if (p === 0) return 0;
@@ -1125,7 +1124,8 @@
             const dropdownName = document.getElementById('dropdown-username');
             const dropdownUid = document.getElementById('dropdown-uid');
             const profileName = document.getElementById('profile-name');
-            const profileEmail = document.getElementById('profile-email');
+            const profileUsernameInput = document.getElementById('profile-username-input');
+            const profileEmailText = document.getElementById('profile-email-text');
             const profileUid = document.getElementById('profile-uid');
             const profileRole = document.getElementById('profile-role');
             const navAdminItem = document.getElementById('nav-admin-item');
@@ -1140,7 +1140,8 @@
                 let userUid = accounts[currentUsername].uid || '10000';
                 if (dropdownUid) dropdownUid.innerText = userUid;
                 if (profileName) profileName.innerText = currentUsername;
-                if (profileEmail) profileEmail.innerText = currentUsername;
+                if (profileUsernameInput) profileUsernameInput.value = currentUsername;
+                if (profileEmailText) profileEmailText.innerText = currentUsername; // Email lưu trùng với username tài khoản
                 if (profileUid) profileUid.innerText = userUid;
 
                 let userAvatar = accounts[currentUsername].avatar || 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=150';
@@ -1148,33 +1149,135 @@
 
                 if (isAdmin()) {
                     if (profileRole) profileRole.innerHTML = 'Chủ Shop (Admin)';
-                    if (navAdminItem) {
-                        navAdminItem.classList.remove('hidden');
-                        document.body.classList.add('has-admin');
-                    }
+                    if (navAdminItem) navAdminItem.classList.remove('hidden');
                 } else {
                     if (profileRole) profileRole.innerHTML = 'Thành viên';
-                    if (navAdminItem) {
-                        navAdminItem.classList.add('hidden');
-                        document.body.classList.remove('has-admin');
-                    }
+                    if (navAdminItem) navAdminItem.classList.add('hidden');
                 }
             } else {
                 disp.innerText = 'Đăng Nhập';
                 if (dropdownName) dropdownName.innerText = 'Khách';
                 if (dropdownUid) dropdownUid.innerText = '---';
                 if (profileName) profileName.innerText = 'Khách';
-                if (profileEmail) profileEmail.innerText = 'Chưa đăng nhập';
+                if (profileUsernameInput) profileUsernameInput.value = '';
+                if (profileEmailText) profileEmailText.innerText = 'Chưa đăng nhập';
                 if (profileUid) profileUid.innerText = '---';
                 if (profileRole) profileRole.innerHTML = 'Khách';
-                if (navAdminItem) {
-                    navAdminItem.classList.add('hidden');
-                    document.body.classList.remove('has-admin');
-                }
+                if (navAdminItem) navAdminItem.classList.add('hidden');
                 avatars.forEach(el => { if(el) el.src = 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=150'; });
             }
             renderHistory();
             renderAdminOrders();
+        }
+
+        function saveNewUsername() {
+            if (!currentUsername) { openAuthModal(); return; }
+            const newName = document.getElementById('profile-username-input').value.trim().toLowerCase();
+            if (!newName) { alert('Tên đăng nhập không được để trống!'); return; }
+            if (newName === currentUsername) { alert('Tên đăng nhập không thay đổi.'); return; }
+
+            let accounts = getAccounts();
+            if (accounts[newName]) {
+                alert('Tên đăng nhập này đã tồn tại trên hệ thống!');
+                return;
+            }
+
+            // Chuyển dữ liệu tài khoản sang tên mới
+            accounts[newName] = accounts[currentUsername];
+            delete accounts[currentUsername];
+            saveAccounts(accounts);
+
+            currentUsername = newName;
+            localStorage.setItem(USER_KEY, newName);
+            updateAuthUI();
+            alert('Cập nhật tên đăng nhập thành công!');
+        }
+
+        function openChangeEmailModal() {
+            if (!currentUsername) { openAuthModal(); return; }
+            document.getElementById('email-step-1').classList.remove('hidden');
+            document.getElementById('email-step-2').classList.add('hidden');
+            document.getElementById('change-old-email').value = '';
+            document.getElementById('change-email-otp').value = '';
+            document.getElementById('change-new-email').value = '';
+            document.getElementById('change-email-modal').classList.remove('hidden');
+        }
+
+        function closeChangeEmailModal() {
+            document.getElementById('change-email-modal').classList.add('hidden');
+        }
+
+        function sendEmailChangeOTP() {
+            const oldEmailInput = document.getElementById('change-old-email').value.trim().toLowerCase();
+            if (!oldEmailInput) { alert('Vui lòng nhập Email cũ!'); return; }
+            if (oldEmailInput !== currentUsername) {
+                alert('Email cũ không khớp với tài khoản hiện tại của bạn!');
+                return;
+            }
+
+            changeEmailOTP = Math.floor(100000 + Math.random() * 900000).toString();
+
+            const btn = document.getElementById('btn-send-email-otp');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<span class="loader"></span> Đang gửi OTP...';
+            btn.disabled = true;
+
+            const templateParams = {
+                email: oldEmailInput,
+                to_email: oldEmailInput,
+                passcode: changeEmailOTP,
+                otp: changeEmailOTP,
+                code: changeEmailOTP,
+                message: changeEmailOTP,
+                time: "15"
+            };
+
+            emailjs.send('service_by7w4rc', 'template_hs2y37q', templateParams)
+                .then(function(response) {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    alert('Mã OTP xác thực đã được gửi đến Email cũ: ' + oldEmailInput);
+                    document.getElementById('email-step-1').classList.add('hidden');
+                    document.getElementById('email-step-2').classList.remove('hidden');
+                }, function(error) {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    alert('Gửi OTP qua email gặp sự cố!\n(Mã OTP test của bạn: ' + changeEmailOTP + ')');
+                    document.getElementById('email-step-1').classList.add('hidden');
+                    document.getElementById('email-step-2').classList.remove('hidden');
+                });
+        }
+
+        function verifyAndChangeEmail() {
+            const otpInput = document.getElementById('change-email-otp').value.trim();
+            const newEmailInput = document.getElementById('change-new-email').value.trim().toLowerCase();
+
+            if (!otpInput || !newEmailInput) {
+                alert('Vui lòng điền đầy đủ mã OTP và Email mới!');
+                return;
+            }
+
+            if (otpInput !== changeEmailOTP) {
+                alert('Mã OTP không chính xác!');
+                return;
+            }
+
+            let accounts = getAccounts();
+            if (accounts[newEmailInput]) {
+                alert('Email mới này đã được sử dụng bởi tài khoản khác!');
+                return;
+            }
+
+            // Đổi tên đăng nhập/email thành email mới
+            accounts[newEmailInput] = accounts[currentUsername];
+            delete accounts[currentUsername];
+            saveAccounts(accounts);
+
+            currentUsername = newEmailInput;
+            localStorage.setItem(USER_KEY, newEmailInput);
+            updateAuthUI();
+            closeChangeEmailModal();
+            alert('Đổi email thành công!');
         }
 
         function toggleUserDropdown() {
@@ -1936,7 +2039,7 @@
                                 ${isPending ? `
                                     <button onclick="adminConfirmOrder('${ord.owner}', '${ord.id}')" class="bg-green-600 hover:bg-green-700 w-full text-white px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition shadow">Nạp Thành Công</button>
                                     <button onclick="adminRejectOrder('${ord.owner}', '${ord.id}')" class="bg-gray-700 hover:bg-red-700 w-full text-white px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition shadow">Hủy Đơn</button>
-                                ` : `<span class="px-2 py-0.5 rounded border text-[11px] font-bold ${ord.status.includes('Thành Công') \vert{}\vert{} ord.status.includes('Hoàn Thành') ? 'bg-green-950/50 text-green-400 border-green-800' : 'bg-red-950/50 text-red-400 border-red-800'}">${ord.status}</span>`}
+                                ` : `<span class="px-2 py-0.5 rounded border text-[11px] font-bold ${ord.status.includes('Thành Công') || ord.status.includes('Hoàn Thành') ? 'bg-green-950/50 text-green-400 border-green-800' : 'bg-red-950/50 text-red-400 border-red-800'}">${ord.status}</span>`}
                             </div>
                         </div>
                         <div class="pt-1.5 border-t border-gray-800/60 flex justify-end">
