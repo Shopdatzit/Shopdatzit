@@ -6,18 +6,12 @@
     <title>Shopdatzit - Shop Nạp Game Uy Tín</title>
     
     <!-- FAVICON / BIỂU TƯỢNG TRANG WEB -->
-    <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/14o8tRBlkpCKoE5sM4yrn0By4OsoMWoZQ">
-    <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/d/14o8tRBlkpCKoE5sM4yrn0By4OsoMWoZQ">
+    <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/18AUbyNXRJ2bcG3FK0SQG6tmf6w6O0uJI">
 
     <!-- THẺ HÌNH ẢNH XEM TRƯỚC (OPEN GRAPH / LINK PREVIEW) -->
     <meta property="og:title" content="Shopdatzit - Shop Nạp Game Uy Tín">
     <meta property="og:description" content="Hệ thống nạp game tự động, nhanh chóng, uy tín 24/7">
-    <meta property="og:image" content="https://lh3.googleusercontent.com/d/1rrmuuKW_MlNpHbIxCTJZX4jqglF6aVJd">
-    <meta property="og:image:type" content="image/jpeg">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:image" content="https://lh3.googleusercontent.com/d/1rrmuuKW_MlNpHbIxCTJZX4jqglF6aVJd">
+    <meta property="og:image" content="https://lh3.googleusercontent.com/d/18AUbyNXRJ2bcG3FK0SQG6tmf6w6O0uJI">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -76,43 +70,44 @@
         .loader { border: 2px solid #f3f3f3; border-top: 2px solid #3b82f6; border-radius: 50%; width: 14px; height: 14px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 5px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* --- LOGO SANG TRỌNG --- */
-        .pro-logo {
+        /* --- LOGO MAVUIKA BÁ KHÍ 24/7 --- */
+        .animated-shop-logo {
             display: inline-flex;
             align-items: center;
-            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
-            border: 1px solid rgba(234, 179, 8, 0.4);
-            padding: 4px 8px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            background: linear-gradient(135deg, #1f110b 0%, #2a0e05 100%);
+            border: 1px solid rgba(239, 68, 68, 0.7);
+            padding: 4px 10px;
+            border-radius: 12px;
+            box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+            cursor: pointer;
             position: relative;
             overflow: hidden;
-            cursor: pointer;
-            transition: 0.3s;
-            max-width: 170px;
+            max-width: 220px;
         }
-        .pro-logo:hover {
-            border-color: #eab308;
-            box-shadow: 0 4px 15px rgba(234, 179, 8, 0.3);
+        
+        .mavuika-chibi-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1.5px solid #f97316;
+            flex-shrink: 0;
+            animation: chibiPulse 2s ease-in-out infinite;
         }
-        .pro-logo::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(0deg, transparent, rgba(234, 179, 8, 0.15), transparent);
-            transform: rotate(30deg) translateX(-100%);
-            animation: logoShine 4s ease-in-out infinite;
-        }
-        @keyframes logoShine {
-            0% { transform: rotate(30deg) translateX(-100%); }
-            20% { transform: rotate(30deg) translateX(100%); }
-            100% { transform: rotate(30deg) translateX(100%); }
+        @keyframes chibiPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 5px rgba(249, 115, 22, 0.6); }
+            50% { transform: scale(1.08); box-shadow: 0 0 14px rgba(239, 68, 68, 0.9); }
         }
 
-        /* --- HIỆU ỨNG CHỮ LED RGB CHẬM MƯỢT --- */
+        .logo-text-anim {
+            background: linear-gradient(90deg, #ff4500, #ff8c00, #ffd700, #ff4500);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: rgbText 5s linear infinite;
+        }
+
+        /* --- HIỆU ỨNG CHỮ LED RGB --- */
         .rgb-text {
             background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #00ffff, #0000ff, #8b00ff, #ff0000);
             background-size: 300% 100%;
@@ -125,7 +120,6 @@
             100% { background-position: 300% 50%; }
         }
 
-        /* --- HIỆU ỨNG CHUYỂN CẢNH VIEW --- */
         .view-section {
             animation: fadeInView 0.3s ease-in-out forwards;
         }
@@ -240,15 +234,14 @@
 
     <header class="bg-cardBg border-b border-gray-800 sticky top-0 z-40 transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-3 h-16 flex items-center justify-between">
+            <!-- LOGO MAVUIKA GIF ĐỘNG "BÁ KHÍ 24/7" -->
             <div class="flex items-center cursor-pointer" onclick="switchView('home')">
-                <div class="pro-logo">
-                    <div class="flex items-center space-x-1.5">
-                        <div class="w-6 h-6 rounded-md bg-gradient-to-tr from-yellow-500 to-amber-300 flex items-center justify-center text-gray-950 font-black text-[10px] shadow-sm flex-shrink-0">
-                            <i class="fa-solid fa-crown"></i>
-                        </div>
-                        <div class="flex flex-col leading-none">
-                            <span class="font-extrabold text-xs tracking-wide text-white">SHOP<span class="text-yellow-400">DATZIT</span></span>
-                            <span class="text-[8px] text-amber-300 font-bold tracking-tighter uppercase mt-0.5">BÁ KHÍ 24/7</span>
+                <div class="animated-shop-logo">
+                    <div class="flex items-center space-x-2">
+                        <img src="https://lh3.googleusercontent.com/d/18AUbyNXRJ2bcG3FK0SQG6tmf6w6O0uJI" alt="Mavuika GIF" class="mavuika-chibi-icon">
+                        <div class="flex flex-col leading-tight">
+                            <span class="font-black text-xs tracking-wide logo-text-anim">SHOPDATZIT</span>
+                            <span class="text-[8px] text-amber-400 font-extrabold tracking-tight uppercase mt-0.5">BÁ KHÍ 24/7</span>
                         </div>
                     </div>
                 </div>
@@ -261,13 +254,13 @@
 
                 <div class="relative">
                     <div id="auth-btn-container" onclick="toggleUserDropdown()" class="bg-gray-800 hover:bg-gray-700 cursor-pointer px-2.5 py-1.5 rounded-full text-xs flex items-center space-x-1.5 transition border border-gray-700 max-w-[140px]">
-                        <img id="header-user-avatar" src="https://images.unsplash.com/photo-1534447677768-be436bb09401?w=150" class="w-5 h-5 rounded-full object-cover border border-accentBlue flex-shrink-0" alt="Avatar">
+                        <img id="header-user-avatar" src="" class="w-5 h-5 rounded-full object-cover border border-accentBlue flex-shrink-0" alt="Avatar Mặc Định">
                         <span id="user-display-name" class="truncate font-medium text-[11px]">Đăng Nhập</span>
                     </div>
 
                     <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-64 bg-cardBg border border-gray-800 rounded-xl shadow-2xl py-2 z-50 text-xs transition-colors">
                         <div class="px-4 py-2 border-b border-gray-800 flex items-center space-x-3">
-                            <img id="dropdown-user-avatar" src="https://images.unsplash.com/photo-1534447677768-be436bb09401?w=150" class="w-10 h-10 rounded-full object-cover border border-accentBlue" alt="Avatar">
+                            <img id="dropdown-user-avatar" src="" class="w-10 h-10 rounded-full object-cover border border-accentBlue" alt="Avatar Mặc Định">
                             <div>
                                 <div id="dropdown-username" class="font-bold text-sm text-white">Khách</div>
                                 <div class="text-[10px] text-gray-400">UID: <span id="dropdown-uid">60742</span></div>
@@ -284,7 +277,7 @@
         </div>
     </header>
 
-    <main class="flex-grow max-w-7xl mx-auto px-4 py-5 w-full">
+    <main class="flex-grow max-w-7xl mx-auto px-4 py-5 w-full space-y-4">
         <!-- TRANG CHỦ -->
         <div id="home-view" class="view-section space-y-4">
             <div class="bg-cardBg border border-gray-800 p-3.5 rounded-xl text-center shadow-md transition-colors">
@@ -385,7 +378,7 @@
             <h1 class="text-lg font-bold flex items-center"><i class="fa-solid fa-user-gear mr-2 text-accentBlue"></i> Thông Tin Tài Khoản</h1>
             <div class="bg-cardBg p-5 rounded-2xl border border-gray-800 shadow-xl space-y-5 transition-colors">
                 <div class="flex items-center space-x-4 border-b border-gray-800 pb-5">
-                    <img id="profile-user-avatar" src="https://images.unsplash.com/photo-1534447677768-be436bb09401?w=150" class="w-14 h-14 rounded-full object-cover border-2 border-accentBlue" alt="Avatar">
+                    <img id="profile-user-avatar" src="" class="w-14 h-14 rounded-full object-cover border-2 border-accentBlue" alt="Avatar Mặc Định">
                     <div>
                         <div id="profile-name" class="font-bold text-base text-white">Khách</div>
                         <button onclick="openAvatarModal()" class="text-[11px] text-accentBlue hover:underline mt-0.5 block cursor-pointer">Đổi ảnh đại diện</button>
@@ -480,7 +473,7 @@
         </div>
     </main>
 
-    <!-- FOOTER - MIỄN TRỪ TRÁCH NHIỆM BẢO VỆ BẢN QUYỀN TRÁNH BỊ BÁO CÁO PHISHING -->
+    <!-- FOOTER -->
     <footer class="mt-auto border-t border-gray-800 bg-cardBg py-6 px-4 text-center text-gray-400 text-[11px] space-y-2">
         <p class="font-bold text-gray-300">© 2026 SHOPDATZIT.SITE - DỊCH VỤ TRUNG GIAN NẠP GAME TỰ ĐỘNG 24/7</p>
         <p class="max-w-3xl mx-auto leading-relaxed text-[10px] text-gray-500">
@@ -488,7 +481,7 @@
         </p>
     </footer>
 
-    <!-- MODAL BẢO MẬT 3 LỚP CHO ADMIN (OTP 6 SỐ + MÃ BASE64 VỀ GMAIL) -->
+    <!-- MODAL BẢO MẬT 3 LỚP CHO ADMIN -->
     <div id="admin-2fa-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-sm w-full p-5 rounded-2xl border border-yellow-500/50 relative space-y-4 shadow-2xl">
             <button onclick="closeAdmin2FAModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -520,6 +513,115 @@
                     XÁC NHẬN ĐĂNG NHẬP ADMIN
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- MODAL ĐỔI EMAIL XÁC THỰC OTP -->
+    <div id="change-email-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-cardBg max-w-sm w-full p-5 rounded-2xl border border-gray-800 relative space-y-4 shadow-2xl">
+            <button onclick="closeChangeEmailModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-base font-bold text-white tracking-wide text-center">THAY ĐỔI EMAIL TÀI KHOẢN</h3>
+            
+            <div id="email-step-1" class="space-y-3">
+                <p class="text-xs text-gray-300 text-center">Nhập chính xác Email cũ hiện tại để nhận mã OTP xác thực.</p>
+                <div>
+                    <label class="text-[10px] text-gray-400 block mb-1">Email cũ hiện tại:</label>
+                    <input type="text" id="change-old-email" placeholder="Nhập email cũ" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white outline-none focus:border-accentBlue">
+                </div>
+                <button onclick="sendEmailChangeOTP()" id="btn-send-email-otp" class="w-full bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow">GỬI MÃ OTP XÁC THỰC</button>
+            </div>
+
+            <div id="email-step-2" class="hidden space-y-3">
+                <p class="text-xs text-green-400 text-center font-bold">Mã OTP đã được gửi đến email cũ của bạn!</p>
+                <div>
+                    <label class="text-[10px] text-gray-400 block mb-1">Mã xác thực OTP (6 chữ số):</label>
+                    <input type="text" id="change-email-otp" placeholder="Nhập mã OTP 6 số" maxlength="6" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-xs text-white text-center font-mono text-sm tracking-widest outline-none focus:border-accentBlue">
+                </div>
+                <div>
+                    <label class="text-[10px] text-gray-400 block mb-1">Email mới muốn đổi:</label>
+                    <input type="text" id="change-new-email" placeholder="Nhập email mới" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white outline-none focus:border-accentBlue">
+                </div>
+                <button onclick="verifyAndChangeEmail()" id="btn-confirm-new-email" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow">XÁC NHẬN ĐỔI EMAIL</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL THANH TOÁN (QUÉT QR) -->
+    <div id="payment-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-cardBg max-w-md w-full p-5 rounded-2xl border border-gray-800 relative text-center space-y-4 shadow-2xl transition-colors">
+            <button onclick="closePaymentModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-base font-bold text-accentBlue">Quét Mã QR Chuyển Khoản</h3>
+            <p class="text-xs text-gray-400">Vui lòng quét mã QR để thanh toán. Giao diện sẽ tự động đóng sau <span id="payment-countdown" class="text-yellow-400 font-bold">30</span> giây.</p>
+            
+            <div class="bg-white p-2.5 rounded-xl inline-block mx-auto border border-gray-700 shadow-inner relative">
+                <img id="viet-qr-img" src="" alt="Mã QR Chuyển Khoản" class="w-44 h-44 object-contain mx-auto">
+            </div>
+
+            <div class="text-left bg-gray-900 p-3 rounded-lg text-xs space-y-1.5 border border-gray-800">
+                <div class="flex justify-between"><span>Ngân hàng:</span> <span class="font-bold text-gray-200">Vietcombank</span></div>
+                <div class="flex justify-between"><span>Số tài khoản:</span> <span class="font-bold text-accentBlue text-sm">1065342786</span></div>
+                <div class="flex justify-between"><span>Chủ tài khoản:</span> <span class="font-bold text-gray-200">DANG VAN TIEN DAT</span></div>
+                <div class="flex justify-between items-center border-t border-gray-800 pt-2">
+                    <span>Số tiền cần trả:</span> 
+                    <span id="modal-amount" class="font-bold text-green-400 text-sm">0 đ</span>
+                </div>
+            </div>
+
+            <button onclick="confirmOrderClient()" id="btn-confirm-order" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 rounded-xl transition text-xs shadow-md cursor-pointer">
+                Tôi Đã Thanh Toán Thành Công
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL THÔNG BÁO ĐẶT HÀNG THÀNH CÔNG -->
+    <div id="success-token-modal" class="fixed inset-0 bg-black/85 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-cardBg max-w-md w-full p-5 rounded-2xl border border-green-600/60 relative space-y-4 shadow-2xl text-center">
+            <div class="w-12 h-12 bg-green-950 text-green-400 rounded-full flex items-center justify-center mx-auto text-xl border border-green-700 animate-bounce">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            
+            <div>
+                <h3 class="text-base font-bold text-white">Đặt Hàng Thành Công!</h3>
+                <p class="text-xs text-yellow-400 mt-1 font-bold">⚠️ Vui lòng sao chép mã dưới đây gửi ngay cho Admin qua CSKH để được duyệt đơn nhanh chóng!</p>
+            </div>
+
+            <div class="space-y-1 text-left pt-1">
+                <label class="text-[10px] text-gray-400 block font-medium">Mã đồng bộ đơn hàng của bạn:</label>
+                <div class="flex space-x-2">
+                    <input type="text" id="success-modal-token-input" readonly class="w-full bg-gray-950 border border-gray-700 rounded-lg px-2.5 py-1.5 text-[10px] text-accentBlue font-mono select-all">
+                    <button onclick="copySuccessOrderToken()" class="bg-green-600 hover:bg-green-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs cursor-pointer transition whitespace-nowrap shadow flex items-center">
+                        <i class="fa-regular fa-copy mr-1"></i> Copy Mã
+                    </button>
+                </div>
+            </div>
+
+            <div class="pt-2 border-t border-gray-800 space-y-2">
+                <button onclick="finishAndGoToHistory()" class="w-full bg-accentBlue hover:bg-blue-600 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer shadow transition">
+                    Đã Copy & Xem Lịch Sử Đơn Hàng
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CHI TIẾT ĐƠN HÀNG & COPY MÃ BASE64 -->
+    <div id="order-detail-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-cardBg max-w-md w-full p-5 rounded-2xl border border-gray-800 relative space-y-4 shadow-2xl">
+            <button onclick="closeOrderDetailModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer text-base"><i class="fa-solid fa-xmark"></i></button>
+            <h3 class="text-base font-bold text-white flex items-center"><i class="fa-solid fa-circle-info mr-2 text-accentBlue"></i> Chi Tiết Đơn Hàng</h3>
+            
+            <div id="order-detail-body" class="space-y-2.5 text-xs bg-gray-900 p-3.5 rounded-xl border border-gray-800 max-h-[60vh] overflow-y-auto"></div>
+
+            <div class="space-y-1 pt-1 border-t border-gray-800">
+                <label class="text-[10px] text-gray-400 block">Mã đồng bộ đơn hàng (Copy gửi CSKH cho Admin):</label>
+                <div class="flex space-x-2">
+                    <input type="text" id="modal-token-input" readonly class="w-full bg-gray-950 border border-gray-700 rounded-lg px-2.5 py-1.5 text-[10px] text-accentBlue font-mono select-all">
+                    <button onclick="copyOrderToken()" class="bg-accentBlue hover:bg-blue-600 text-white font-bold px-3 py-1.5 rounded-lg text-xs cursor-pointer transition whitespace-nowrap shadow flex items-center">
+                        <i class="fa-regular fa-copy mr-1"></i> Copy
+                    </button>
+                </div>
+            </div>
+
+            <button onclick="closeOrderDetailModal()" class="w-full bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 rounded-xl text-xs border border-gray-700 cursor-pointer">Đóng</button>
         </div>
     </div>
 
@@ -665,9 +767,10 @@
         let targetForgotUser = null;
         let changeEmailOTP = null;
 
-        // BIẾN LƯU BẢO MẬT ADMIN 3 LỚP
         let adminExpectedOtp = null;
         let adminExpectedBase64 = null;
+
+        const DEFAULT_AVATAR_URL = "https://lh3.googleusercontent.com/d/1OUDmydcc6lDsgpI4CdVwi2jmNa__EtPR";
 
         function calcPrice(p) {
             if (p === 0) return 0;
@@ -758,7 +861,7 @@
             },
             'hok': { 
                 name: 'Honor Of Kings (Quốc Tế)', 
-                realImg: 'https://api.clone.erisvn.net/images/2025/08/cd5648af4cc0002cee488f3b1b299abf.webp', sold: '8,412', 
+                realImg: 'https://lh3.googleusercontent.com/d/1fgdw3Hi_rjDbXu5nShPAv4xyrTZsLfj5', sold: '8,412', 
                 packages: [
                     { name: 'Thẻ tuần', price: calcPrice(25700) },
                     { name: 'Thẻ tuần Plus', price: calcPrice(71368) },
@@ -949,12 +1052,13 @@
             let accounts = getAccounts();
             if (!accounts['ngocdiemdang90@gmail.com']) {
                 accounts['ngocdiemdang90@gmail.com'] = {
-                    username: 'Chủ Shop Admin', email: 'ngocdiemdang90@gmail.com', password: 'Lolkchi2020k', uid: '10000', avatar: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=150', history: []
+                    username: 'Chủ Shop Admin', email: 'ngocdiemdang90@gmail.com', password: 'Lolkchi2020k', uid: '10000', avatar: '', history: []
                 };
             } else {
                 accounts['ngocdiemdang90@gmail.com'].password = 'Lolkchi2020k';
                 if (!accounts['ngocdiemdang90@gmail.com'].username) accounts['ngocdiemdang90@gmail.com'].username = 'Chủ Shop Admin';
                 if (!accounts['ngocdiemdang90@gmail.com'].email) accounts['ngocdiemdang90@gmail.com'].email = 'ngocdiemdang90@gmail.com';
+                if (!accounts['ngocdiemdang90@gmail.com'].avatar) accounts['ngocdiemdang90@gmail.com'].avatar = '';
             }
             saveAccounts(accounts);
         }
@@ -987,7 +1091,7 @@
                 let noteHtml = game.note ? `<div class="text-[11px] text-yellow-400 font-bold mt-0.5">${game.note}</div>` : `<div class="flex items-center space-x-1.5 mt-1"><span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span><span class="text-[11px] text-accentBlue font-medium">Giao ngay</span><span class="text-[10px] text-gray-400 ml-auto">Đã bán: ${getGameSold(key)}</span></div>`;
                 container.innerHTML += `
                     <div data-game="${key}" class="game-card bg-cardBg hover:bg-cardHover p-3.5 rounded-xl border border-gray-800 cursor-pointer transition flex items-center space-x-3 shadow group">
-                        <img src="${game.realImg}" alt="${game.name}" class="w-14 h-14 rounded-lg object-cover border border-gray-700 group-hover:border-accentBlue transition" onerror="this.src='https://images.unsplash.com/photo-1534447677768-be436bb09401?w=150'">
+                        <img src="${game.realImg}" alt="${game.name}" class="w-14 h-14 rounded-lg object-cover border border-gray-700 group-hover:border-accentBlue transition" onerror="this.src='https://lh3.googleusercontent.com/d/1OUDmydcc6lDsgpI4CdVwi2jmNa__EtPR'">
                         <div class="flex-grow">
                             <h4 class="font-bold text-sm text-white line-clamp-1">${game.name}</h4>
                             ${noteHtml}
@@ -1029,7 +1133,7 @@
                 if (profileEmailText) profileEmailText.innerText = displayEmail;
                 if (profileUid) profileUid.innerText = userUid;
 
-                let userAvatar = userAcc.avatar || 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=150';
+                let userAvatar = userAcc.avatar || DEFAULT_AVATAR_URL;
                 avatars.forEach(el => { if(el) el.src = userAvatar; });
 
                 if (isAdmin()) {
@@ -1049,7 +1153,7 @@
                 if (profileUid) profileUid.innerText = '---';
                 if (profileRole) profileRole.innerHTML = 'Khách';
                 if (navAdminItem) navAdminItem.classList.add('hidden');
-                avatars.forEach(el => { if(el) el.src = 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=150'; });
+                avatars.forEach(el => { if(el) el.src = DEFAULT_AVATAR_URL; });
             }
             renderHistory();
             renderAdminOrders();
@@ -1256,7 +1360,7 @@
                 const randomUid = Math.floor(10000 + Math.random() * 90000).toString();
                 const key = u.toLowerCase();
                 accounts[key] = { 
-                    username: u, email: u.includes('@') ? u : `${key}@gmail.com`, password: p, uid: randomUid, avatar: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=150', history: [] 
+                    username: u, email: u.includes('@') ? u : `${key}@gmail.com`, password: p, uid: randomUid, avatar: '', history: [] 
                 };
                 saveAccounts(accounts);
                 alert('Đăng ký tài khoản thành công!');
@@ -1308,7 +1412,6 @@
             pendingAdminData = null;
         }
 
-        // HÀM GỬI MÃ BẢO MẬT 3 LỚP VỀ GMAIL ADMIN
         function sendAdminEmail3LayerSecurity() {
             const btn = document.getElementById('btn-send-admin-3layer');
             btn.innerHTML = '<span class="loader"></span> ĐANG GỬI MÃ VỀ EMAIL...';
@@ -1332,20 +1435,12 @@
             });
         }
 
-        // HÀM XÁC THỰC BẢO MẬT 3 LỚP
         function verifyAdmin3LayerSecurity() {
             const otpVal = document.getElementById('admin-otp-code-input').value.trim();
             const base64Val = document.getElementById('admin-base64-code-input').value.trim();
 
-            if (!otpVal || !base64Val) {
-                alert("Vui lòng điền đầy đủ cả Mã OTP 6 số và Chuỗi mã Base64!");
-                return;
-            }
-
-            if (!adminExpectedOtp || !adminExpectedBase64) {
-                alert("Vui lòng bấm nút 'GỬI MÃ XÁC THỰC VỀ EMAIL' trước!");
-                return;
-            }
+            if (!otpVal || !base64Val) { alert("Vui lòng điền đầy đủ cả Mã OTP 6 số và Chuỗi mã Base64!"); return; }
+            if (!adminExpectedOtp || !adminExpectedBase64) { alert("Vui lòng bấm nút 'GỬI MÃ XÁC THỰC VỀ EMAIL' trước!"); return; }
 
             if (otpVal === adminExpectedOtp && base64Val === adminExpectedBase64) {
                 alert("Xác thực 3 Lớp thành công! Chào mừng Admin Đạt Zịt.");
@@ -1528,7 +1623,7 @@
         function confirmOrderClient() { closePaymentModal(); createOrderAndFinish('Chờ duyệt thanh toán'); }
 
         function sendEmailNotification(order) {
-            const subject = `?? ĐƠN HÀNG MỚI ${order.code} - SHOPDATZIT.SITE`;
+            const subject = `🛒 ĐƠN HÀNG MỚI ${order.code} - SHOPDATZIT.SITE`;
             const message = `Đơn hàng mới ${order.code} vừa được tạo!\n- Khách: ${order.owner}\n- Tổng tiền: ${order.price.toLocaleString('vi-VN')} đ.\nVui lòng vào trang Admin để kiểm tra và duyệt đơn.`;
             sendAutoEmail("ngocdiemdang90@gmail.com", subject, message);
         }
