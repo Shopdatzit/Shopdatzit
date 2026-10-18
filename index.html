@@ -37,16 +37,6 @@
         }
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- THƯ VIỆN EMAILJS -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-    <script type="text/javascript">
-       (function(){
-          emailjs.init({
-            publicKey: "BooqRAWiUgrB-bSk8",
-          });
-       })();
-    </script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
@@ -258,7 +248,6 @@
                         </div>
                         <div class="flex flex-col leading-none">
                             <span class="font-extrabold text-xs tracking-wide text-white">SHOP<span class="text-yellow-400">DATZIT</span></span>
-                            <!-- ĐÃ ĐỔI DÒNG CHỮ Ở ĐÂY THÀNH BÁ KHÍ 24/7 -->
                             <span class="text-[8px] text-amber-300 font-bold tracking-tighter uppercase mt-0.5">BÁ KHÍ 24/7</span>
                         </div>
                     </div>
@@ -408,7 +397,6 @@
                         <span id="profile-uid" class="font-bold text-white">60742</span>
                     </div>
 
-                    <!-- TÊN ĐĂNG NHẬP (ĐÃ CHO PHÉP IN HOA & KÝ TỰ ĐẶC BIỆT, ĐỘC LẬP VỚI EMAIL) -->
                     <div class="flex justify-between items-center border-b border-gray-800/50 pb-2.5">
                         <span class="text-gray-400">Tên Đăng Nhập</span>
                         <div class="flex items-center space-x-2">
@@ -417,7 +405,6 @@
                         </div>
                     </div>
 
-                    <!-- EMAIL BẢO MẬT (RIÊNG BIỆT) -->
                     <div class="flex justify-between items-center border-b border-gray-800/50 pb-2.5">
                         <span class="text-gray-400">Email</span>
                         <div class="flex items-center space-x-2">
@@ -477,7 +464,6 @@
                     </div>
                 </div>
 
-                <!-- KHUNG ADMIN NHẬP MÃ BASE64 ĐỂ XEM ĐƠN KHÁCH GỬI -->
                 <div class="border-t border-gray-800 pt-3.5 space-y-2">
                     <label class="text-xs text-yellow-400 font-bold block"><i class="fa-solid fa-code mr-1"></i> Nhập mã đồng bộ đơn hàng (Base64 từ khách):</label>
                     <div class="flex space-x-2">
@@ -494,13 +480,20 @@
         </div>
     </main>
 
+    <!-- FOOTER - MIỄN TRỪ TRÁCH NHIỆM BẢO VỆ BẢN QUYỀN TRÁNH BỊ BÁO CÁO PHISHING -->
+    <footer class="mt-auto border-t border-gray-800 bg-cardBg py-6 px-4 text-center text-gray-400 text-[11px] space-y-2">
+        <p class="font-bold text-gray-300">© 2026 SHOPDATZIT.SITE - DỊCH VỤ TRUNG GIAN NẠP GAME TỰ ĐỘNG 24/7</p>
+        <p class="max-w-3xl mx-auto leading-relaxed text-[10px] text-gray-500">
+            Shopdatzit là hệ thống dịch vụ trung gian. Tất cả bản quyền hình ảnh, tên game thuộc về nhà phát hành tương ứng.
+        </p>
+    </footer>
+
     <!-- MODAL ĐỔI EMAIL XÁC THỰC OTP -->
     <div id="change-email-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-sm w-full p-5 rounded-2xl border border-gray-800 relative space-y-4 shadow-2xl">
             <button onclick="closeChangeEmailModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
             <h3 class="text-base font-bold text-white tracking-wide text-center">THAY ĐỔI EMAIL TÀI KHOẢN</h3>
             
-            <!-- BƯỚC 1: XÁC NHẬN EMAIL CŨ VÀ GỬI OTP -->
             <div id="email-step-1" class="space-y-3">
                 <p class="text-xs text-gray-300 text-center">Nhập chính xác Email cũ hiện tại để nhận mã OTP xác thực.</p>
                 <div>
@@ -510,7 +503,6 @@
                 <button onclick="sendEmailChangeOTP()" id="btn-send-email-otp" class="w-full bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow">GỬI MÃ OTP XÁC THỰC</button>
             </div>
 
-            <!-- BƯỚC 2: NHẬP MÃ OTP VÀ EMAIL MỚI -->
             <div id="email-step-2" class="hidden space-y-3">
                 <p class="text-xs text-green-400 text-center font-bold">Mã OTP đã được gửi đến email cũ của bạn!</p>
                 <div>
@@ -591,7 +583,6 @@
             
             <div id="order-detail-body" class="space-y-2.5 text-xs bg-gray-900 p-3.5 rounded-xl border border-gray-800 max-h-[60vh] overflow-y-auto"></div>
 
-            <!-- NÚT COPY MÃ ĐỒNG BỘ CHO KHÁCH -->
             <div class="space-y-1 pt-1 border-t border-gray-800">
                 <label class="text-[10px] text-gray-400 block">Mã đồng bộ đơn hàng (Copy gửi CSKH cho Admin):</label>
                 <div class="flex space-x-2">
@@ -752,6 +743,9 @@
     </div>
 
     <script>
+        // URL API GOOGLE APPS SCRIPT CỦA M
+        const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxV8J9cGa6YaYkkzxvx3CKt6mX318xkrtL0mxU3MidJ4EOwVhcf8zLdTHdLdv71B2s/exec";
+
         const STORAGE_KEY = 'shopdatzit_v10_local_data';
         const USER_KEY = 'shopdatzit_v10_user';
         const EXPIRE_TIME_MS = 24 * 60 * 60 * 1000;
@@ -970,7 +964,7 @@
                     { name: 'Thẻ tháng', price: calcPrice(61253) },
                     { name: '65 Pha Lê', price: calcPrice(13049) },
                     { name: '330 Pha Lê', price: calcPrice(61253) },
-                    { name: '660 Pha Lê', file_gen: true, price: calcPrice(122834) },
+                    { name: '660 Pha Lê', price: calcPrice(122834) },
                     { name: '1320 Pha Lê', price: calcPrice(244398) },
                     { name: '3300 Pha Lê', price: calcPrice(611206) },
                     { name: '6600 Pha Lê', price: calcPrice(1219698) },
@@ -984,6 +978,29 @@
                 ]
             }
         };
+
+        // HÀM GỬI EMAIL TỰ ĐỘNG BẰNG GOOGLE APPS SCRIPT (MIỄN PHÍ 0Đ)
+        function sendAutoEmail(targetEmail, subjectText, messageText, callbackSuccess, callbackError) {
+            if (!GAS_WEBAPP_URL) {
+                if (callbackError) callbackError();
+                return;
+            }
+            fetch(GAS_WEBAPP_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    email: targetEmail,
+                    subject: subjectText,
+                    message: messageText
+                })
+            }).then(() => {
+                if (callbackSuccess) callbackSuccess();
+            }).catch(err => {
+                console.error("Lỗi gửi email:", err);
+                if (callbackError) callbackError(err);
+            });
+        }
 
         window.onload = function() {
             initAdminAccount();
@@ -1149,8 +1166,8 @@
                 let userUid = userAcc.uid || '10000';
                 if (dropdownUid) dropdownUid.innerText = userUid;
                 if (profileName) profileName.innerText = displayName;
-                if (profileUsernameInput) profileUsernameInput.value = displayName; // Giữ nguyên chữ hoa & ký tự đặc biệt
-                if (profileEmailText) profileEmailText.innerText = displayEmail; // Độc lập với Username
+                if (profileUsernameInput) profileUsernameInput.value = displayName;
+                if (profileEmailText) profileEmailText.innerText = displayEmail;
                 if (profileUid) profileUid.innerText = userUid;
 
                 let userAvatar = userAcc.avatar || 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=150';
@@ -1179,15 +1196,14 @@
             renderAdminOrders();
         }
 
-        /* LƯU TÊN ĐĂNG NHẬP (CHO PHÉP CHỮ IN HOA & KÝ TỰ ĐẶC BIỆT, KHÔNG ĐỔI EMAIL) */
         function saveNewUsername() {
             if (!currentUsername) { openAuthModal(); return; }
-            const newName = document.getElementById('profile-username-input').value.trim(); // GIỮ NGUYÊN HOA/THƯỜNG/ĐẶC BIỆT
+            const newName = document.getElementById('profile-username-input').value.trim();
             if (!newName) { alert('Tên đăng nhập không được để trống!'); return; }
 
             let accounts = getAccounts();
             if (accounts[currentUsername]) {
-                accounts[currentUsername].username = newName; // Chỉ đổi tên hiển thị / username
+                accounts[currentUsername].username = newName;
                 saveAccounts(accounts);
                 updateAuthUI();
                 alert('Cập nhật tên đăng nhập thành công!');
@@ -1208,7 +1224,7 @@
             document.getElementById('change-email-modal').classList.add('hidden');
         }
 
-        /* GỬI OTP XÁC THỰC EMAIL CŨ */
+        /* GỬI OTP BẰNG GOOGLE APPS SCRIPT (KHÔNG TỐN TIỀN) */
         function sendEmailChangeOTP() {
             const oldEmailInput = document.getElementById('change-old-email').value.trim().toLowerCase();
             if (!oldEmailInput) { alert('Vui lòng nhập Email cũ!'); return; }
@@ -1229,33 +1245,24 @@
             btn.innerHTML = '<span class="loader"></span> Đang gửi OTP...';
             btn.disabled = true;
 
-            const templateParams = {
-                email: oldEmailInput,
-                to_email: oldEmailInput,
-                passcode: changeEmailOTP,
-                otp: changeEmailOTP,
-                code: changeEmailOTP,
-                message: changeEmailOTP,
-                time: "15"
-            };
+            const subject = "Mã xác thực OTP thay đổi Email - ShopDatZit";
+            const message = "Mã OTP xác thực thay đổi Email của bạn là: " + changeEmailOTP;
 
-            emailjs.send('service_by7w4rc', 'template_hs2y37q', templateParams)
-                .then(function(response) {
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
-                    alert('Mã OTP xác thực đã được gửi đến Email cũ: ' + oldEmailInput);
-                    document.getElementById('email-step-1').classList.add('hidden');
-                    document.getElementById('email-step-2').classList.remove('hidden');
-                }, function(error) {
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
-                    alert('Gửi OTP qua email gặp sự cố!\n(Mã OTP test của bạn: ' + changeEmailOTP + ')');
-                    document.getElementById('email-step-1').classList.add('hidden');
-                    document.getElementById('email-step-2').classList.remove('hidden');
-                });
+            sendAutoEmail(oldEmailInput, subject, message, function() {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                alert('Mã OTP xác thực đã được gửi đến Email cũ: ' + oldEmailInput);
+                document.getElementById('email-step-1').classList.add('hidden');
+                document.getElementById('email-step-2').classList.remove('hidden');
+            }, function() {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                alert('Gửi OTP qua email gặp sự cố!\n(Mã OTP test của bạn: ' + changeEmailOTP + ')');
+                document.getElementById('email-step-1').classList.add('hidden');
+                document.getElementById('email-step-2').classList.remove('hidden');
+            });
         }
 
-        /* XÁC THỰC OTP VÀ ĐỔI EMAIL ĐỘC LẬP */
         function verifyAndChangeEmail() {
             const otpInput = document.getElementById('change-email-otp').value.trim();
             const newEmailInput = document.getElementById('change-new-email').value.trim().toLowerCase();
@@ -1272,7 +1279,7 @@
 
             let accounts = getAccounts();
             if (accounts[currentUsername]) {
-                accounts[currentUsername].email = newEmailInput; // Chỉ cập nhật Email
+                accounts[currentUsername].email = newEmailInput;
                 saveAccounts(accounts);
                 updateAuthUI();
                 closeChangeEmailModal();
@@ -1388,30 +1395,22 @@
             btn.innerHTML = '<span class="loader"></span> Đang gửi OTP...';
             btn.disabled = true;
 
-            const templateParams = {
-                email: emailInput,
-                to_email: emailInput,
-                passcode: generatedOTP,
-                otp: generatedOTP,
-                code: generatedOTP,
-                message: generatedOTP,
-                time: "15"
-            };
+            const subject = "Mã OTP Khôi Phục Mật Khẩu - ShopDatZit";
+            const message = "Mã OTP khôi phục mật khẩu của bạn là: " + generatedOTP;
 
-            emailjs.send('service_by7w4rc', 'template_hs2y37q', templateParams)
-                .then(function(response) {
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
-                    alert('Mã OTP 6 chữ số đã được gửi thành công đến Email: ' + emailInput);
-                    document.getElementById('forgot-step-1').classList.add('hidden');
-                    document.getElementById('forgot-step-2').classList.remove('hidden');
-                }, function(error) {
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
-                    alert('Gửi OTP qua email gặp sự cố, vui lòng thử lại sau!\n(Mã OTP test của bạn: ' + generatedOTP + ')');
-                    document.getElementById('forgot-step-1').classList.add('hidden');
-                    document.getElementById('forgot-step-2').classList.remove('hidden');
-                });
+            sendAutoEmail(emailInput, subject, message, function() {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                alert('Mã OTP 6 chữ số đã được gửi thành công đến Email: ' + emailInput);
+                document.getElementById('forgot-step-1').classList.add('hidden');
+                document.getElementById('forgot-step-2').classList.remove('hidden');
+            }, function() {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                alert('Gửi OTP qua email gặp sự cố!\n(Mã OTP test của bạn: ' + generatedOTP + ')');
+                document.getElementById('forgot-step-1').classList.add('hidden');
+                document.getElementById('forgot-step-2').classList.remove('hidden');
+            });
         }
 
         function handleResetPassword() {
@@ -1726,19 +1725,10 @@
         }
 
         function sendEmailNotification(order) {
-            const templateParams = {
-                email: "ngocdiemdang90@gmail.com",
-                to_email: "ngocdiemdang90@gmail.com",
-                link: "https://shopdatzit.io.vn",
-                message: `Đơn hàng mới ${order.code} vừa được tạo với tổng tiền ${order.price.toLocaleString('vi-VN')} đ.`
-            };
+            const subject = `🛒 ĐƠN HÀNG MỚI ${order.code} - SHOPDATZIT.SITE`;
+            const message = `Đơn hàng mới ${order.code} vừa được tạo!\n- Khách: ${order.owner}\n- Tổng tiền: ${order.price.toLocaleString('vi-VN')} đ.\nVui lòng vào trang Admin để kiểm tra và duyệt đơn.`;
 
-            emailjs.send('service_by7w4rc', 'template_hs2y37q', templateParams)
-                .then(function(response) {
-                    console.log('Gửi email thông báo đơn hàng thành công!');
-                }, function(error) {
-                    console.log('Gửi email thông báo thất bại...');
-                });
+            sendAutoEmail("ngocdiemdang90@gmail.com", subject, message);
         }
 
         function createOrderAndFinish(status) {
