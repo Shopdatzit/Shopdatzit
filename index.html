@@ -6,12 +6,12 @@
     <title>Shopdatzit - Shop Nạp Game Uy Tín</title>
     
     <!-- FAVICON / BIỂU TƯỢNG TRANG WEB -->
-    <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/18AUbyNXRJ2bcG3FK0SQG6tmf6w6O0uJI">
+    <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1S1r9aE9MtmiRDEzw5IkDJ6pRDGyP42kV">
 
     <!-- THẺ HÌNH ẢNH XEM TRƯỚC (OPEN GRAPH / LINK PREVIEW) -->
     <meta property="og:title" content="Shopdatzit - Shop Nạp Game Uy Tín">
-    <meta property="og:description" content="Hệ thống nạp game , nhanh chóng, uy tín 24/7">
-    <meta property="og:image" content="https://lh3.googleusercontent.com/d/18AUbyNXRJ2bcG3FK0SQG6tmf6w6O0uJI">
+    <meta property="og:description" content="Hệ thống nạp game, nhanh chóng, uy tín 24/7">
+    <meta property="og:image" content="https://lh3.googleusercontent.com/d/1S1r9aE9MtmiRDEzw5IkDJ6pRDGyP42kV">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -34,16 +34,6 @@
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
-
-        /* Ẩn triệt để huy hiệu Powered by Netlify */
-        #netlify-badge, 
-        a[href*="netlify.com/?utm_source"],
-        div:has(> a[href*="netlify.com"]) {
-            display: none !important;
-            visibility: hidden !important;
-            opacity: 0 !important;
-            pointer-events: none !important;
-        }
 
         :root {
             --nav-bg: #1e1e1e;
@@ -70,33 +60,18 @@
         .loader { border: 2px solid #f3f3f3; border-top: 2px solid #3b82f6; border-radius: 50%; width: 14px; height: 14px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 5px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* --- LOGO MAVUIKA BÁ KHÍ 24/7 --- */
+        /* --- BẢNG TÊN SHOP CHỈ CÒN CHỮ --- */
         .animated-shop-logo {
             display: inline-flex;
             align-items: center;
             background: linear-gradient(135deg, #1f110b 0%, #2a0e05 100%);
             border: 1px solid rgba(239, 68, 68, 0.7);
-            padding: 4px 10px;
+            padding: 6px 14px;
             border-radius: 12px;
             box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
             cursor: pointer;
             position: relative;
             overflow: hidden;
-            max-width: 220px;
-        }
-        
-        .mavuika-chibi-icon {
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 1.5px solid #f97316;
-            flex-shrink: 0;
-            animation: chibiPulse 2s ease-in-out infinite;
-        }
-        @keyframes chibiPulse {
-            0%, 100% { transform: scale(1); box-shadow: 0 0 5px rgba(249, 115, 22, 0.6); }
-            50% { transform: scale(1.08); box-shadow: 0 0 14px rgba(239, 68, 68, 0.9); }
         }
 
         .logo-text-anim {
@@ -234,15 +209,12 @@
 
     <header class="bg-cardBg border-b border-gray-800 sticky top-0 z-40 transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-3 h-16 flex items-center justify-between">
-            <!-- LOGO MAVUIKA GIF ĐỘNG "BÁ KHÍ 24/7" -->
+            <!-- BẢNG TÊN SHOP CHỈ CÒN CHỮ -->
             <div class="flex items-center cursor-pointer" onclick="switchView('home')">
                 <div class="animated-shop-logo">
-                    <div class="flex items-center space-x-2">
-                        <img src="https://lh3.googleusercontent.com/d/18AUbyNXRJ2bcG3FK0SQG6tmf6w6O0uJI" alt="Mavuika GIF" class="mavuika-chibi-icon">
-                        <div class="flex flex-col leading-tight">
-                            <span class="font-black text-xs tracking-wide logo-text-anim">SHOPDATZIT</span>
-                            <span class="text-[8px] text-amber-400 font-extrabold tracking-tight uppercase mt-0.5">BÁ KHÍ 24/7</span>
-                        </div>
+                    <div class="flex flex-col leading-tight text-left">
+                        <span class="font-black text-sm tracking-wide logo-text-anim">SHOPDATZIT</span>
+                        <span class="text-[9px] text-amber-400 font-extrabold tracking-tight uppercase mt-0.5">BÁ KHÍ 24/7</span>
                     </div>
                 </div>
             </div>
@@ -1139,7 +1111,7 @@
                 let noteHtml = game.note ? `<div class="text-[11px] text-yellow-400 font-bold mt-0.5">${game.note}</div>` : `<div class="flex items-center space-x-1.5 mt-1"><span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span><span class="text-[11px] text-accentBlue font-medium">Giao ngay</span><span class="text-[10px] text-gray-400 ml-auto">Đã bán: ${getGameSold(key)}</span></div>`;
                 container.innerHTML += `
                     <div data-game="${key}" class="game-card bg-cardBg hover:bg-cardHover p-3.5 rounded-xl border border-gray-800 cursor-pointer transition flex items-center space-x-3 shadow group">
-                        <img src="${game.realImg}" alt="${game.name}" class="w-14 h-14 rounded-lg object-cover border border-gray-700 group-hover:border-accentBlue transition" onerror="this.src='https://lh3.googleusercontent.com/d/1OUDmydcc6lDsgpI4CdVwi2jmNa__EtPR'">
+                        <img src="${game.realImg}" alt="${game.name}" class="w-14 h-14 rounded-lg object-cover border border-gray-700 group-hover:border-accentBlue transition" onerror="this.src='https://lh3.googleusercontent.com/d/1S1r9aE9MtmiRDEzw5IkDJ6pRDGyP42kV'">
                         <div class="flex-grow">
                             <h4 class="font-bold text-sm text-white line-clamp-1">${game.name}</h4>
                             ${noteHtml}
