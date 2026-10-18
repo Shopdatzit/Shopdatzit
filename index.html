@@ -11,7 +11,7 @@
     <!-- THẺ HÌNH ẢNH XEM TRƯỚC (OPEN GRAPH / LINK PREVIEW) -->
     <meta property="og:title" content="Shopdatzit - Shop Nạp Game Uy Tín">
     <meta property="og:description" content="Hệ thống nạp game, nhanh chóng, uy tín 24/7">
-    <meta property="og:image" content="https://lh3.googleusercontent.com/d/1S1r9aE9MtmiRDEzw5IkDJ6pRDGyP42kV">
+    <meta property="og:image" content="https://lh3.googleusercontent.com/d/1oOQv6vZh-kbGNv2qZXZLijSQDz0J0YH-">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -1793,7 +1793,7 @@
             sortedHistory.forEach((ord) => {
                 let is24hPassed = (Date.now() - (ord.timestamp || 0)) >= EXPIRE_TIME_MS;
                 let displayStatus = ord.status;
-                let statusBadgeHtml = (displayStatus === 'Admin Đã Hoàn Thành Đơn' || (ord.status.includes('Chờ duyệt') && is24hPassed)) ? `<span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-green-400 border-green-800 bg-green-950/50 flex items-center space-x-1"><i class="fa-solid fa-circle-check"></i> <span>Admin Đã Hoàn Thành Đơn</span></span>` : (displayStatus.includes('Thành Công') ? `<span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-green-400 border-green-800 bg-green-950/50">${displayStatus}</span>` : (displayStatus.includes('Hủy') ? `<span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-red-400 border-red-800 bg-red-950/50">${displayStatus}</span>` : `<span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-yellow-400 border-yellow-800 bg-yellow-950/50">${displayStatus}</span>`));
+                let statusBadgeHtml = (displayStatus === 'Admin Đã Hoàn Thành Đơn' || (ord.status.includes('Chờ duyệt') && is24hPassed)) ? `<span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-green-400 border-green-800 bg-green-950/50 flex items-center space-x-1"><i class="fa-solid fa-circle-check"></i> <span>Admin Đã Hoàn Thành Đơn</span></span>` : (displayStatus.includes('Thành Công') ? `<span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-green-400 border-green-800 bg-green-950/50">${displayStatus}</span>` : (displayStatus.includes('Hủy') ? `<span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-red-400 border-red-800 bg-green-950/50">${displayStatus}</span>` : `<span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-yellow-400 border-yellow-800 bg-yellow-950/50">${displayStatus}</span>`));
 
                 container.innerHTML += `
                     <div class="bg-cardBg p-3.5 rounded-xl border border-gray-800 space-y-2.5 shadow-sm hover:border-accentBlue transition">
