@@ -305,7 +305,7 @@
         <!-- TRANG CHỦ -->
         <div id="home-view" class="view-section space-y-4">
             <div class="bg-cardBg border border-gray-800 p-3.5 rounded-xl text-center shadow-md transition-colors">
-                <h2 class="text-base sm:text-lg font-bold rgb-text">🔥 NẠP GAME & THẺ CÀO NHANH CHÓNG - UY TÍN REALTIME 24/7 🔥</h2>
+                <h2 class="text-base sm:text-lg font-bold rgb-text">🔥 NẠP GAME & THẺ CÀO NHANH CHÓNG - UY TÍN 24/7 🔥</h2>
                 <p class="text-[11px] sm:text-xs text-white font-bold mt-1">Lưu ý: hãy copy link dán lên google</p>
             </div>
 
@@ -455,11 +455,6 @@
                     <i class="fa-solid fa-headset"></i>
                 </div>
                 <h3 class="text-base font-bold text-white">Hỗ Trợ Khách Hàng 24/7</h3>
-                
-                <div class="bg-blue-950/50 p-3 rounded-xl border border-blue-800 text-[11px] text-blue-200 text-left space-y-1">
-                    <span class="font-bold text-accentBlue block"><i class="fa-solid fa-circle-info mr-1"></i> Lưu ý quan trọng:</span>
-                    <p>Hệ thống đã nâng cấp <b>Supabase Realtime</b> tự động 100%. Đơn hàng của bạn sẽ được gửi thẳng đến hệ thống quản lý của Admin ngay lập tức mà không cần thao tác thủ công!</p>
-                </div>
 
                 <div class="space-y-2.5 pt-1">
                     <a href="https://www.facebook.com/share/1eUqgvpGFf/" target="_blank" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl flex items-center justify-center space-x-2 shadow-md cursor-pointer transition text-xs">
@@ -2041,24 +2036,40 @@
             }
         }
 
-        // CHỨC NĂNG XÓA SẠCH TẤT CẢ ĐƠN HÀNG DÀNH CHO ADMIN
+        // CHỨC NĂNG XÓA SẠCH TẤT CẢ ĐƠN HÀNG DÀNH CHO ADMIN (XÓA TỪNG ID TRÁNH BỊ RLS CHẶN)
         async function adminClearAllOrders() {
             if (!isAdmin()) return;
             if (confirm("⚠️ XÁC NHẬN DỌN TRỐNG ĐƠN HÀNG?\nThao tác này sẽ xóa toàn bộ đơn hàng hiện có trên Supabase. Lịch sử của khách lẫn admin sẽ về 0 và không thể khôi phục!")) {
-                const { error } = await supabaseClient
-                    .from('orders')
-                    .delete()
-                    .neq('id', '0'); // Lệnh xóa toàn bộ dữ liệu trong bảng orders
+                const { data: allOrders, error: fetchErr } = await supabaseClient.from('orders').select('id');
+                if (fetchErr) {
+                    alert('Lỗi tải danh sách đơn hàng: ' + fetchErr.message);
+                    return;
+                }
 
-                if (error) {
-                    alert('Lỗi dọn sạch đơn: ' + error.message);
+                if (!allOrders || allOrders.length === 0) {
+                    alert('Hệ thống hiện tại không có đơn hàng nào để xóa!');
+                    return;
+                }
+
+                let hasError = false;
+                for (let ord of allOrders) {
+                    const { error: delErr } = await supabaseClient.from('orders').delete().eq('id', ord.id);
+                    if (delErr) {
+                        hasError = true;
+                        console.error("Lỗi xóa đơn ID:", ord.id, delErr);
+                    }
+                }
+
+                if (hasError) {
+                    alert('Một số đơn hàng xóa không thành công do quy tắc bảo mật Supabase!');
                 } else {
                     alert('Đã dọn sạch toàn bộ đơn hàng thành công!');
-                    await fetchAndCalculateSolds();
-                    renderGameList();
-                    renderAdminOrders();
-                    renderHistory();
                 }
+
+                await fetchAndCalculateSolds();
+                renderGameList();
+                renderAdminOrders();
+                renderHistory();
             }
         }
     </script>
