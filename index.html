@@ -822,6 +822,48 @@
     </div>
 
     <script>
+        // --- 1. CHỐNG SPAM F5 & KHÓA F12 / CHUỘT PHẢI ---
+        let lastF5Time = 0;
+        window.addEventListener('keydown', function (e) {
+            // Chống spam F5 hoặc Ctrl+R (mỗi 2 giây được bấm 1 lần)
+            if (e.keyCode === 116 || (e.ctrlKey && e.keyCode === 82)) {
+                const now = Date.now();
+                if (now - lastF5Time < 2000) {
+                    e.preventDefault();
+                    alert('⚠️ Vui lòng không spam F5 quá nhanh!');
+                    return false;
+                }
+                lastF5Time = now;
+            }
+
+            // Chặn phím F12
+            if (e.keyCode === 123) {
+                e.preventDefault();
+                return false;
+            }
+            // Chặn Ctrl + Shift + I (Inspect)
+            if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
+                e.preventDefault();
+                return false;
+            }
+            // Chặn Ctrl + Shift + J (Console)
+            if (e.ctrlKey && e.shiftKey && e.keyCode === 74) {
+                e.preventDefault();
+                return false;
+            }
+            // Chặn Ctrl + U (View Source)
+            if (e.ctrlKey && e.keyCode === 85) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // Khóa chuột phải để chống xem nguồn / inspect nhanh
+        window.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+        });
+
+
         const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxV8J9cGa6YaYkkzxvx3CKt6mX318xkrtL0mxU3MidJ4EOwVhcf8zLdTHdLdv71B2s/exec";
 
         // --- CẤU HÌNH SUPABASE REALTIME ---
