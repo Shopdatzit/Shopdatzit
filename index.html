@@ -14,6 +14,9 @@
     <meta property="og:image" content="https://lh3.googleusercontent.com/d/1oOQv6vZh-kbGNv2qZXZLijSQDz0J0YH-">
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- THƯ VIỆN SUPABASE JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -302,8 +305,8 @@
         <!-- TRANG CHỦ -->
         <div id="home-view" class="view-section space-y-4">
             <div class="bg-cardBg border border-gray-800 p-3.5 rounded-xl text-center shadow-md transition-colors">
-                <h2 class="text-base sm:text-lg font-bold rgb-text">🔥 NẠP GAME & THẺ CÀO NHANH CHÓNG - UY TÍN 24/7 🔥</h2>
-                <p class="text-[11px] sm:text-xs text-white font-bold mt-1">Lưu Ý: Hãy Copy Link Và Dán Lên Google</p>
+                <h2 class="text-base sm:text-lg font-bold rgb-text">🔥 NẠP GAME & THẺ CÀO NHANH CHÓNG - UY TÍN REALTIME 24/7 🔥</h2>
+                <p class="text-[11px] sm:text-xs text-white font-bold mt-1">Hệ thống đồng bộ đơn hàng tự động Realtime không cần copy mã!</p>
             </div>
 
             <h1 class="text-lg font-bold flex items-center mt-5"><i class="fa-solid fa-gamepad mr-2 text-accentBlue"></i> Danh Sách Nạp Game & Thẻ Cào</h1>
@@ -437,7 +440,7 @@
 
         <!-- LỊCH SỬ ĐƠN HÀNG -->
         <div id="history-view" class="view-section hidden max-w-2xl mx-auto space-y-4">
-            <h1 class="text-lg font-bold flex items-center"><i class="fa-solid fa-clock-rotate-left mr-2 text-accentBlue"></i> Lịch Sử Đơn Hàng</h1>
+            <h1 class="text-lg font-bold flex items-center"><i class="fa-solid fa-clock-rotate-left mr-2 text-accentBlue"></i> Lịch Sử Đơn Hàng (Realtime)</h1>
             <div id="history-container" class="space-y-3"></div>
         </div>
 
@@ -451,7 +454,7 @@
                 
                 <div class="bg-blue-950/50 p-3 rounded-xl border border-blue-800 text-[11px] text-blue-200 text-left space-y-1">
                     <span class="font-bold text-accentBlue block"><i class="fa-solid fa-circle-info mr-1"></i> Lưu ý quan trọng:</span>
-                    <p>Khách hàng hãy vào <b>Lịch sử đơn hàng</b>, bấm vào <b>Chi tiết đơn & Mã đồng bộ</b> rồi copy <b>Mã đồng bộ đơn hàng</b> gửi cho Admin qua tin nhắn bên dưới để được duyệt đơn nhanh chóng!</p>
+                    <p>Hệ thống đã nâng cấp <b>Supabase Realtime</b> tự động 100%. Đơn hàng của bạn sẽ được gửi thẳng đến hệ thống quản lý của Admin ngay lập tức mà không cần thao tác thủ công!</p>
                 </div>
 
                 <div class="space-y-2.5 pt-1">
@@ -473,25 +476,14 @@
             <div class="bg-cardBg p-4 sm:p-5 rounded-xl border border-gray-800 space-y-4 shadow-md">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                     <div>
-                        <h1 class="text-lg font-bold flex items-center text-yellow-400"><i class="fa-solid fa-shield-halved mr-2"></i> Quản Lý Shop (Admin)</h1>
-                        <p class="text-[11px] text-gray-400 mt-0.5">Quản lý và duyệt tất cả các đơn hàng nạp trên hệ thống.</p>
-                    </div>
-                    <div>
-                        <button onclick="resetAdminOrders()" class="bg-red-800 hover:bg-red-900 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition cursor-pointer shadow">Xóa sạch đơn</button>
-                    </div>
-                </div>
-
-                <div class="border-t border-gray-800 pt-3.5 space-y-2">
-                    <label class="text-xs text-yellow-400 font-bold block"><i class="fa-solid fa-code mr-1"></i> Nhập mã đồng bộ đơn hàng (Base64 từ khách):</label>
-                    <div class="flex space-x-2">
-                        <input type="text" id="admin-sync-token" placeholder="Dán đoạn mã Base64 khách gửi vào đây..." class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-xs text-white outline-none focus:border-yellow-500 font-mono">
-                        <button onclick="adminDecodeToken()" class="bg-yellow-600 hover:bg-yellow-500 text-white font-bold px-3.5 py-2 rounded-lg text-xs cursor-pointer transition whitespace-nowrap shadow">Xem đơn</button>
+                        <h1 class="text-lg font-bold flex items-center text-yellow-400"><i class="fa-solid fa-shield-halved mr-2"></i> Quản Lý Shop Realtime (Admin)</h1>
+                        <p class="text-[11px] text-gray-400 mt-0.5">Đơn hàng mới của khách sẽ tự động nảy lên tức thì mà không cần bấm F5!</p>
                     </div>
                 </div>
             </div>
 
             <div class="space-y-3 pt-1">
-                <h3 class="font-bold text-sm text-white flex items-center"><i class="fa-solid fa-receipt text-accentBlue mr-2"></i> Danh Sách Tất Cả Đơn Hàng</h3>
+                <h3 class="font-bold text-sm text-white flex items-center"><i class="fa-solid fa-receipt text-accentBlue mr-2"></i> Danh Sách Tất Cả Đơn Hàng (Realtime)</h3>
                 <div id="admin-orders-container" class="space-y-3"></div>
             </div>
         </div>
@@ -502,7 +494,7 @@
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
             <div class="space-y-2 text-left pr-0 md:pr-4">
                 <p class="text-gray-400 text-xs leading-relaxed">
-                    Shopdatzit.site cung cấp các gói nạp bảo đảm an toàn tuyệt đối. Hệ thống của shop chỉ mới là bản demo nên phải duyệt đơn thủ công mong mọi người thông cảm. Hoạt động từ tháng 9/2026. Shopdatzit luôn sẵn sàng phục vụ mọi người!
+                    Shopdatzit.site cung cấp các gói nạp bảo đảm an toàn tuyệt đối. Hệ thống tích hợp Supabase Database Realtime tự động hóa toàn bộ quy trình đặt hàng. Hoạt động từ tháng 9/2026. Shopdatzit luôn sẵn sàng phục vụ mọi người!
                 </p>
             </div>
             <div class="bg-gray-900/60 p-4 rounded-2xl border border-gray-800 space-y-3 text-left">
@@ -542,7 +534,7 @@
             <button onclick="closeAdmin2FAModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
             <div class="text-center space-y-1.5">
                 <h3 class="text-base font-bold text-yellow-400 tracking-wide">XÁC THỰC BẢO MẬT 3 LỚP ADMIN</h3>
-                <p class="text-[11px] text-gray-300">Mã OTP 6 số và Chuỗi Base64 sẽ được gửi trực tiếp đến Gmail Admin của m:</p>
+                <p class="text-[11px] text-gray-300">Mã OTP 6 số sẽ được gửi trực tiếp đến Gmail Admin của m:</p>
             </div>
 
             <div class="space-y-3">
@@ -565,11 +557,6 @@
                     </div>
                     <p class="u026-msg">Gửi lại mã sau 2:59</p>
                     <span class="u026-live" aria-live="polite"></span>
-                </div>
-
-                <div>
-                    <label class="text-[10px] text-gray-400 block mb-1">Chuỗi Mã Base64 Chữ:</label>
-                    <input type="text" id="admin-base64-code-input" placeholder="Dán mã Base64 chữ vào đây..." class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-xs text-white text-center font-mono outline-none focus:border-yellow-500">
                 </div>
 
                 <button onclick="verifyAdmin3LayerSecurity()" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2.5 rounded-xl text-xs transition cursor-pointer shadow mt-2">
@@ -659,22 +646,12 @@
             
             <div>
                 <h3 class="text-base font-bold text-white">Đặt Hàng Thành Công!</h3>
-                <p class="text-xs text-yellow-400 mt-1 font-bold">⚠️ Vui lòng sao chép mã dưới đây gửi ngay cho Admin qua CSKH để được duyệt đơn nhanh chóng!</p>
-            </div>
-
-            <div class="space-y-1 text-left pt-1">
-                <label class="text-[10px] text-gray-400 block font-medium">Mã đồng bộ đơn hàng của bạn:</label>
-                <div class="flex space-x-2">
-                    <input type="text" id="success-modal-token-input" readonly class="w-full bg-gray-950 border border-gray-700 rounded-lg px-2.5 py-1.5 text-[10px] text-accentBlue font-mono select-all">
-                    <button onclick="copySuccessOrderToken()" class="bg-green-600 hover:bg-green-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs cursor-pointer transition whitespace-nowrap shadow flex items-center">
-                        <i class="fa-regular fa-copy mr-1"></i> Copy Mã
-                    </button>
-                </div>
+                <p class="text-xs text-green-400 mt-1 font-bold">🎉 Đơn hàng đã tự động đồng bộ lên hệ thống Realtime của Admin!</p>
             </div>
 
             <div class="pt-2 border-t border-gray-800 space-y-2">
                 <button onclick="finishAndGoToHistory()" class="w-full bg-accentBlue hover:bg-blue-600 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer shadow transition">
-                    Đã Copy & Xem Lịch Sử Đơn Hàng
+                    Xem Lịch Sử Đơn Hàng
                 </button>
             </div>
         </div>
@@ -687,16 +664,6 @@
             <h3 class="text-base font-bold text-white flex items-center"><i class="fa-solid fa-circle-info mr-2 text-accentBlue"></i> Chi Tiết Đơn Hàng</h3>
             
             <div id="order-detail-body" class="space-y-2.5 text-xs bg-gray-900 p-3.5 rounded-xl border border-gray-800 max-h-[60vh] overflow-y-auto"></div>
-
-            <div class="space-y-1 pt-1 border-t border-gray-800">
-                <label class="text-[10px] text-gray-400 block">Mã đồng bộ đơn hàng (Copy gửi CSKH cho Admin):</label>
-                <div class="flex space-x-2">
-                    <input type="text" id="modal-token-input" readonly class="w-full bg-gray-950 border border-gray-700 rounded-lg px-2.5 py-1.5 text-[10px] text-accentBlue font-mono select-all">
-                    <button onclick="copyOrderToken()" class="bg-accentBlue hover:bg-blue-600 text-white font-bold px-3 py-1.5 rounded-lg text-xs cursor-pointer transition whitespace-nowrap shadow flex items-center">
-                        <i class="fa-regular fa-copy mr-1"></i> Copy
-                    </button>
-                </div>
-            </div>
 
             <button onclick="closeOrderDetailModal()" class="w-full bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 rounded-xl text-xs border border-gray-700 cursor-pointer">Đóng</button>
         </div>
@@ -842,6 +809,11 @@
     <script>
         const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxV8J9cGa6YaYkkzxvx3CKt6mX318xkrtL0mxU3MidJ4EOwVhcf8zLdTHdLdv71B2s/exec";
 
+        // --- CẤU HÌNH SUPABASE REALTIME ---
+        const SUPABASE_URL = 'https://iopcnnbcjycgfnpbeqvo.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_9ioPYsftnZkUOpoN4812gw_-rLTaDfu';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
         const STORAGE_KEY = 'shopdatzit_v10_local_data';
         const USER_KEY = 'shopdatzit_v10_user';
         const EXPIRE_TIME_MS = 24 * 60 * 60 * 1000;
@@ -857,9 +829,7 @@
         let generatedOTP = null;
         let targetForgotUser = null;
         let changeEmailOTP = null;
-
         let adminExpectedOtp = null;
-        let adminExpectedBase64 = null;
 
         const DEFAULT_AVATAR_URL = "https://lh3.googleusercontent.com/d/1OUDmydcc6lDsgpI4CdVwi2jmNa__EtPR";
 
@@ -1036,7 +1006,7 @@
                     { name: 'Hội Viên Inter-Knot (5$)', price: calcPrice(102500) },
                     { name: 'Kế Hoạch Trưởng Thành (10$)', price: calcPrice(205000) },
                     { name: 'Kế Hoạch Cao Cấp (20$)', price: calcPrice(410000) },
-                    { name: '60 Film Trắng Đen (1$)', price: calcPrice(22000) },
+                    { name: '60 Film Trắng Đен (1$)', price: calcPrice(22000) },
                     { name: '300 + 30 Film Trắng Đen (5$)', price: calcPrice(102500) },
                     { name: '980 + 110 Film Trắng Đen (15$)', price: calcPrice(307500) },
                     { name: '1980 + 260 Film Trắng Đen (30$)', price: calcPrice(615000) },
@@ -1102,10 +1072,23 @@
             initTheme();
             renderGameList();
             updateAuthUI();
+            initRealtimeListener();
             initOtpWidget('admin-otp-widget', adminVerifyCallback);
             initOtpWidget('forgot-otp-widget', forgotVerifyCallback);
             initOtpWidget('change-email-otp-widget', changeEmailVerifyCallback);
         };
+
+        // LẮNG NGHE REALTIME TỪ SUPABASE
+        function initRealtimeListener() {
+            supabaseClient
+              .channel('public:orders')
+              .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, payload => {
+                  console.log('⚡ Dữ liệu đơn hàng Realtime thay đổi:', payload);
+                  renderHistory();
+                  renderAdminOrders();
+              })
+              .subscribe();
+        }
 
         function initOtpWidget(widgetId, onCompleteCallback) {
             const root = document.getElementById(widgetId);
@@ -1224,34 +1207,15 @@
         function getGameSold(gameKey) {
             const game = gamesData[gameKey];
             if (!game) return '0';
-            let base = game.sold ? (parseInt(game.sold.replace(/,/g, '')) || 0) : 0;
-            let totalPurchased = 0;
-            let accounts = getAccounts();
-            for (let u in accounts) {
-                if (accounts[u].history) {
-                    accounts[u].history.forEach(ord => {
-                        if (ord.status !== 'Đã Hủy') {
-                            if (ord.items && ord.items.length > 0) {
-                                ord.items.forEach(item => { if (item.gameKey === gameKey || item.gameName === game.name) totalPurchased += (item.qty || 1); });
-                            } else if (ord.game === game.name) totalPurchased += (ord.totalQty || 1);
-                        }
-                    });
-                }
-            }
-            return (base + totalPurchased).toLocaleString('vi-VN');
+            return (game.sold || '0');
         }
 
         function initAdminAccount() {
             let accounts = getAccounts();
             if (!accounts['ngocdiemdang90@gmail.com']) {
                 accounts['ngocdiemdang90@gmail.com'] = {
-                    username: 'Chủ Shop Admin', email: 'ngocdiemdang90@gmail.com', password: 'Lolkchi2020k', uid: '10000', avatar: '', history: []
+                    username: 'Chủ Shop Admin', email: 'ngocdiemdang90@gmail.com', password: 'Lolkchi2020k', uid: '10000', avatar: ''
                 };
-            } else {
-                accounts['ngocdiemdang90@gmail.com'].password = 'Lolkchi2020k';
-                if (!accounts['ngocdiemdang90@gmail.com'].username) accounts['ngocdiemdang90@gmail.com'].username = 'Chủ Shop Admin';
-                if (!accounts['ngocdiemdang90@gmail.com'].email) accounts['ngocdiemdang90@gmail.com'].email = 'ngocdiemdang90@gmail.com';
-                if (!accounts['ngocdiemdang90@gmail.com'].avatar) accounts['ngocdiemdang90@gmail.com'].avatar = '';
             }
             saveAccounts(accounts);
         }
@@ -1553,7 +1517,7 @@
                 const randomUid = Math.floor(10000 + Math.random() * 90000).toString();
                 const key = u.toLowerCase();
                 accounts[key] = { 
-                    username: u, email: u.includes('@') ? u : `${key}@gmail.com`, password: p, uid: randomUid, avatar: '', history: [] 
+                    username: u, email: u.includes('@') ? u : `${key}@gmail.com`, password: p, uid: randomUid, avatar: ''
                 };
                 saveAccounts(accounts);
                 alert('Đăng ký tài khoản thành công!');
@@ -1594,9 +1558,7 @@
 
         function openAdmin2FAModal() {
             document.getElementById('admin-otp-code-input').value = '';
-            document.getElementById('admin-base64-code-input').value = '';
             adminExpectedOtp = null;
-            adminExpectedBase64 = null;
             document.getElementById('admin-2fa-modal').classList.remove('hidden');
         }
 
@@ -1611,39 +1573,34 @@
             btn.disabled = true;
 
             adminExpectedOtp = Math.floor(100000 + Math.random() * 900000).toString();
-            const randomRaw = "ADMIN_SEC_KEY_" + Date.now() + "_" + Math.floor(Math.random() * 10000);
-            adminExpectedBase64 = btoa(randomRaw);
-
-            const subject = "🔐 MÃ XÁC THỰC BẢO MẬT 3 LỚP ADMIN - SHOPDATZIT";
-            const message = `Yêu cầu đăng nhập Admin ShopDatZit!\n\n1. Mã OTP 6 số: ${adminExpectedOtp}\n2. Mã Token Base64: ${adminExpectedBase64}\n\nVui lòng copy dán cả 2 mã trên vào giao diện để hoàn tất đăng nhập!`;
+            const subject = "🔐 MÃ XÁC THỰC BẢO MẬT ADMIN - SHOPDATZIT";
+            const message = `Yêu cầu đăng nhập Admin ShopDatZit!\n\nMã OTP 6 số: ${adminExpectedOtp}\n\nVui lòng nhập mã trên vào giao diện để hoàn tất đăng nhập!`;
 
             sendAutoEmail("ngocdiemdang90@gmail.com", subject, message, function() {
                 btn.innerHTML = '<i class="fa-solid fa-circle-check text-green-400"></i> ĐÃ GỬI MÃ VỀ EMAIL!';
                 btn.disabled = false;
-                alert("Mã OTP 6 số và Chuỗi Base64 đã được gửi thành công đến Gmail Admin!");
+                alert("Mã OTP 6 số đã được gửi thành công đến Gmail Admin!");
             }, function() {
                 btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> GỬI LẠI MÃ';
                 btn.disabled = false;
-                alert(`Gửi mail gặp sự cố!\n\n[MÃ TEST KHẨN CẤP]:\n- OTP 6 số: ${adminExpectedOtp}\n- Base64: ${adminExpectedBase64}`);
+                alert(`Gửi mail gặp sự cố!\n\n[MÃ TEST KHẨN CẤP]:\n- OTP 6 số: ${adminExpectedOtp}`);
             });
         }
 
         function verifyAdmin3LayerSecurity() {
             const otpVal = document.getElementById('admin-otp-code-input').value.trim();
-            const base64Val = document.getElementById('admin-base64-code-input').value.trim();
+            if (!otpVal) { alert("Vui lòng điền mã OTP 6 số!"); return; }
+            if (!adminExpectedOtp) { alert("Vui lòng bấm nút 'GỬI MÃ XÁC THỰC VỀ EMAIL' trước!"); return; }
 
-            if (!otpVal || !base64Val) { alert("Vui lòng điền đầy đủ cả Mã OTP 6 số và Chuỗi mã Base64!"); return; }
-            if (!adminExpectedOtp || !adminExpectedBase64) { alert("Vui lòng bấm nút 'GỬI MÃ XÁC THỰC VỀ EMAIL' trước!"); return; }
-
-            if (otpVal === adminExpectedOtp && base64Val === adminExpectedBase64) {
-                alert("Xác thực 3 Lớp thành công! Chào mừng Admin Đạt Zịt.");
+            if (otpVal === adminExpectedOtp) {
+                alert("Xác thực thành công! Chào mừng Admin Đạt Zịt.");
                 currentUsername = pendingAdminData.user;
                 localStorage.setItem(USER_KEY, currentUsername);
                 closeAdmin2FAModal();
                 updateAuthUI();
                 switchView('admin');
             } else {
-                alert("Mã OTP 6 số hoặc Chuỗi Base64 không chính xác!");
+                alert("Mã OTP 6 số không chính xác!");
             }
         }
 
@@ -1817,15 +1774,15 @@
 
         function sendEmailNotification(order) {
             const subject = `🛒 ĐƠN HÀNG MỚI ${order.code} - SHOPDATZIT.SITE`;
-            const message = `Đơn hàng mới ${order.code} vừa được tạo!\n- Khách: ${order.owner}\n- Tổng tiền: ${order.price.toLocaleString('vi-VN')} đ.\nVui lòng vào trang Admin để kiểm tra và duyệt đơn.`;
+            const message = `Đơn hàng mới ${order.code} vừa được tạo!\n- Khách: ${order.customer_name}\n- Tổng tiền: ${order.price.toLocaleString('vi-VN')} đ.\nVui lòng vào trang Admin để kiểm tra và duyệt đơn.`;
             sendAutoEmail("ngocdiemdang90@gmail.com", subject, message);
         }
 
-        function createOrderAndFinish(status) {
+        // TẠO ĐƠN HÀNG VÀ ĐẨY THẲNG LÊN SUPABASE
+        async function createOrderAndFinish(status) {
             const randomCode = Math.floor(100000 + Math.random() * 900000);
             let accounts = getAccounts();
             if (currentUsername && accounts[currentUsername]) {
-                if (!accounts[currentUsername].history) accounts[currentUsername].history = [];
                 const now = Date.now();
                 const totalAmount = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
                 const totalQty = cart.reduce((sum, i) => sum + i.qty, 0);
@@ -1834,33 +1791,36 @@
                 let packageSummary = cart.map(i => `${i.pkgName} (x${i.qty})`).join(', ');
 
                 const newOrder = {
-                    id: 'ORD_' + now, code: '#' + randomCode, user: currentUsername, owner: currentUsername,
-                    uid: accounts[currentUsername].uid || '10000', game: gameSummary, package: packageSummary,
-                    totalQty: totalQty, items: JSON.parse(JSON.stringify(cart)), price: totalAmount,
-                    time: new Date().toLocaleString('vi-VN'), timestamp: now, status: status,
-                    inputUser: document.getElementById('input-username').value || 'Không có',
-                    inputPass: document.getElementById('input-password').value || 'Không có',
-                    inputServer: document.getElementById('input-server').value || 'Mặc định'
+                    id: 'ORD_' + now, 
+                    code: '#' + randomCode, 
+                    customer_name: currentUsername,
+                    uid: accounts[currentUsername].uid || '10000', 
+                    game: gameSummary, 
+                    package: packageSummary,
+                    total_qty: totalQty, 
+                    items: cart, 
+                    price: totalAmount,
+                    time: new Date().toLocaleString('vi-VN'), 
+                    timestamp: now, 
+                    status: status,
+                    input_user: document.getElementById('input-username').value || 'Không có',
+                    input_pass: document.getElementById('input-password').value || 'Không có',
+                    input_server: document.getElementById('input-server').value || 'Mặc định'
                 };
 
-                accounts[currentUsername].history.unshift(newOrder);
-                saveAccounts(accounts);
+                const { error } = await supabaseClient.from('orders').insert([newOrder]);
+
+                if (error) {
+                    alert('Lỗi tạo đơn hàng: ' + error.message);
+                    return;
+                }
+
                 sendEmailNotification(newOrder);
-                clearCart(); renderGameList();
+                clearCart(); 
+                renderGameList();
 
-                let base64Token = '';
-                try { base64Token = btoa(unescape(encodeURIComponent(JSON.stringify(newOrder)))); } catch (e) { base64Token = ''; }
-
-                document.getElementById('success-modal-token-input').value = base64Token;
                 document.getElementById('success-token-modal').classList.remove('hidden');
             }
-        }
-
-        function copySuccessOrderToken() {
-            const input = document.getElementById('success-modal-token-input');
-            input.select(); input.setSelectionRange(0, 99999);
-            navigator.clipboard.writeText(input.value);
-            alert("Đã copy mã đồng bộ đơn hàng thành công!");
         }
 
         function finishAndGoToHistory() {
@@ -1868,47 +1828,14 @@
             switchView('history');
         }
 
-        function copyOrderToken() {
-            const input = document.getElementById('modal-token-input');
-            input.select(); input.setSelectionRange(0, 99999);
-            navigator.clipboard.writeText(input.value);
-            alert("Đã copy mã đồng bộ đơn hàng!");
-        }
+        async function openOrderDetail(orderId) {
+            const { data: orders, error } = await supabaseClient
+                .from('orders')
+                .select('*')
+                .eq('id', orderId);
 
-        function adminDecodeToken() {
-            const token = document.getElementById('admin-sync-token').value.trim();
-            if (!token) { alert('Vui lòng dán mã đồng bộ!'); return; }
-            try {
-                const jsonString = decodeURIComponent(escape(window.atob(token)));
-                const orderData = JSON.parse(jsonString);
-
-                if (orderData && orderData.id) {
-                    let accounts = getAccounts();
-                    let targetUser = orderData.owner || orderData.user || 'ngocdiemdang90@gmail.com';
-                    if (!accounts[targetUser]) accounts[targetUser] = { password: '123', uid: orderData.uid || '10000', history: [] };
-                    if (!accounts[targetUser].history) accounts[targetUser].history = [];
-                    if (!accounts[targetUser].history.some(o => o.id === orderData.id)) {
-                        accounts[targetUser].history.unshift(orderData); saveAccounts(accounts);
-                    }
-                    renderAdminOrders(); openOrderDetail(targetUser, orderData.id);
-                    alert('Giải mã và đồng bộ đơn hàng thành công!');
-                } else { alert('Mã đơn không hợp lệ!'); }
-            } catch (e) { alert('Lỗi giải mã!'); }
-        }
-
-        function openOrderDetail(username, orderId) {
-            let accounts = getAccounts();
-            let order = null;
-            if (accounts[username] && accounts[username].history) order = accounts[username].history.find(o => o.id === orderId);
-            if (!order) {
-                for (let u in accounts) {
-                    if (accounts[u].history) {
-                        let found = accounts[u].history.find(o => o.id === orderId);
-                        if (found) { order = found; break; }
-                    }
-                }
-            }
-            if (!order) return;
+            if (error || !orders || orders.length === 0) return;
+            const order = orders[0];
 
             const body = document.getElementById('order-detail-body');
             const is24hPassed = (Date.now() - (order.timestamp || 0)) >= EXPIRE_TIME_MS;
@@ -1916,12 +1843,9 @@
             let displayStatus = order.status;
             if (order.status.includes('Chờ duyệt') && is24hPassed) displayStatus = 'Admin Đã Hoàn Thành Đơn';
 
-            let base64Token = '';
-            try { base64Token = btoa(unescape(encodeURIComponent(JSON.stringify(order)))); } catch (e) { base64Token = ''; }
-
             let itemsListHtml = '';
             if (order.items && order.items.length > 0) {
-                itemsListHtml = `<div class="bg-gray-950 p-2.5 rounded-lg border border-gray-800 space-y-1.5"><div class="font-bold text-accentBlue text-xs mb-1 border-b border-gray-800 pb-1">🛒 Các món đã đặt mua (${order.totalQty || order.items.length} cái):</div>`;
+                itemsListHtml = `<div class="bg-gray-950 p-2.5 rounded-lg border border-gray-800 space-y-1.5"><div class="font-bold text-accentBlue text-xs mb-1 border-b border-gray-800 pb-1">🛒 Các món đã đặt mua (${order.total_qty || order.items.length} cái):</div>`;
                 order.items.forEach(item => {
                     itemsListHtml += `<div class="flex justify-between items-center text-[10px] sm:text-[11px] border-b border-gray-800/40 pb-1"><div><span class="text-white font-bold">${item.gameName}</span> - <span class="text-gray-300">${item.pkgName}</span><span class="text-yellow-400 font-bold ml-1">x${item.qty}</span></div><span class="text-green-400 font-bold">${(item.price * item.qty).toLocaleString('vi-VN')} đ</span></div>`;
                 });
@@ -1935,35 +1859,40 @@
             body.innerHTML = `
                 <div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Mã đơn:</span><span class="font-bold text-white">${order.code}</span></div>
                 <div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Thời gian:</span><span class="text-gray-200">${order.time}</span></div>
-                <div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Khách hàng:</span><span class="font-bold text-accentBlue">${order.owner || order.user} (UID: ${order.uid})</span></div>
+                <div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Khách hàng:</span><span class="font-bold text-accentBlue">${order.customer_name} (UID: ${order.uid})</span></div>
                 ${itemsListHtml}
                 <div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Tổng thanh toán:</span><span class="font-bold text-green-400 text-xs sm:text-sm">${order.price.toLocaleString('vi-VN')} đ</span></div>
                 <div class="flex justify-between border-b border-gray-800 pb-1.5 items-center"><span class="text-gray-400">Trạng thái:</span>${statusRenderHtml}</div>
                 <div class="bg-gray-950 p-2.5 rounded-lg border border-gray-800 space-y-1.5">
-                    <div class="flex justify-between items-center"><span class="text-gray-400">Tài khoản / SĐT:</span><span class="font-bold text-white select-all">${order.inputUser}</span></div>
-                    <div class="flex justify-between items-center"><span class="text-gray-400">Mật khẩu game:</span><div class="flex items-center space-x-2"><input type="password" id="modal-pass-${order.id}" value="${order.inputPass}" readonly class="bg-transparent text-right font-bold text-white w-24 focus:outline-none select-all"><i class="fa-solid fa-eye text-gray-400 cursor-pointer text-xs" onclick="toggleModalPass('${order.id}')"></i></div></div>
-                    <div class="flex justify-between items-center"><span class="text-gray-400">Server / Ghi chú:</span><span class="font-bold text-white">${order.inputServer}</span></div>
+                    <div class="flex justify-between items-center"><span class="text-gray-400">Tài khoản / SĐT:</span><span class="font-bold text-white select-all">${order.input_user}</span></div>
+                    <div class="flex justify-between items-center"><span class="text-gray-400">Mật khẩu game:</span><div class="flex items-center space-x-2"><input type="password" id="modal-pass-${order.id}" value="${order.input_pass}" readonly class="bg-transparent text-right font-bold text-white w-24 focus:outline-none select-all"><i class="fa-solid fa-eye text-gray-400 cursor-pointer text-xs" onclick="toggleModalPass('${order.id}')"></i></div></div>
+                    <div class="flex justify-between items-center"><span class="text-gray-400">Server / Ghi chú:</span><span class="font-bold text-white">${order.input_server}</span></div>
                 </div>
             `;
-            document.getElementById('modal-token-input').value = base64Token;
             document.getElementById('order-detail-modal').classList.remove('hidden');
         }
 
         function toggleModalPass(id) { const input = document.getElementById(`modal-pass-${id}`); if (input) input.type = input.type === 'password' ? 'text' : 'password'; }
         function closeOrderDetailModal() { document.getElementById('order-detail-modal').classList.add('hidden'); }
 
-        function renderHistory() {
+        // TẢI LỊCH SỬ ĐƠN HÀNG TỪ SUPABASE
+        async function renderHistory() {
             const container = document.getElementById('history-container');
-            if (!container) return;
-            let accounts = getAccounts();
-            if (!currentUsername || !accounts[currentUsername] || !accounts[currentUsername].history || accounts[currentUsername].history.length === 0) {
+            if (!container || !currentUsername) return;
+
+            const { data: orders, error } = await supabaseClient
+                .from('orders')
+                .select('*')
+                .eq('customer_name', currentUsername)
+                .order('timestamp', { ascending: false });
+
+            if (error || !orders || orders.length === 0) {
                 container.innerHTML = `<div class="bg-cardBg p-6 rounded-xl border border-gray-800 text-center text-gray-400 text-xs">Bạn chưa có đơn nạp nào.</div>`;
                 return;
             }
-            container.innerHTML = '';
-            let sortedHistory = [...accounts[currentUsername].history].sort((a,b) => (b.timestamp || 0) - (a.timestamp || 0));
 
-            sortedHistory.forEach((ord) => {
+            container.innerHTML = '';
+            orders.forEach((ord) => {
                 let is24hPassed = (Date.now() - (ord.timestamp || 0)) >= EXPIRE_TIME_MS;
                 let displayStatus = ord.status;
                 let statusBadgeHtml = (displayStatus === 'Admin Đã Hoàn Thành Đơn' || (ord.status.includes('Chờ duyệt') && is24hPassed)) ? `<span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-green-400 border-green-800 bg-green-950/50 flex items-center space-x-1"><i class="fa-solid fa-circle-check"></i> <span>Admin Đã Hoàn Thành Đơn</span></span>` : (displayStatus.includes('Thành Công') ? `<span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-green-400 border-green-800 bg-green-950/50">${displayStatus}</span>` : (displayStatus.includes('Hủy') ? `<span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-red-400 border-red-800 bg-green-950/50">${displayStatus}</span>` : `<span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-yellow-400 border-yellow-800 bg-yellow-950/50">${displayStatus}</span>`));
@@ -1972,61 +1901,58 @@
                     <div class="bg-cardBg p-3.5 rounded-xl border border-gray-800 space-y-2.5 shadow-sm hover:border-accentBlue transition">
                         <div class="flex justify-between items-center border-b border-gray-800 pb-2"><span class="font-bold text-white text-xs">${ord.code}</span><span class="text-[10px] text-gray-400">${ord.time}</span></div>
                         <div class="flex justify-between items-center text-xs"><div><div class="font-bold text-accentBlue text-xs sm:text-sm">${ord.game}</div><div class="text-gray-300 text-[11px] mt-0.5">${ord.package}</div></div><div class="text-right flex flex-col items-end space-y-1.5"><div class="font-bold text-green-400 text-xs sm:text-sm">${ord.price.toLocaleString('vi-VN')} đ</div>${statusBadgeHtml}</div></div>
-                        <div class="pt-2 border-t border-gray-800/60 flex justify-between items-center"><span class="text-[10px] text-gray-400">Trạng thái đơn</span><button onclick="openOrderDetail('${currentUsername}', '${ord.id}')" class="bg-gray-800 hover:bg-gray-700 text-accentBlue px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer border border-gray-700 flex items-center"><i class="fa-solid fa-eye mr-1"></i> Chi tiết & Mã đồng bộ</button></div>
+                        <div class="pt-2 border-t border-gray-800/60 flex justify-between items-center"><span class="text-[10px] text-gray-400">Trạng thái đơn</span><button onclick="openOrderDetail('${ord.id}')" class="bg-gray-800 hover:bg-gray-700 text-accentBlue px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer border border-gray-700 flex items-center"><i class="fa-solid fa-eye mr-1"></i> Chi tiết đơn hàng</button></div>
                     </div>
                 `;
             });
         }
 
-        function renderAdminOrders() {
+        // TẢI DANH SÁCH ĐƠN CHO ADMIN TỪ SUPABASE
+        async function renderAdminOrders() {
             const container = document.getElementById('admin-orders-container');
             if (!container || !isAdmin()) return;
-            let accounts = getAccounts();
-            let allOrders = [];
-            for (let username in accounts) {
-                if (accounts[username].history) accounts[username].history.forEach(ord => allOrders.push({ ...ord, owner: username }));
-            }
-            if (allOrders.length === 0) {
+
+            const { data: orders, error } = await supabaseClient
+                .from('orders')
+                .select('*')
+                .order('timestamp', { ascending: false });
+
+            if (error || !orders || orders.length === 0) {
                 container.innerHTML = `<div class="bg-cardBg p-6 rounded-xl border border-gray-800 text-center text-gray-400 text-xs">Chưa có đơn nào trên hệ thống.</div>`;
                 return;
             }
-            container.innerHTML = '';
-            allOrders.sort((a,b) => (b.timestamp || 0) - (a.timestamp || 0));
 
-            allOrders.forEach((ord) => {
+            container.innerHTML = '';
+            orders.forEach((ord) => {
                 let isPending = ord.status.includes('Chờ duyệt');
                 container.innerHTML += `
                     <div class="bg-cardBg p-3.5 rounded-xl border border-gray-800 space-y-2.5 shadow-sm hover:border-gray-600 transition">
-                        <div class="flex justify-between items-center border-b border-gray-800 pb-2"><span class="font-bold text-gray-300 text-[11px]">${ord.code} - Khách: <span class="text-white">${ord.owner}</span> <span class="text-accentBlue">(UID: ${ord.uid})</span></span><span class="text-[10px] text-gray-500">${ord.time}</span></div>
-                        <div class="flex justify-between items-center text-xs"><div><div class="font-bold text-white text-xs sm:text-sm">${ord.game}</div><div class="text-accentBlue text-[11px] mb-0.5">${ord.package}</div><div class="text-green-400 font-bold text-xs">${ord.price.toLocaleString('vi-VN')} đ</div></div><div class="flex flex-col items-end space-y-1.5">${isPending ? `<button onclick="adminConfirmOrder('${ord.owner}', '${ord.id}')" class="bg-green-600 hover:bg-green-700 w-full text-white px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition shadow">Nạp Thành Công</button><button onclick="adminRejectOrder('${ord.owner}', '${ord.id}')" class="bg-gray-700 hover:bg-red-700 w-full text-white px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition shadow">Hủy Đơn</button>` : `<span class="px-2 py-0.5 rounded border text-[11px] font-bold ${ord.status.includes('Thành Công') || ord.status.includes('Hoàn Thành') ? 'bg-green-950/50 text-green-400 border-green-800' : 'bg-red-950/50 text-red-400 border-red-800'}">${ord.status}</span>`}</div></div>
-                        <div class="pt-1.5 border-t border-gray-800/60 flex justify-end"><button onclick="openOrderDetail('${ord.owner}', '${ord.id}')" class="bg-gray-800 hover:bg-gray-700 text-accentBlue px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer border border-gray-700 flex items-center"><i class="fa-solid fa-eye mr-1"></i> Xem Chi Tiết</button></div>
+                        <div class="flex justify-between items-center border-b border-gray-800 pb-2"><span class="font-bold text-gray-300 text-[11px]">${ord.code} - Khách: <span class="text-white">${ord.customer_name}</span> <span class="text-accentBlue">(UID: ${ord.uid})</span></span><span class="text-[10px] text-gray-500">${ord.time}</span></div>
+                        <div class="flex justify-between items-center text-xs"><div><div class="font-bold text-white text-xs sm:text-sm">${ord.game}</div><div class="text-accentBlue text-[11px] mb-0.5">${ord.package}</div><div class="text-green-400 font-bold text-xs">${ord.price.toLocaleString('vi-VN')} đ</div></div><div class="flex flex-col items-end space-y-1.5">${isPending ? `<button onclick="adminConfirmOrder('${ord.id}')" class="bg-green-600 hover:bg-green-700 w-full text-white px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition shadow">Nạp Thành Công</button><button onclick="adminRejectOrder('${ord.id}')" class="bg-gray-700 hover:bg-red-700 w-full text-white px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition shadow">Hủy Đơn</button>` : `<span class="px-2 py-0.5 rounded border text-[11px] font-bold ${ord.status.includes('Thành Công') || ord.status.includes('Hoàn Thành') ? 'bg-green-950/50 text-green-400 border-green-800' : 'bg-red-950/50 text-red-400 border-red-800'}">${ord.status}</span>`}</div></div>
+                        <div class="pt-1.5 border-t border-gray-800/60 flex justify-end"><button onclick="openOrderDetail('${ord.id}')" class="bg-gray-800 hover:bg-gray-700 text-accentBlue px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer border border-gray-700 flex items-center"><i class="fa-solid fa-eye mr-1"></i> Xem Chi Tiết</button></div>
                     </div>
                 `;
             });
         }
 
-        function adminConfirmOrder(owner, orderId) {
-            let accounts = getAccounts();
-            if (accounts[owner] && accounts[owner].history) {
-                let ord = accounts[owner].history.find(o => o.id === orderId);
-                if (ord) { ord.status = 'Đã Nạp Thành Công'; saveAccounts(accounts); renderAdminOrders(); alert('Đã duyệt đơn!'); }
-            }
+        async function adminConfirmOrder(orderId) {
+            const { error } = await supabaseClient
+                .from('orders')
+                .update({ status: 'Đã Nạp Thành Công' })
+                .eq('id', orderId);
+
+            if (error) alert('Lỗi cập nhật: ' + error.message);
+            else { renderAdminOrders(); alert('Đã duyệt đơn!'); }
         }
 
-        function adminRejectOrder(owner, orderId) {
-            let accounts = getAccounts();
-            if (accounts[owner] && accounts[owner].history) {
-                let ord = accounts[owner].history.find(o => o.id === orderId);
-                if (ord) { ord.status = 'Đã Hủy'; saveAccounts(accounts); renderAdminOrders(); alert('Đã hủy đơn!'); }
-            }
-        }
+        async function adminRejectOrder(orderId) {
+            const { error } = await supabaseClient
+                .from('orders')
+                .update({ status: 'Đã Hủy' })
+                .eq('id', orderId);
 
-        function resetAdminOrders() {
-            if (confirm("Xóa sạch lịch sử đơn?")) {
-                let accounts = getAccounts();
-                for (let u in accounts) accounts[u].history = [];
-                saveAccounts(accounts); renderAdminOrders(); alert('Đã xóa sạch.');
-            }
+            if (error) alert('Lỗi cập nhật: ' + error.message);
+            else { renderAdminOrders(); alert('Đã hủy đơn!'); }
         }
     </script>
 </body>
