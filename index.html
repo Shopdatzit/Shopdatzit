@@ -846,6 +846,7 @@
         let paymentTimer = null;
         let pendingAdminData = null;
         let cancelTargetOrderId = null;
+        let globalGameSoldCounts = {};
 
         let generatedOTP = null;
         let targetForgotUser = null;
@@ -864,7 +865,6 @@
             'garena': {
                 name: 'Thẻ Garena',
                 realImg: 'https://inviva.vn/wp-content/uploads/2026/05/logo-garena-vector-08.jpg',
-                sold: '0',
                 packages: [
                     { name: 'Thẻ Garena 5.000', price: 4900 },
                     { name: 'Thẻ Garena 10.000', price: 9850 },
@@ -878,14 +878,12 @@
             'robux120h': {
                 name: 'Robux 120h',
                 realImg: 'https://lh3.googleusercontent.com/d/1SLqz0SUZwgGle5Y5fwZ9WppbqhQGUvYS',
-                sold: '0',
                 note: 'Dự Kiến Sắp Có',
                 packages: []
             },
             'aniimo': { 
                 name: 'Aniimo', 
                 realImg: 'https://lh3.googleusercontent.com/d/1traVmsawVmnJ8EAx7wzRnHqbv0hTOnBJ', 
-                sold: '0',
                 packages: [
                     { name: 'Thẻ Tháng', price: calcPrice(122500) },
                     { name: 'Cẩm Nang Đồng Hành Nâng Cao', price: calcPrice(240000) },
@@ -902,7 +900,6 @@
             'arknights': { 
                 name: 'Arknights: Endfield', 
                 realImg: 'https://api.clone.erisvn.net/images/2026/01/c8954a49d2ad375015bf5d5adf25ce8d.webp', 
-                sold: '0',
                 packages: [
                     { name: 'Thẻ Tháng (55)', price: calcPrice(102500) },
                     { name: 'Giao Thức Tùy Chỉnh (105)', price: calcPrice(205000) },
@@ -930,7 +927,6 @@
             'genshin': { 
                 name: 'Genshin Impact', 
                 realImg: 'https://lh3.googleusercontent.com/d/1Xa_NtMprHhqTVQXMWQmMlIFSGHN-_6Af', 
-                sold: '0',
                 packages: [
                     { name: 'Không Nguyệt Chúc Phúc', price: calcPrice(87000) },
                     { name: 'Hành Trình Trân Châu', price: calcPrice(173000) },
@@ -947,7 +943,6 @@
             'hok': { 
                 name: 'Honor Of Kings (Quốc Tế)', 
                 realImg: 'https://lh3.googleusercontent.com/d/1fgdw3Hi_rjDbXu5nShPAv4xyrTZsLfj5', 
-                sold: '0',
                 packages: [
                     { name: 'Thẻ tuần', price: calcPrice(25700) },
                     { name: 'Thẻ tuần Plus', price: calcPrice(71368) },
@@ -966,7 +961,6 @@
             'pgr': { 
                 name: 'Punishing Gray Raven', 
                 realImg: 'https://lh3.googleusercontent.com/d/1i_JrSrVsddCTuKWyMHz9H0ERHS5SjXWh', 
-                sold: '0',
                 packages: [
                     { name: '5 RC', price: calcPrice(22000) },
                     { name: '28 RC', price: calcPrice(90000) },
@@ -981,7 +975,6 @@
             'wuwa': { 
                 name: 'Wuthering Waves', 
                 realImg: 'https://lh3.googleusercontent.com/d/1GADdoUiRukY7hjWzqdCT11UE6dVaLKHj', 
-                sold: '0',
                 packages: [
                     { name: 'Lunite Subscription', price: calcPrice(98501) },
                     { name: 'Insider Channel', price: calcPrice(197001) },
@@ -1022,7 +1015,6 @@
             'zzz': { 
                 name: 'Zenless Zone Zero', 
                 realImg: 'https://lh3.googleusercontent.com/d/1rBDBk94jXyXo2aDM9zSgw0uSBtmBrYdj', 
-                sold: '0',
                 packages: [
                     { name: 'Hội Viên Inter-Knot (5$)', price: calcPrice(102500) },
                     { name: 'Kế Hoạch Trưởng Thành (10$)', price: calcPrice(205000) },
@@ -1042,7 +1034,6 @@
             'hsr': { 
                 name: 'Honkai: Star Rail', 
                 realImg: 'https://lh3.googleusercontent.com/d/1jFEctjMKIJ1my-KQDIiJoj9aIBG0nJ25', 
-                sold: '0',
                 packages: [
                     { name: 'Chứng Nhận Tiếp Tế Tàu (5$)', price: calcPrice(102500) },
                     { name: 'Vinh Quang Khách Vô Danh (10$)', price: calcPrice(205000) },
@@ -1059,7 +1050,6 @@
             'honkai': { 
                 name: 'Honkai Impact 3', 
                 realImg: 'https://api.clone.erisvn.net/images/2025/06/a5c8683bdd2ee804abf944b70f13c5ca.webp', 
-                sold: '0',
                 packages: [
                     { name: 'Thẻ tháng', price: calcPrice(61253) },
                     { name: '65 Pha Lê', price: calcPrice(13049) },
@@ -1088,9 +1078,10 @@
             }).then(() => { if (callbackSuccess) callbackSuccess(); }).catch(err => { if (callbackError) callbackError(err); });
         }
 
-        window.onload = function() {
+        window.onload = async function() {
             initAdminAccount();
             initTheme();
+            await fetchAndCalculateSolds();
             renderGameList();
             updateAuthUI();
             initRealtimeListener();
@@ -1103,8 +1094,10 @@
         function initRealtimeListener() {
             supabaseClient
               .channel('public:orders')
-              .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, payload => {
+              .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, async payload => {
                   console.log('⚡ Dữ liệu đơn hàng Realtime thay đổi:', payload);
+                  await fetchAndCalculateSolds();
+                  renderGameList();
                   renderHistory();
                   renderAdminOrders();
               })
@@ -1225,10 +1218,40 @@
             return currentUsername && accounts[currentUsername] && (accounts[currentUsername].email === 'ngocdiemdang90@gmail.com' || currentUsername === 'ngocdiemdang90@gmail.com'); 
         }
 
+        // ĐẾM LƯỢT "ĐÃ BÁN" REALTIME TỪ CÁC ĐƠN HÀNG THÀNH CÔNG
+        async function fetchAndCalculateSolds() {
+            globalGameSoldCounts = {};
+            const { data: orders, error } = await supabaseClient
+                .from('orders')
+                .select('*');
+
+            if (error || !orders) return;
+
+            orders.forEach(ord => {
+                const is24hPassed = (Date.now() - (ord.timestamp || 0)) >= EXPIRE_TIME_MS;
+                const isCompleted = ord.status.includes('Thành Công') || ord.status.includes('Hoàn Thành') || (ord.status.includes('Chờ duyệt') && is24hPassed);
+
+                if (isCompleted) {
+                    if (ord.items && Array.isArray(ord.items) && ord.items.length > 0) {
+                        ord.items.forEach(item => {
+                            if (item.gameKey) {
+                                globalGameSoldCounts[item.gameKey] = (globalGameSoldCounts[item.gameKey] || 0) + (item.qty || 1);
+                            }
+                        });
+                    } else if (ord.game) {
+                        for (let key in gamesData) {
+                            if (gamesData[key].name === ord.game) {
+                                globalGameSoldCounts[key] = (globalGameSoldCounts[key] || 0) + (ord.total_qty || 1);
+                                break;
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
         function getGameSold(gameKey) {
-            const game = gamesData[gameKey];
-            if (!game) return '0';
-            return (game.sold || '0');
+            return globalGameSoldCounts[gameKey] || 0;
         }
 
         function initAdminAccount() {
@@ -1634,11 +1657,15 @@
             }
         }
 
-        function switchView(viewName) {
+        async function switchView(viewName) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
             document.getElementById('user-dropdown').classList.add('hidden');
             
-            if (viewName === 'home') { renderGameList(); document.getElementById('home-view').classList.remove('hidden'); }
+            if (viewName === 'home') { 
+                await fetchAndCalculateSolds(); 
+                renderGameList(); 
+                document.getElementById('home-view').classList.remove('hidden'); 
+            }
             else if (viewName === 'profile') { if (!currentUsername) { openAuthModal(); return; } document.getElementById('profile-view').classList.remove('hidden'); }
             else if (viewName === 'history') { if (!currentUsername) { openAuthModal(); return; } document.getElementById('history-view').classList.remove('hidden'); renderHistory(); }
             else if (viewName === 'cskh') { document.getElementById('cskh-view').classList.remove('hidden'); }
@@ -1842,6 +1869,7 @@
                 sendEmailNotification(newOrder);
                 clearCart(); 
                 document.getElementById('input-user-note').value = '';
+                await fetchAndCalculateSolds();
                 renderGameList();
 
                 document.getElementById('success-token-modal').classList.remove('hidden');
@@ -1977,7 +2005,12 @@
                 .eq('id', orderId);
 
             if (error) alert('Lỗi cập nhật: ' + error.message);
-            else { renderAdminOrders(); alert('Đã duyệt đơn!'); }
+            else { 
+                await fetchAndCalculateSolds();
+                renderGameList();
+                renderAdminOrders(); 
+                alert('Đã duyệt đơn và cộng lượt Đã Bán thành công!'); 
+            }
         }
 
         function openCancelReasonModal(orderId) {
@@ -2011,16 +2044,18 @@
         // CHỨC NĂNG XÓA SẠCH TẤT CẢ ĐƠN HÀNG DÀNH CHO ADMIN
         async function adminClearAllOrders() {
             if (!isAdmin()) return;
-            if (confirm("⚠️ XÁC NHẬN BẤM XÓA SẠCH?\nThao tác này sẽ xóa toàn bộ danh sách đơn hàng hiện có trên Supabase và không thể khôi phục!")) {
+            if (confirm("⚠️ XÁC NHẬN DỌN TRỐNG ĐƠN HÀNG?\nThao tác này sẽ xóa toàn bộ đơn hàng hiện có trên Supabase. Lịch sử của khách lẫn admin sẽ về 0 và không thể khôi phục!")) {
                 const { error } = await supabaseClient
                     .from('orders')
                     .delete()
-                    .neq('id', '0'); // Lệnh xóa tất cả dữ liệu trong bảng
+                    .neq('id', '0'); // Lệnh xóa toàn bộ dữ liệu trong bảng orders
 
                 if (error) {
                     alert('Lỗi dọn sạch đơn: ' + error.message);
                 } else {
-                    alert('Đã xóa dọn sạch toàn bộ đơn hàng trên hệ thống!');
+                    alert('Đã dọn sạch toàn bộ đơn hàng thành công!');
+                    await fetchAndCalculateSolds();
+                    renderGameList();
                     renderAdminOrders();
                     renderHistory();
                 }
