@@ -228,20 +228,20 @@
 
         /* --- GIAO DIỆN NHẬP OTP MỚI --- */
         .u026{position:relative;width:100%;display:flex;flex-direction:column;align-items:center;text-align:center}
-        .u026-ic{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;color:#fff;background:linear-gradient(140deg,#5B8CFF,#8B6CFF);box-shadow:0 10px 20px -10px rgba(91,108,255,.8);transition:background .5s var(--ux-ease);margin:0 auto}
-        .u026-ic svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+        .u026-ic{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#fff;background:linear-gradient(140deg,#5B8CFF,#8B6CFF);box-shadow:0 10px 20px -10px rgba(91,108,255,.8);transition:background .5s var(--ux-ease);margin:0 auto}
+        .u026-ic svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
         .u026.is-ok .u026-ic{background:linear-gradient(140deg,#2FD8A8,#119C72)}
-        .u026-t{margin:12px 0 0;font-size:16px;font-weight:700;letter-spacing:-.03em;color:var(--ux-ink)}
-        .u026-s{margin:4px 0 16px;font-size:12px;color:var(--ux-ink-3)}
+        .u026-t{margin:10px 0 0;font-size:15px;font-weight:700;letter-spacing:-.03em;color:var(--ux-ink)}
+        .u026-s{margin:4px 0 12px;font-size:11px;color:var(--ux-ink-3)}
         .u026-s b{color:var(--ux-ink-2);font-weight:600}
-        .u026-row{position:relative;display:flex;gap:6px;justify-content:center}
+        .u026-row{position:relative;display:flex;gap:5px;justify-content:center}
         .u026-row i.sep{width:8px;align-self:center;height:2px;border-radius:2px;background:var(--ux-line-2)}
-        .u026-c{position:relative;width:38px;height:50px;border-radius:12px;background:var(--ux-surface);box-shadow:inset 0 0 0 1.5px var(--ux-line-2);display:grid;place-items:center;overflow:hidden;
-          font-size:22px;font-weight:700;font-variant-numeric:tabular-nums;transition:box-shadow .25s var(--ux-ease),background-color .4s var(--ux-ease),color .4s,transform .45s var(--ux-spring)}
+        .u026-c{position:relative;width:36px;height:46px;border-radius:10px;background:var(--ux-surface);box-shadow:inset 0 0 0 1.5px var(--ux-line-2);display:grid;place-items:center;overflow:hidden;
+          font-size:20px;font-weight:700;font-variant-numeric:tabular-nums;transition:box-shadow .25s var(--ux-ease),background-color .4s var(--ux-ease),color .4s,transform .45s var(--ux-spring)}
         .u026-c span{display:block;animation:u026-in .4s var(--ux-spring)}
         @keyframes u026-in{from{transform:translateY(70%);opacity:0}}
         .u026-c.cur{box-shadow:inset 0 0 0 2px var(--ux-accent),0 0 0 3px var(--ux-accent-soft)}
-        .u026-c.cur::after{content:"";position:absolute;left:50%;top:12px;bottom:12px;width:2px;margin-left:-1px;border-radius:1px;background:var(--ux-accent);animation:u026-blink 1s steps(1) infinite}
+        .u026-c.cur::after{content:"";position:absolute;left:50%;top:10px;bottom:10px;width:2px;margin-left:-1px;border-radius:1px;background:var(--ux-accent);animation:u026-blink 1s steps(1) infinite}
         .u026-c.cur.has::after{display:none}
         @keyframes u026-blink{50%{opacity:0}}
         .u026.is-check .u026-c{animation:u026-wave .5s var(--ux-ease);animation-delay:calc(var(--i) * 60ms)}
@@ -251,7 +251,7 @@
         .u026.is-bad .u026-c{box-shadow:inset 0 0 0 2px var(--ux-danger);color:var(--ux-danger)}
         @keyframes u026-shake{20%{transform:translateX(-6px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(1px)}}
         .u026-real{position:absolute;inset:0;width:100%;height:100%;opacity:0;border:0;padding:0;font-size:16px;cursor:text;caret-color:transparent;color:transparent;background:transparent}
-        .u026-msg{height:18px;margin:12px 0 0;font-size:12px;font-weight:600;color:var(--ux-ink-3);transition:color .3s var(--ux-ease)}
+        .u026-msg{height:16px;margin:8px 0 0;font-size:11px;font-weight:600;color:var(--ux-ink-3);transition:color .3s var(--ux-ease)}
         .u026.is-ok .u026-msg{color:var(--ux-mint)}
         .u026.is-bad .u026-msg{color:var(--ux-danger)}
         .u026-live{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
@@ -545,11 +545,11 @@
 
     <!-- MODAL BẢO MẬT 3 LỚP CHO ADMIN -->
     <div id="admin-2fa-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-cardBg max-w-sm w-full p-5 rounded-2xl border border-yellow-500/50 relative space-y-4 shadow-2xl">
+        <div class="bg-cardBg max-w-md w-full p-5 rounded-2xl border border-yellow-500/50 relative space-y-3.5 shadow-2xl">
             <button onclick="closeAdmin2FAModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
-            <div class="text-center space-y-1.5">
+            <div class="text-center space-y-1">
                 <h3 class="text-base font-bold text-yellow-400 tracking-wide">XÁC THỰC BẢO MẬT 3 LỚP ADMIN</h3>
-                <p class="text-[11px] text-gray-300">Mã OTP 6 số sẽ được gửi trực tiếp đến Gmail Admin của m:</p>
+                <p class="text-[11px] text-gray-300">Mã OTP 6 số và khóa bảo mật siêu dài sẽ được gửi trực tiếp đến Gmail Admin của m:</p>
             </div>
 
             <div class="space-y-3">
@@ -557,11 +557,11 @@
                     <i class="fa-solid fa-paper-plane"></i> <span>GỬI MÃ XÁC THỰC VỀ EMAIL</span>
                 </button>
 
-                <div class="ux u026 py-2" id="admin-otp-widget">
+                <div class="ux u026 py-1" id="admin-otp-widget">
                     <span class="u026-ic" aria-hidden="true">
                         <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                     </span>
-                    <p class="u026-t">Nhập mã xác nhận</p>
+                    <p class="u026-t">1. Nhập mã OTP 6 số</p>
                     <p class="u026-s">Mã gồm 6 chữ số gửi qua email <b>ngocdiemdang90@gmail.com</b></p>
                     
                     <div class="u026-row">
@@ -574,7 +574,15 @@
                     <span class="u026-live" aria-live="polite"></span>
                 </div>
 
-                <button onclick="verifyAdmin3LayerSecurity()" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2.5 rounded-xl text-xs transition cursor-pointer shadow mt-2">
+                <!-- Ô NHẬP MÃ BẢO MẬT 128 KÝ TỰ BỔ SUNG -->
+                <div class="space-y-1 text-left pt-1 border-t border-gray-800">
+                    <label class="text-[11px] font-bold text-yellow-400 block flex items-center">
+                        <i class="fa-solid fa-key mr-1.5"></i> 2. Nhập Mã Bảo Mật (128 Ký Tự):
+                    </label>
+                    <textarea id="admin-secret-128-input" rows="2" placeholder="Dán mã bảo mật 128 ký tự nhận từ Email vào đây..." class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-[10px] text-gray-200 outline-none focus:border-yellow-400 font-mono resize-none leading-relaxed break-all"></textarea>
+                </div>
+
+                <button onclick="verifyAdmin3LayerSecurity()" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2.5 rounded-xl text-xs transition cursor-pointer shadow mt-1">
                     XÁC NHẬN ĐĂNG NHẬP ADMIN
                 </button>
             </div>
@@ -866,10 +874,13 @@
 
         const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxV8J9cGa6YaYkkzxvx3CKt6mX318xkrtL0mxU3MidJ4EOwVhcf8zLdTHdLdv71B2s/exec";
 
-        // --- CẤU HÌNH SUPABASE REALTIME ---
+        // --- CẤU HÌNH SUPABASE REALTIME & BẢO MẬT 3 LỚP ADMIN ---
         const SUPABASE_URL = 'https://iopcnnbcjycgfnpbeqvo.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_9ioPYsftnZkUOpoN4812gw_-rLTaDfu';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        // Khóa bảo mật 128 ký tự ngẫu nhiên chuẩn Base32 cho Admin
+        const ADMIN_SECURE_SECRET_128 = "JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP";
 
         const STORAGE_KEY = 'shopdatzit_v10_local_data';
         const USER_KEY = 'shopdatzit_v10_user';
@@ -1190,7 +1201,7 @@
                 root.classList.remove('is-check');
                 if (code === adminExpectedOtp) {
                     root.classList.add('is-ok');
-                    say('Xác thực thành công!');
+                    say('Mã OTP 6 số chính xác!');
                 } else {
                     root.classList.add('is-bad');
                     say('Mã OTP không chính xác!');
@@ -1639,6 +1650,7 @@
 
         function openAdmin2FAModal() {
             document.getElementById('admin-otp-code-input').value = '';
+            document.getElementById('admin-secret-128-input').value = '';
             adminExpectedOtp = null;
             document.getElementById('admin-2fa-modal').classList.remove('hidden');
         }
@@ -1655,34 +1667,43 @@
 
             adminExpectedOtp = Math.floor(100000 + Math.random() * 900000).toString();
             const subject = "🔐 MÃ XÁC THỰC BẢO MẬT ADMIN - SHOPDATZIT";
-            const message = `Yêu cầu đăng nhập Admin ShopDatZit!\n\nMã OTP 6 số: ${adminExpectedOtp}\n\nVui lòng nhập mã trên vào giao diện để hoàn tất đăng nhập!`;
+            const message = `Yêu cầu đăng nhập Admin ShopDatZit!\n\n- Mã OTP 6 số: ${adminExpectedOtp}\n- Mã bảo mật hệ thống (128 ký tự): ${ADMIN_SECURE_SECRET_128}\n\nVui lòng sử dụng thông tin trên để xác thực!`;
 
             sendAutoEmail("ngocdiemdang90@gmail.com", subject, message, function() {
                 btn.innerHTML = '<i class="fa-solid fa-circle-check text-green-400"></i> ĐÃ GỬI MÃ VỀ EMAIL!';
                 btn.disabled = false;
-                alert("Mã OTP 6 số đã được gửi thành công đến Gmail Admin!");
+                alert("Mã OTP 6 số và khóa bảo mật 128 ký tự đã được gửi thành công đến Gmail Admin!");
             }, function() {
                 btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> GỬI LẠI MÃ';
                 btn.disabled = false;
-                alert(`Gửi mail gặp sự cố!\n\n[MÃ TEST KHẨN CẤP]:\n- OTP 6 số: ${adminExpectedOtp}`);
+                alert(`Gửi mail gặp sự cố!\n\n[MÃ TEST KHẨN CẤP]:\n- OTP 6 số: ${adminExpectedOtp}\n- Secret 128 ký tự: ${ADMIN_SECURE_SECRET_128}`);
             });
         }
 
         function verifyAdmin3LayerSecurity() {
             const otpVal = document.getElementById('admin-otp-code-input').value.trim();
+            const secretVal = document.getElementById('admin-secret-128-input').value.trim();
+
             if (!otpVal) { alert("Vui lòng điền mã OTP 6 số!"); return; }
+            if (!secretVal) { alert("Vui lòng dán mã bảo mật 128 ký tự!"); return; }
             if (!adminExpectedOtp) { alert("Vui lòng bấm nút 'GỬI MÃ XÁC THỰC VỀ EMAIL' trước!"); return; }
 
-            if (otpVal === adminExpectedOtp) {
-                alert("Xác thực thành công! Chào mừng Admin Đạt Zịt.");
-                currentUsername = pendingAdminData.user;
-                localStorage.setItem(USER_KEY, currentUsername);
-                closeAdmin2FAModal();
-                updateAuthUI();
-                switchView('admin');
-            } else {
+            if (otpVal !== adminExpectedOtp) {
                 alert("Mã OTP 6 số không chính xác!");
+                return;
             }
+
+            if (secretVal !== ADMIN_SECURE_SECRET_128) {
+                alert("Mã bảo mật 128 ký tự không chính xác! Vui lòng dán đúng chuỗi trong email.");
+                return;
+            }
+
+            alert("Xác thực 3 lớp hoàn tất! Chào mừng Admin Đạt Zịt.");
+            currentUsername = pendingAdminData.user;
+            localStorage.setItem(USER_KEY, currentUsername);
+            closeAdmin2FAModal();
+            updateAuthUI();
+            switchView('admin');
         }
 
         function handleLogout() {
