@@ -78,7 +78,7 @@
         html.light .bg-gray-800 { background-color: #e5e7eb !important; color: #1f2937 !important; border-color: #d1d5db !important; }
         html.light .text-gray-100, html.light .text-white { color: #111827 !important; }
         html.light .text-gray-400 { color: #6b7280 !important; }
-        html.light input, html.light select { background-color: #ffffff !important; color: #111827 !important; border-color: #d1d5db !important; }
+        html.light input, html.light select, html.light textarea { background-color: #ffffff !important; color: #111827 !important; border-color: #d1d5db !important; }
         
         .loader { border: 2px solid #f3f3f3; border-top: 2px solid #3b82f6; border-radius: 50%; width: 14px; height: 14px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 5px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -306,7 +306,7 @@
         <div id="home-view" class="view-section space-y-4">
             <div class="bg-cardBg border border-gray-800 p-3.5 rounded-xl text-center shadow-md transition-colors">
                 <h2 class="text-base sm:text-lg font-bold rgb-text">🔥 NẠP GAME & THẺ CÀO NHANH CHÓNG - UY TÍN REALTIME 24/7 🔥</h2>
-                <p class="text-[11px] sm:text-xs text-white font-bold mt-1">Hệ thống đồng bộ đơn hàng tự động Realtime không cần copy mã!</p>
+                <p class="text-[11px] sm:text-xs text-white font-bold mt-1">Lưu ý: hãy copy link dán lên google</p>
             </div>
 
             <h1 class="text-lg font-bold flex items-center mt-5"><i class="fa-solid fa-gamepad mr-2 text-accentBlue"></i> Danh Sách Nạp Game & Thẻ Cào</h1>
@@ -366,6 +366,10 @@
                             <div>
                                 <label class="text-xs text-gray-400 block mb-1">Số điện thoại / Zalo nhận thẻ</label>
                                 <input type="text" id="input-phone" placeholder="Nhập SĐT/Zalo" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="text-xs text-gray-400 block mb-1">Ghi chú từ khách hàng (Tùy chọn)</label>
+                                <textarea id="input-user-note" rows="2" placeholder="Ví dụ: Nhờ admin nạp nhanh giúp em..." class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100 resize-none"></textarea>
                             </div>
                         </div>
                     </div>
@@ -477,7 +481,6 @@
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                     <div>
                         <h1 class="text-lg font-bold flex items-center text-yellow-400"><i class="fa-solid fa-shield-halved mr-2"></i> Quản Lý Shop Realtime (Admin)</h1>
-                        <p class="text-[11px] text-gray-400 mt-0.5">Đơn hàng mới của khách sẽ tự động nảy lên tức thì mà không cần bấm F5!</p>
                     </div>
                 </div>
             </div>
@@ -527,6 +530,20 @@
             <p class="text-[10px] text-gray-500">Shopdatzit là hệ thống dịch vụ trung gian. Tất cả bản quyền hình ảnh, tên game thuộc về nhà phát hành tương ứng.</p>
         </div>
     </footer>
+
+    <!-- MODAL HỦY ĐƠN VÀ NHẬP LÝ DO -->
+    <div id="cancel-reason-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-cardBg max-w-sm w-full p-5 rounded-2xl border border-red-500/50 relative space-y-4 shadow-2xl">
+            <button onclick="closeCancelReasonModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-base font-bold text-red-400 tracking-wide text-center">NHẬP LÝ DO HỦY ĐƠN</h3>
+            
+            <div class="space-y-3">
+                <p class="text-xs text-gray-300">Lý do này sẽ được hiển thị trực tiếp cho khách hàng xem trong lịch sử đơn:</p>
+                <textarea id="cancel-reason-input" rows="3" placeholder="Nhập lý do hủy (ví dụ: Sai mật khẩu, Sai tài khoản...)" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white outline-none focus:border-red-500 resize-none"></textarea>
+                <button onclick="submitCancelOrderWithReason()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow">XÁC NHẬN HỦY ĐƠN</button>
+            </div>
+        </div>
+    </div>
 
     <!-- MODAL BẢO MẬT 3 LỚP CHO ADMIN -->
     <div id="admin-2fa-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
@@ -825,6 +842,7 @@
         let tempAvatarBase64 = null;
         let paymentTimer = null;
         let pendingAdminData = null;
+        let cancelTargetOrderId = null;
 
         let generatedOTP = null;
         let targetForgotUser = null;
@@ -1790,6 +1808,8 @@
                 let gameSummary = cart.length === 1 ? cart[0].gameName : `Nhiều dịch vụ (${cart.length} loại)`;
                 let packageSummary = cart.map(i => `${i.pkgName} (x${i.qty})`).join(', ');
 
+                const userNote = document.getElementById('input-user-note').value.trim();
+
                 const newOrder = {
                     id: 'ORD_' + now, 
                     code: '#' + randomCode, 
@@ -1805,7 +1825,8 @@
                     status: status,
                     input_user: document.getElementById('input-username').value || 'Không có',
                     input_pass: document.getElementById('input-password').value || 'Không có',
-                    input_server: document.getElementById('input-server').value || 'Mặc định'
+                    input_server: document.getElementById('input-server').value || 'Mặc định',
+                    input_note: userNote || 'Không có'
                 };
 
                 const { error } = await supabaseClient.from('orders').insert([newOrder]);
@@ -1817,6 +1838,7 @@
 
                 sendEmailNotification(newOrder);
                 clearCart(); 
+                document.getElementById('input-user-note').value = '';
                 renderGameList();
 
                 document.getElementById('success-token-modal').classList.remove('hidden');
@@ -1856,6 +1878,10 @@
 
             let statusRenderHtml = (displayStatus === 'Admin Đã Hoàn Thành Đơn' || (order.status.includes('Chờ duyệt') && is24hPassed)) ? `<span class="px-2 py-0.5 rounded-lg border text-[11px] font-bold text-green-400 bg-green-950/50 border-green-800 flex items-center space-x-1 w-max"><i class="fa-solid fa-circle-check"></i> <span>Admin Đã Hoàn Thành Đơn</span></span>` : `<span class="font-bold ${displayStatus.includes('Thành Công') ? 'text-green-400' : (displayStatus.includes('Hủy') ? 'text-red-400' : 'text-yellow-400')}">${displayStatus}</span>`;
 
+            let cancelReasonHtml = (order.cancel_reason && order.status.includes('Hủy')) ? `<div class="bg-red-950/40 p-2.5 rounded-lg border border-red-800/80 text-red-300 font-bold text-[11px] mt-1"><i class="fa-solid fa-circle-exclamation mr-1"></i> Lý do hủy đơn từ Admin: <span class="text-white font-normal">${order.cancel_reason}</span></div>` : '';
+
+            let userNoteHtml = (order.input_note && order.input_note !== 'Không có') ? `<div class="flex justify-between items-start border-t border-gray-800/60 pt-1.5 mt-1"><span class="text-gray-400">Ghi chú của khách:</span><span class="font-bold text-yellow-300 text-right max-w-[180px]">${order.input_note}</span></div>` : '';
+
             body.innerHTML = `
                 <div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Mã đơn:</span><span class="font-bold text-white">${order.code}</span></div>
                 <div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Thời gian:</span><span class="text-gray-200">${order.time}</span></div>
@@ -1863,10 +1889,12 @@
                 ${itemsListHtml}
                 <div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Tổng thanh toán:</span><span class="font-bold text-green-400 text-xs sm:text-sm">${order.price.toLocaleString('vi-VN')} đ</span></div>
                 <div class="flex justify-between border-b border-gray-800 pb-1.5 items-center"><span class="text-gray-400">Trạng thái:</span>${statusRenderHtml}</div>
-                <div class="bg-gray-950 p-2.5 rounded-lg border border-gray-800 space-y-1.5">
+                ${cancelReasonHtml}
+                <div class="bg-gray-950 p-2.5 rounded-lg border border-gray-800 space-y-1.5 mt-2">
                     <div class="flex justify-between items-center"><span class="text-gray-400">Tài khoản / SĐT:</span><span class="font-bold text-white select-all">${order.input_user}</span></div>
                     <div class="flex justify-between items-center"><span class="text-gray-400">Mật khẩu game:</span><div class="flex items-center space-x-2"><input type="password" id="modal-pass-${order.id}" value="${order.input_pass}" readonly class="bg-transparent text-right font-bold text-white w-24 focus:outline-none select-all"><i class="fa-solid fa-eye text-gray-400 cursor-pointer text-xs" onclick="toggleModalPass('${order.id}')"></i></div></div>
                     <div class="flex justify-between items-center"><span class="text-gray-400">Server / Ghi chú:</span><span class="font-bold text-white">${order.input_server}</span></div>
+                    ${userNoteHtml}
                 </div>
             `;
             document.getElementById('order-detail-modal').classList.remove('hidden');
@@ -1895,12 +1923,14 @@
             orders.forEach((ord) => {
                 let is24hPassed = (Date.now() - (ord.timestamp || 0)) >= EXPIRE_TIME_MS;
                 let displayStatus = ord.status;
-                let statusBadgeHtml = (displayStatus === 'Admin Đã Hoàn Thành Đơn' || (ord.status.includes('Chờ duyệt') && is24hPassed)) ? `<span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-green-400 border-green-800 bg-green-950/50 flex items-center space-x-1"><i class="fa-solid fa-circle-check"></i> <span>Admin Đã Hoàn Thành Đơn</span></span>` : (displayStatus.includes('Thành Công') ? `<span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-green-400 border-green-800 bg-green-950/50">${displayStatus}</span>` : (displayStatus.includes('Hủy') ? `<span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-red-400 border-red-800 bg-green-950/50">${displayStatus}</span>` : `<span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-yellow-400 border-yellow-800 bg-yellow-950/50">${displayStatus}</span>`));
+                let statusBadgeHtml = (displayStatus === 'Admin Đã Hoàn Thành Đơn' || (ord.status.includes('Chờ duyệt') && is24hPassed)) ? `<span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-green-400 border-green-800 bg-green-950/50 flex items-center space-x-1"><i class="fa-solid fa-circle-check"></i> <span>Admin Đã Hoàn Thành Đơn</span></span>` : (displayStatus.includes('Thành Công') ? `<span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-green-400 border-green-800 bg-green-950/50">${displayStatus}</span>` : (displayStatus.includes('Hủy') ? `<span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-red-400 border-red-800 bg-red-950/50">${displayStatus}</span>` : `<span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-yellow-400 border-yellow-800 bg-yellow-950/50">${displayStatus}</span>`));
+
+                let cancelReasonShort = (ord.cancel_reason && ord.status.includes('Hủy')) ? `<div class="text-[11px] text-red-400 mt-1 flex items-center"><i class="fa-solid fa-circle-info mr-1"></i> Lý do hủy: ${ord.cancel_reason}</div>` : '';
 
                 container.innerHTML += `
                     <div class="bg-cardBg p-3.5 rounded-xl border border-gray-800 space-y-2.5 shadow-sm hover:border-accentBlue transition">
                         <div class="flex justify-between items-center border-b border-gray-800 pb-2"><span class="font-bold text-white text-xs">${ord.code}</span><span class="text-[10px] text-gray-400">${ord.time}</span></div>
-                        <div class="flex justify-between items-center text-xs"><div><div class="font-bold text-accentBlue text-xs sm:text-sm">${ord.game}</div><div class="text-gray-300 text-[11px] mt-0.5">${ord.package}</div></div><div class="text-right flex flex-col items-end space-y-1.5"><div class="font-bold text-green-400 text-xs sm:text-sm">${ord.price.toLocaleString('vi-VN')} đ</div>${statusBadgeHtml}</div></div>
+                        <div class="flex justify-between items-center text-xs"><div><div class="font-bold text-accentBlue text-xs sm:text-sm">${ord.game}</div><div class="text-gray-300 text-[11px] mt-0.5">${ord.package}</div>${cancelReasonShort}</div><div class="text-right flex flex-col items-end space-y-1.5"><div class="font-bold text-green-400 text-xs sm:text-sm">${ord.price.toLocaleString('vi-VN')} đ</div>${statusBadgeHtml}</div></div>
                         <div class="pt-2 border-t border-gray-800/60 flex justify-between items-center"><span class="text-[10px] text-gray-400">Trạng thái đơn</span><button onclick="openOrderDetail('${ord.id}')" class="bg-gray-800 hover:bg-gray-700 text-accentBlue px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer border border-gray-700 flex items-center"><i class="fa-solid fa-eye mr-1"></i> Chi tiết đơn hàng</button></div>
                     </div>
                 `;
@@ -1925,10 +1955,12 @@
             container.innerHTML = '';
             orders.forEach((ord) => {
                 let isPending = ord.status.includes('Chờ duyệt');
+                let userNoteHtml = (ord.input_note && ord.input_note !== 'Không có') ? `<div class="text-[11px] text-yellow-300 mt-1"><b>Khách nhắn:</b> ${ord.input_note}</div>` : '';
+                
                 container.innerHTML += `
                     <div class="bg-cardBg p-3.5 rounded-xl border border-gray-800 space-y-2.5 shadow-sm hover:border-gray-600 transition">
                         <div class="flex justify-between items-center border-b border-gray-800 pb-2"><span class="font-bold text-gray-300 text-[11px]">${ord.code} - Khách: <span class="text-white">${ord.customer_name}</span> <span class="text-accentBlue">(UID: ${ord.uid})</span></span><span class="text-[10px] text-gray-500">${ord.time}</span></div>
-                        <div class="flex justify-between items-center text-xs"><div><div class="font-bold text-white text-xs sm:text-sm">${ord.game}</div><div class="text-accentBlue text-[11px] mb-0.5">${ord.package}</div><div class="text-green-400 font-bold text-xs">${ord.price.toLocaleString('vi-VN')} đ</div></div><div class="flex flex-col items-end space-y-1.5">${isPending ? `<button onclick="adminConfirmOrder('${ord.id}')" class="bg-green-600 hover:bg-green-700 w-full text-white px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition shadow">Nạp Thành Công</button><button onclick="adminRejectOrder('${ord.id}')" class="bg-gray-700 hover:bg-red-700 w-full text-white px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition shadow">Hủy Đơn</button>` : `<span class="px-2 py-0.5 rounded border text-[11px] font-bold ${ord.status.includes('Thành Công') || ord.status.includes('Hoàn Thành') ? 'bg-green-950/50 text-green-400 border-green-800' : 'bg-red-950/50 text-red-400 border-red-800'}">${ord.status}</span>`}</div></div>
+                        <div class="flex justify-between items-center text-xs"><div><div class="font-bold text-white text-xs sm:text-sm">${ord.game}</div><div class="text-accentBlue text-[11px] mb-0.5">${ord.package}</div><div class="text-green-400 font-bold text-xs">${ord.price.toLocaleString('vi-VN')} đ</div>${userNoteHtml}</div><div class="flex flex-col items-end space-y-1.5">${isPending ? `<button onclick="adminConfirmOrder('${ord.id}')" class="bg-green-600 hover:bg-green-700 w-full text-white px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition shadow">Nạp Thành Công</button><button onclick="openCancelReasonModal('${ord.id}')" class="bg-gray-700 hover:bg-red-700 w-full text-white px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition shadow">Hủy Đơn</button>` : `<span class="px-2 py-0.5 rounded border text-[11px] font-bold ${ord.status.includes('Thành Công') || ord.status.includes('Hoàn Thành') ? 'bg-green-950/50 text-green-400 border-green-800' : 'bg-red-950/50 text-red-400 border-red-800'}">${ord.status}</span>`}</div></div>
                         <div class="pt-1.5 border-t border-gray-800/60 flex justify-end"><button onclick="openOrderDetail('${ord.id}')" class="bg-gray-800 hover:bg-gray-700 text-accentBlue px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer border border-gray-700 flex items-center"><i class="fa-solid fa-eye mr-1"></i> Xem Chi Tiết</button></div>
                     </div>
                 `;
@@ -1945,14 +1977,32 @@
             else { renderAdminOrders(); alert('Đã duyệt đơn!'); }
         }
 
-        async function adminRejectOrder(orderId) {
+        function openCancelReasonModal(orderId) {
+            cancelTargetOrderId = orderId;
+            document.getElementById('cancel-reason-input').value = '';
+            document.getElementById('cancel-reason-modal').classList.remove('hidden');
+        }
+
+        function closeCancelReasonModal() {
+            document.getElementById('cancel-reason-modal').classList.add('hidden');
+            cancelTargetOrderId = null;
+        }
+
+        async function submitCancelOrderWithReason() {
+            if (!cancelTargetOrderId) return;
+            const reason = document.getElementById('cancel-reason-input').value.trim() || 'Admin Hủy Đơn';
+
             const { error } = await supabaseClient
                 .from('orders')
-                .update({ status: 'Đã Hủy' })
-                .eq('id', orderId);
+                .update({ status: 'Đã Hủy', cancel_reason: reason })
+                .eq('id', cancelTargetOrderId);
 
             if (error) alert('Lỗi cập nhật: ' + error.message);
-            else { renderAdminOrders(); alert('Đã hủy đơn!'); }
+            else { 
+                closeCancelReasonModal();
+                renderAdminOrders(); 
+                alert('Đã hủy đơn thành công!'); 
+            }
         }
     </script>
 </body>
