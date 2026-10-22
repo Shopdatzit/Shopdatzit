@@ -833,7 +833,6 @@
         // --- 1. CHỐNG SPAM F5 & KHÓA F12 / CHUỘT PHẢI ---
         let lastF5Time = 0;
         window.addEventListener('keydown', function (e) {
-            // Chống spam F5 hoặc Ctrl+R (mỗi 2 giây được bấm 1 lần)
             if (e.keyCode === 116 || (e.ctrlKey && e.keyCode === 82)) {
                 const now = Date.now();
                 if (now - lastF5Time < 2000) {
@@ -843,34 +842,13 @@
                 }
                 lastF5Time = now;
             }
-
-            // Chặn phím F12
-            if (e.keyCode === 123) {
-                e.preventDefault();
-                return false;
-            }
-            // Chặn Ctrl + Shift + I (Inspect)
-            if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
-                e.preventDefault();
-                return false;
-            }
-            // Chặn Ctrl + Shift + J (Console)
-            if (e.ctrlKey && e.shiftKey && e.keyCode === 74) {
-                e.preventDefault();
-                return false;
-            }
-            // Chặn Ctrl + U (View Source)
-            if (e.ctrlKey && e.keyCode === 85) {
-                e.preventDefault();
-                return false;
-            }
+            if (e.keyCode === 123) { e.preventDefault(); return false; }
+            if (e.ctrlKey && e.shiftKey && e.keyCode === 73) { e.preventDefault(); return false; }
+            if (e.ctrlKey && e.shiftKey && e.keyCode === 74) { e.preventDefault(); return false; }
+            if (e.ctrlKey && e.keyCode === 85) { e.preventDefault(); return false; }
         });
 
-        // Khóa chuột phải để chống xem nguồn / inspect nhanh
-        window.addEventListener('contextmenu', function (e) {
-            e.preventDefault();
-        });
-
+        window.addEventListener('contextmenu', function (e) { e.preventDefault(); });
 
         const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxV8J9cGa6YaYkkzxvx3CKt6mX318xkrtL0mxU3MidJ4EOwVhcf8zLdTHdLdv71B2s/exec";
 
@@ -879,8 +857,8 @@
         const SUPABASE_ANON_KEY = 'sb_publishable_9ioPYsftnZkUOpoN4812gw_-rLTaDfu';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
-        // Khóa bảo mật 128 ký tự ngẫu nhiên chuẩn Base32 cho Admin
-        const ADMIN_SECURE_SECRET_128 = "JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP";
+        // Khóa bảo mật 128 ký tự ngẫu nhiên chuẩn Base32 cho Admin (sẽ được đổi mới tự động mỗi khi bấm gửi)
+        let ADMIN_SECURE_SECRET_128 = "JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP";
 
         const STORAGE_KEY = 'shopdatzit_v10_local_data';
         const USER_KEY = 'shopdatzit_v10_user';
@@ -1138,7 +1116,6 @@
             initOtpWidget('change-email-otp-widget', changeEmailVerifyCallback);
         };
 
-        // LẮNG NGHE REALTIME TỪ SUPABASE
         function initRealtimeListener() {
             supabaseClient
               .channel('public:orders')
@@ -1266,7 +1243,6 @@
             return currentUsername && accounts[currentUsername] && (accounts[currentUsername].email === 'ngocdiemdang90@gmail.com' || currentUsername === 'ngocdiemdang90@gmail.com'); 
         }
 
-        // ĐẾM LƯỢT "ĐÃ BÁN" REALTIME TỪ CÁC ĐƠN HÀNG THÀNH CÔNG
         async function fetchAndCalculateSolds() {
             globalGameSoldCounts = {};
             const { data: orders, error } = await supabaseClient
@@ -1660,19 +1636,52 @@
             pendingAdminData = null;
         }
 
+        // --- HÀM TẠO CHUỖI BASE32 128 KÝ TỰ TỪ CÁC CÂU BẤT KỲ (KHÔNG TRÙNG LẶP) ---
+        function generateRandomBase32Secret128() {
+            const sampleSentences = [
+                "SHOPDATZIT IS THE MOST TRUSTED GAMING TOPUP STORE ONLINE 247",
+                "SECURITY IS THE TOP PRIORITY FOR ADMIN SYSTEM LOGINS TODAY",
+                "ALWAYS DOUBLE CHECK YOUR AUTHENTICATION CODE BEFORE LOGGING IN",
+                "PREVENT ALL BRUTE FORCE ATTACKS WITH DYNAMIC RANDOM BASE32 KEY",
+                "SUPER SECRET PASSCODE GENERATED AUTOMATICALLY FOR ADMIN LOGIN",
+                "REALTIME DATABASE SYNCHRONIZED WITH SUPABASE AND GOOGLE SHEETS",
+                "FAST TOPUP SERVICE WITH AUTOMATIC EMAIL NOTIFICATION SYSTEM NOW"
+            ];
+            
+            const randomSentence = sampleSentences[Math.floor(Math.random() * sampleSentences.length)];
+            
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+            let base32Str = "";
+            for (let i = 0; i < randomSentence.length; i++) {
+                const code = randomSentence.charCodeAt(i);
+                base32Str += chars[code % 32];
+            }
+            
+            while (base32Str.length < 128) {
+                base32Str += chars[Math.floor(Math.random() * 32)];
+            }
+            
+            return base32Str.substring(0, 128);
+        }
+
         function sendAdminEmail3LayerSecurity() {
             const btn = document.getElementById('btn-send-admin-3layer');
             btn.innerHTML = '<span class="loader"></span> ĐANG GỬI MÃ VỀ EMAIL...';
             btn.disabled = true;
 
+            // 1. Tạo mã OTP 6 số ngẫu nhiên
             adminExpectedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+            
+            // 2. TỰ ĐỘNG TẠO MỚI MÃ 128 KÝ TỰ KHÔNG TRÙNG LẶP MỖI LẦN GỬI
+            ADMIN_SECURE_SECRET_128 = generateRandomBase32Secret128();
+
             const subject = "🔐 MÃ XÁC THỰC BẢO MẬT ADMIN - SHOPDATZIT";
-            const message = `Yêu cầu đăng nhập Admin ShopDatZit!\n\n- Mã OTP 6 số: ${adminExpectedOtp}\n- Mã bảo mật hệ thống (128 ký tự): ${ADMIN_SECURE_SECRET_128}\n\nVui lòng sử dụng thông tin trên để xác thực!`;
+            const message = `Yêu cầu đăng nhập Admin ShopDatZit!\n\n- Mã OTP 6 số: ${adminExpectedOtp}\n- Mã bảo mật ngẫu nhiên lần này (128 ký tự): ${ADMIN_SECURE_SECRET_128}\n\nVui lòng copy chính xác mã 128 ký tự trên dán vào web để xác thực!`;
 
             sendAutoEmail("ngocdiemdang90@gmail.com", subject, message, function() {
                 btn.innerHTML = '<i class="fa-solid fa-circle-check text-green-400"></i> ĐÃ GỬI MÃ VỀ EMAIL!';
                 btn.disabled = false;
-                alert("Mã OTP 6 số và khóa bảo mật 128 ký tự đã được gửi thành công đến Gmail Admin!");
+                alert("Mã OTP 6 số và khóa bảo mật 128 ký tự MỚI đã được gửi thành công đến Gmail Admin!");
             }, function() {
                 btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> GỬI LẠI MÃ';
                 btn.disabled = false;
@@ -1884,7 +1893,6 @@
             sendAutoEmail("ngocdiemdang90@gmail.com", subject, message);
         }
 
-        // TẠO ĐƠN HÀNG VÀ ĐẨY THẲNG LÊN SUPABASE
         async function createOrderAndFinish(status) {
             const randomCode = Math.floor(100000 + Math.random() * 900000);
             let accounts = getAccounts();
@@ -1992,7 +2000,6 @@
         function toggleModalPass(id) { const input = document.getElementById(`modal-pass-${id}`); if (input) input.type = input.type === 'password' ? 'text' : 'password'; }
         function closeOrderDetailModal() { document.getElementById('order-detail-modal').classList.add('hidden'); }
 
-        // TẢI LỊCH SỬ ĐƠN HÀNG TỪ SUPABASE
         async function renderHistory() {
             const container = document.getElementById('history-container');
             if (!container || !currentUsername) return;
@@ -2026,7 +2033,6 @@
             });
         }
 
-        // TẢI DANH SÁCH ĐƠN CHO ADMIN TỪ SUPABASE
         async function renderAdminOrders() {
             const container = document.getElementById('admin-orders-container');
             if (!container || !isAdmin()) return;
@@ -2099,7 +2105,6 @@
             }
         }
 
-        // CHỨC NĂNG XÓA SẠCH TẤT CẢ ĐƠN HÀNG DÀNH CHO ADMIN (XÓA TỪNG ID TRÁNH BỊ RLS CHẶN)
         async function adminClearAllOrders() {
             if (!isAdmin()) return;
             if (confirm("⚠️ XÁC NHẬN DỌN TRỐNG ĐƠN HÀNG?\nThao tác này sẽ xóa toàn bộ đơn hàng hiện có trên Supabase. Lịch sử của khách lẫn admin sẽ về 0 và không thể khôi phục!")) {
