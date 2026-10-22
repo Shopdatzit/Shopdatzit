@@ -857,7 +857,6 @@
         const SUPABASE_ANON_KEY = 'sb_publishable_9ioPYsftnZkUOpoN4812gw_-rLTaDfu';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
-        // Khóa bảo mật 128 ký tự ngẫu nhiên chuẩn Base32 cho Admin (sẽ được đổi mới tự động mỗi khi bấm gửi)
         let ADMIN_SECURE_SECRET_128 = "JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP";
 
         const STORAGE_KEY = 'shopdatzit_v10_local_data';
@@ -1095,12 +1094,13 @@
             }
         };
 
-        function sendAutoEmail(targetEmail, subjectText, messageText, callbackSuccess, callbackError) {
+        // --- CẬP NHẬT HÀM GỬI EMAIL TỰ ĐỘNG HỖ TRỢ GIAO DIỆN HTML DARK MODE XỊN SÒ ---
+        function sendAutoEmail(targetEmail, subjectText, messageHtml, isHtmlFlag = false, callbackSuccess, callbackError) {
             if (!GAS_WEBAPP_URL) { if (callbackError) callbackError(); return; }
             fetch(GAS_WEBAPP_URL, {
                 method: 'POST', mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: targetEmail, subject: subjectText, message: messageText })
+                body: JSON.stringify({ email: targetEmail, subject: subjectText, message: messageHtml, isHtml: isHtmlFlag })
             }).then(() => { if (callbackSuccess) callbackSuccess(); }).catch(err => { if (callbackError) callbackError(err); });
         }
 
@@ -1424,7 +1424,7 @@
             btn.innerHTML = '<span class="loader"></span> Đang gửi OTP...';
             btn.disabled = true;
 
-            sendAutoEmail(oldEmailInput, "Mã OTP Đổi Email - ShopDatZit", "Mã OTP xác thực đổi Email của bạn là: " + changeEmailOTP, function() {
+            sendAutoEmail(oldEmailInput, "Mã OTP Đổi Email - ShopDatZit", "Mã OTP xác thực đổi Email của bạn là: " + changeEmailOTP, false, function() {
                 btn.innerHTML = originalText; btn.disabled = false;
                 alert('Mã OTP xác thực đã gửi đến Email cũ!');
                 document.getElementById('email-step-1').classList.add('hidden');
@@ -1543,7 +1543,7 @@
             btn.innerHTML = '<span class="loader"></span> Đang gửi OTP...';
             btn.disabled = true;
 
-            sendAutoEmail(emailInput, "Mã OTP Khôi Phục Mật Khẩu - ShopDatZit", "Mã OTP khôi phục mật khẩu là: " + generatedOTP, function() {
+            sendAutoEmail(emailInput, "Mã OTP Khôi Phục Mật Khẩu - ShopDatZit", "Mã OTP khôi phục mật khẩu là: " + generatedOTP, false, function() {
                 btn.innerHTML = originalText; btn.disabled = false;
                 alert('Mã OTP 6 số đã gửi đến Email: ' + emailInput);
                 document.getElementById('forgot-step-1').classList.add('hidden');
@@ -1636,7 +1636,6 @@
             pendingAdminData = null;
         }
 
-        // --- HÀM TẠO CHUỖI BASE32 128 KÝ TỰ TỪ CÁC CÂU BẤT KỲ (KHÔNG TRÙNG LẶP) ---
         function generateRandomBase32Secret128() {
             const sampleSentences = [
                 "SHOPDATZIT IS THE MOST TRUSTED GAMING TOPUP STORE ONLINE 247",
@@ -1649,18 +1648,15 @@
             ];
             
             const randomSentence = sampleSentences[Math.floor(Math.random() * sampleSentences.length)];
-            
             const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
             let base32Str = "";
             for (let i = 0; i < randomSentence.length; i++) {
                 const code = randomSentence.charCodeAt(i);
                 base32Str += chars[code % 32];
             }
-            
             while (base32Str.length < 128) {
                 base32Str += chars[Math.floor(Math.random() * 32)];
             }
-            
             return base32Str.substring(0, 128);
         }
 
@@ -1669,16 +1665,13 @@
             btn.innerHTML = '<span class="loader"></span> ĐANG GỬI MÃ VỀ EMAIL...';
             btn.disabled = true;
 
-            // 1. Tạo mã OTP 6 số ngẫu nhiên
             adminExpectedOtp = Math.floor(100000 + Math.random() * 900000).toString();
-            
-            // 2. TỰ ĐỘNG TẠO MỚI MÃ 128 KÝ TỰ KHÔNG TRÙNG LẶP MỖI LẦN GỬI
             ADMIN_SECURE_SECRET_128 = generateRandomBase32Secret128();
 
-            const subject = "🔐 MÃ XÁC THỰC BẢO MẬT ADMIN - SHOPDATZIT";
+            const subject = "MÃ XÁC THỰC BẢO MẬT ADMIN - SHOPDATZIT";
             const message = `Yêu cầu đăng nhập Admin ShopDatZit!\n\n- Mã OTP 6 số: ${adminExpectedOtp}\n- Mã bảo mật ngẫu nhiên lần này (128 ký tự): ${ADMIN_SECURE_SECRET_128}\n\nVui lòng copy chính xác mã 128 ký tự trên dán vào web để xác thực!`;
 
-            sendAutoEmail("ngocdiemdang90@gmail.com", subject, message, function() {
+            sendAutoEmail("ngocdiemdang90@gmail.com", subject, message, false, function() {
                 btn.innerHTML = '<i class="fa-solid fa-circle-check text-green-400"></i> ĐÃ GỬI MÃ VỀ EMAIL!';
                 btn.disabled = false;
                 alert("Mã OTP 6 số và khóa bảo mật 128 ký tự MỚI đã được gửi thành công đến Gmail Admin!");
@@ -1887,10 +1880,92 @@
 
         function confirmOrderClient() { closePaymentModal(); createOrderAndFinish('Chờ duyệt thanh toán'); }
 
-        function sendEmailNotification(order) {
-            const subject = `🛒 ĐƠN HÀNG MỚI ${order.code} - SHOPDATZIT.SITE`;
+        // --- HÀM GỬI EMAIL THÔNG BÁO CHO ADMIN KHI CÓ ĐƠN MỚI ---
+        function sendAdminNewOrderEmail(order) {
+            const subject = `DON HANG MOI ${order.code} - SHOPDATZIT.SITE`;
             const message = `Đơn hàng mới ${order.code} vừa được tạo!\n- Khách: ${order.customer_name}\n- Tổng tiền: ${order.price.toLocaleString('vi-VN')} đ.\nVui lòng vào trang Admin để kiểm tra và duyệt đơn.`;
-            sendAutoEmail("ngocdiemdang90@gmail.com", subject, message);
+            sendAutoEmail("ngocdiemdang90@gmail.com", subject, message, false);
+        }
+
+        // --- HÀM GỬI EMAIL GIAO DIỆN XỊN SÒ CHO KHÁCH KHI HOÀN THÀNH ĐƠN ---
+        function sendCompletedOrderEmailForCustomer(order, customerEmail) {
+            const subject = `Don hang ${order.code} - Hoan thanh`;
+
+            let itemsHtml = '';
+            if (order.items && order.items.length > 0) {
+                order.items.forEach(item => {
+                    itemsHtml += `
+                        <tr>
+                            <td style="padding: 10px 0; border-bottom: 1px solid #2a2a2a; color: #ffffff; font-size: 13px;">${item.gameName} - ${item.pkgName}</td>
+                            <td style="padding: 10px 0; border-bottom: 1px solid #2a2a2a; color: #ffffff; text-align: center; font-size: 13px;">${item.qty}</td>
+                            <td style="padding: 10px 0; border-bottom: 1px solid #2a2a2a; color: #22c55e; text-align: right; font-size: 13px; font-weight: bold;">${(item.price * item.qty).toLocaleString('vi-VN')} VND</td>
+                        </tr>
+                    `;
+                });
+            } else {
+                itemsHtml = `
+                    <tr>
+                        <td style="padding: 10px 0; border-bottom: 1px solid #2a2a2a; color: #ffffff; font-size: 13px;">${order.game} (${order.package})</td>
+                        <td style="padding: 10px 0; border-bottom: 1px solid #2a2a2a; color: #ffffff; text-align: center; font-size: 13px;">${order.total_qty || 1}</td>
+                        <td style="padding: 10px 0; border-bottom: 1px solid #2a2a2a; color: #22c55e; text-align: right; font-size: 13px; font-weight: bold;">${order.price.toLocaleString('vi-VN')} VND</td>
+                    </tr>
+                `;
+            }
+
+            const htmlMessage = `
+                <div style="background-color: #121212; padding: 20px; font-family: 'Poppins', Arial, sans-serif; color: #ffffff;">
+                    <div style="max-width: 480px; margin: 0 auto; background-color: #1e1e1e; border-radius: 16px; border: 1px solid #2a2a2a; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+                        <div style="height: 4px; background: linear-gradient(90deg, #3b82f6, #22c55e);"></div>
+                        <div style="padding: 24px;">
+                            <h2 style="font-size: 20px; font-weight: bold; color: #ffffff; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #2a2a2a; padding-bottom: 12px;">
+                                Don hang ${order.code}
+                            </h2>
+                            <p style="font-size: 14px; color: #d1d5db; margin-bottom: 16px;">
+                                Xin chao <b>${order.customer_name}</b>,
+                            </p>
+                            <p style="font-size: 14px; color: #d1d5db; margin-bottom: 20px;">
+                                Don hang cua ban da hoan thanh thanh cong.
+                            </p>
+                            <div style="background-color: #15221b; border: 1px solid #14532d; border-radius: 12px; padding: 14px; margin-bottom: 20px;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="color: #86efac; font-size: 13px; padding-bottom: 8px;">Trang thai</td>
+                                        <td style="color: #86efac; font-size: 13px; text-align: right; font-weight: bold; padding-bottom: 8px;">Hoan thanh</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: #86efac; font-size: 13px; padding-bottom: 8px;">Ngay</td>
+                                        <td style="color: #86efac; font-size: 13px; text-align: right; padding-bottom: 8px;">${order.time.split(' ')[0]}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: #86efac; font-size: 13px;">Tong cong</td>
+                                        <td style="color: #86efac; font-size: 14px; text-align: right; font-weight: bold;">${order.price.toLocaleString('vi-VN')} VND</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div style="background-color: #121212; border: 1px solid #2a2a2a; border-radius: 12px; padding: 14px; margin-bottom: 20px;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <thead>
+                                        <tr>
+                                            <th style="color: #9ca3af; font-size: 11px; text-align: left; padding-bottom: 8px; border-bottom: 1px solid #2a2a2a;">San pham</th>
+                                            <th style="color: #9ca3af; font-size: 11px; text-align: center; padding-bottom: 8px; border-bottom: 1px solid #2a2a2a;">SL</th>
+                                            <th style="color: #9ca3af; font-size: 11px; text-align: right; padding-bottom: 8px; border-bottom: 1px solid #2a2a2a;">Gia</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${itemsHtml}
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p style="font-size: 11px; color: #6b7280; text-align: center; margin-top: 24px; border-top: 1px solid #2a2a2a; padding-top: 16px;">
+                                ShopDatZit | Email nay duoc gui tu dong, vui long khong tra loi.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // Gửi email định dạng HTML cho khách
+            sendAutoEmail(customerEmail, subject, htmlMessage, true);
         }
 
         async function createOrderAndFinish(status) {
@@ -1932,7 +2007,7 @@
                     return;
                 }
 
-                sendEmailNotification(newOrder);
+                sendAdminNewOrderEmail(newOrder);
                 clearCart(); 
                 document.getElementById('input-user-note').value = '';
                 await fetchAndCalculateSolds();
@@ -2063,17 +2138,40 @@
         }
 
         async function adminConfirmOrder(orderId) {
+            const { data: fetchedOrders, error: fetchErr } = await supabaseClient
+                .from('orders')
+                .select('*')
+                .eq('id', orderId);
+
+            if (fetchErr || !fetchedOrders || fetchedOrders.length === 0) {
+                alert('Không tìm thấy thông tin đơn hàng!');
+                return;
+            }
+            const order = fetchedOrders[0];
+
             const { error } = await supabaseClient
                 .from('orders')
                 .update({ status: 'Đã Nạp Thành Công' })
                 .eq('id', orderId);
 
-            if (error) alert('Lỗi cập nhật: ' + error.message);
-            else { 
+            if (error) {
+                alert('Lỗi cập nhật: ' + error.message);
+            } else { 
+                // Gửi email giao diện xịn sò cho khách khi admin bấm nạp thành công
+                let targetCustomerEmail = "ngocdiemdang90@gmail.com";
+                let accounts = getAccounts();
+                if (order.customer_name && accounts[order.customer_name] && accounts[order.customer_name].email) {
+                    targetCustomerEmail = accounts[order.customer_name].email;
+                } else if (order.input_user && order.input_user.includes('@')) {
+                    targetCustomerEmail = order.input_user;
+                }
+
+                sendCompletedOrderEmailForCustomer(order, targetCustomerEmail);
+
                 await fetchAndCalculateSolds();
                 renderGameList();
                 renderAdminOrders(); 
-                alert('Đã duyệt đơn và cộng lượt Đã Bán thành công!'); 
+                alert('Đã duyệt đơn, gửi email hoàn thành xịn sò cho khách và cộng lượt Đã Bán thành công!'); 
             }
         }
 
