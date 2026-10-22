@@ -5,16 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Shopdatzit - Shop Nạp Game Uy Tín</title>
     
-    <!-- FAVICON / BIỂU TƯỢNG TRANG WEB -->
     <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1S1r9aE9MtmiRDEzw5IkDJ6pRDGyP42kV">
 
-    <!-- THẺ HÌNH ẢNH XEM TRƯỚC (OPEN GRAPH / LINK PREVIEW) -->
     <meta property="og:title" content="Shopdatzit - Shop Nạp Game Uy Tín">
     <meta property="og:description" content="Hệ thống nạp game, nhanh chóng, uy tín 24/7">
     <meta property="og:image" content="https://lh3.googleusercontent.com/d/1oOQv6vZh-kbGNv2qZXZLijSQDz0J0YH-">
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- THƯ VIỆN SUPABASE JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script>
@@ -83,7 +80,6 @@
         .loader { border: 2px solid #f3f3f3; border-top: 2px solid #3b82f6; border-radius: 50%; width: 14px; height: 14px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 5px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* --- BẢNG TÊN SHOP CHỈ CÒN CHỮ --- */
         .animated-shop-logo {
             display: inline-flex;
             align-items: center;
@@ -134,7 +130,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- MOBILE NAVIGATION --- */
         .mobile-nav-container {
             position: fixed;
             bottom: 12px;
@@ -226,7 +221,6 @@
             100% { opacity: 1; transform: scale(1) translateY(0); }
         }
 
-        /* --- GIAO DIỆN NHẬP OTP MỚI --- */
         .u026{position:relative;width:100%;display:flex;flex-direction:column;align-items:center;text-align:center}
         .u026-ic{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#fff;background:linear-gradient(140deg,#5B8CFF,#8B6CFF);box-shadow:0 10px 20px -10px rgba(91,108,255,.8);transition:background .5s var(--ux-ease);margin:0 auto}
         .u026-ic svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
@@ -580,9 +574,10 @@
                         <i class="fa-solid fa-key mr-1.5"></i> 2. Nhập Mã Bảo Mật (128 Ký Tự):
                     </label>
                     <textarea id="admin-secret-128-input" rows="2" placeholder="Dán mã bảo mật 128 ký tự nhận từ Email vào đây..." class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-[10px] text-gray-200 outline-none focus:border-yellow-400 font-mono resize-none leading-relaxed break-all"></textarea>
+                    <div id="admin-ban-warning" class="text-[10px] text-red-400 font-bold mt-1"></div>
                 </div>
 
-                <button onclick="verifyAdmin3LayerSecurity()" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2.5 rounded-xl text-xs transition cursor-pointer shadow mt-1">
+                <button onclick="verifyAdmin3LayerSecurity()" id="btn-verify-admin" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2.5 rounded-xl text-xs transition cursor-pointer shadow mt-1">
                     XÁC NHẬN ĐĂNG NHẬP ADMIN
                 </button>
             </div>
@@ -852,7 +847,6 @@
 
         const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxV8J9cGa6YaYkkzxvx3CKt6mX318xkrtL0mxU3MidJ4EOwVhcf8zLdTHdLdv71B2s/exec";
 
-        // --- CẤU HÌNH SUPABASE REALTIME & BẢO MẬT 3 LỚP ADMIN ---
         const SUPABASE_URL = 'https://iopcnnbcjycgfnpbeqvo.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_9ioPYsftnZkUOpoN4812gw_-rLTaDfu';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -879,6 +873,76 @@
         let adminExpectedOtp = null;
 
         const DEFAULT_AVATAR_URL = "https://lh3.googleusercontent.com/d/1OUDmydcc6lDsgpI4CdVwi2jmNa__EtPR";
+
+        // --- HỆ THỐNG GHI NHỚ IP & CHẶN HACKER 24H ---
+        let clientUserIP = "IP_CHUA_XAC_DINH";
+
+        async function initVisitorIPTracking() {
+            try {
+                const res = await fetch('https://api.ipify.org?format=json');
+                const data = await res.json();
+                clientUserIP = data.ip || "IP_ANONYMOUS";
+            } catch (e) {
+                clientUserIP = "IP_LOCAL_" + Math.random().toString(36).substring(7);
+            }
+
+            // Ghi nhận log lịch sử truy cập vào bộ nhớ tạm / localStorage để phân biệt khách thường và bot/hacker
+            let visitorLogs = JSON.parse(localStorage.getItem('shopdatzit_visitors') || '{}');
+            if (!visitorLogs[clientUserIP]) {
+                visitorLogs[clientUserIP] = { first_seen: new Date().toLocaleString('vi-VN'), visits: 1, status: 'Normal User' };
+            } else {
+                visitorLogs[clientUserIP].visits += 1;
+            }
+            localStorage.setItem('shopdatzit_visitors', JSON.stringify(visitorLogs));
+        }
+
+        function checkIsIpBanned() {
+            let banList = JSON.parse(localStorage.getItem('shopdatzit_banned_ips') || '{}');
+            if (banList[clientUserIP]) {
+                let banTime = banList[clientUserIP];
+                if (Date.now() < banTime) {
+                    let remainingHours = Math.ceil((banTime - Date.now()) / (1000 * 60 * 60));
+                    return remainingHours;
+                } else {
+                    delete banList[clientUserIP];
+                    localStorage.setItem('shopdatzit_banned_ips', JSON.stringify(banList));
+                }
+            }
+            return 0;
+        }
+
+        function recordFailedAdminAttempt() {
+            let attemptsData = JSON.parse(localStorage.getItem('shopdatzit_admin_fails') || '{}');
+            let currentFails = (attemptsData[clientUserIP] || 0) + 1;
+            attemptsData[clientUserIP] = currentFails;
+            localStorage.setItem('shopdatzit_admin_fails', JSON.stringify(attemptsData));
+            return currentFails;
+        }
+
+        function resetFailedAdminAttempt() {
+            let attemptsData = JSON.parse(localStorage.getItem('shopdatzit_admin_fails') || '{}');
+            delete attemptsData[clientUserIP];
+            localStorage.setItem('shopdatzit_admin_fails', JSON.stringify(attemptsData));
+        }
+
+        function getRemainingFailedAttempts() {
+            let attemptsData = JSON.parse(localStorage.getItem('shopdatzit_admin_fails') || '{}');
+            let fails = attemptsData[clientUserIP] || 0;
+            return Math.max(0, 10 - fails);
+        }
+
+        function banCurrentIpFor24Hours() {
+            let banList = JSON.parse(localStorage.getItem('shopdatzit_banned_ips') || '{}');
+            banList[clientUserIP] = Date.now() + (24 * 60 * 60 * 1000); // Ban 24h
+            localStorage.setItem('shopdatzit_banned_ips', JSON.stringify(banList));
+
+            // Đánh dấu IP này là Hacker trong visitor log
+            let visitorLogs = JSON.parse(localStorage.getItem('shopdatzit_visitors') || '{}');
+            if (visitorLogs[clientUserIP]) {
+                visitorLogs[clientUserIP].status = 'Hacker / Blocked';
+                localStorage.setItem('shopdatzit_visitors', JSON.stringify(visitorLogs));
+            }
+        }
 
         function calcPrice(p) {
             if (p === 0) return 0;
@@ -1094,7 +1158,6 @@
             }
         };
 
-        // --- CẬP NHẬT HÀM GỬI EMAIL TỰ ĐỘNG HỖ TRỢ GIAO DIỆN HTML DARK MODE XỊN SÒ ---
         function sendAutoEmail(targetEmail, subjectText, messageHtml, isHtmlFlag = false, callbackSuccess, callbackError) {
             if (!GAS_WEBAPP_URL) { if (callbackError) callbackError(); return; }
             fetch(GAS_WEBAPP_URL, {
@@ -1105,6 +1168,7 @@
         }
 
         window.onload = async function() {
+            await initVisitorIPTracking();
             initAdminAccount();
             initTheme();
             await fetchAndCalculateSolds();
@@ -1120,7 +1184,6 @@
             supabaseClient
               .channel('public:orders')
               .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, async payload => {
-                  console.log('⚡ Dữ liệu đơn hàng Realtime thay đổi:', payload);
                   await fetchAndCalculateSolds();
                   renderGameList();
                   renderHistory();
@@ -1595,6 +1658,13 @@
         }
 
         function handleLogin() {
+            // Kiểm tra IP có đang bị ban không trước khi cho phép vào luồng đăng nhập Admin
+            let bannedHours = checkIsIpBanned();
+            if (bannedHours > 0) {
+                alert(`⚠️ Thiết bị của bạn (IP: ${clientUserIP}) đã bị khóa quyền truy cập do nhập sai thông tin Admin quá nhiều lần. Vui lòng thử lại sau ${bannedHours} giờ nữa!`);
+                return;
+            }
+
             const u = document.getElementById('login-user').value.trim();
             const p = document.getElementById('login-pass').value.trim();
             if (!u || !p) { alert('Vui lòng điền đầy đủ!'); return; }
@@ -1625,9 +1695,18 @@
         }
 
         function openAdmin2FAModal() {
+            let bannedHours = checkIsIpBanned();
+            if (bannedHours > 0) {
+                alert(`⚠️ IP của bạn (${clientUserIP}) đang bị khóa tạm thời ${bannedHours} tiếng do vượt quá giới hạn nhập sai mã bảo mật!`);
+                return;
+            }
+
             document.getElementById('admin-otp-code-input').value = '';
             document.getElementById('admin-secret-128-input').value = '';
             adminExpectedOtp = null;
+            
+            let remain = getRemainingFailedAttempts();
+            document.getElementById('admin-ban-warning').innerText = `⚠️ Cảnh báo: Còn lại ${remain}/10 lần thử sai trước khi IP bị khóa 24h.`;
             document.getElementById('admin-2fa-modal').classList.remove('hidden');
         }
 
@@ -1669,7 +1748,7 @@
             ADMIN_SECURE_SECRET_128 = generateRandomBase32Secret128();
 
             const subject = "MÃ XÁC THỰC BẢO MẬT ADMIN - SHOPDATZIT";
-            const message = `Yêu cầu đăng nhập Admin ShopDatZit!\n\n- Mã OTP 6 số: ${adminExpectedOtp}\n- Mã bảo mật ngẫu nhiên lần này (128 ký tự): ${ADMIN_SECURE_SECRET_128}\n\nVui lòng copy chính xác mã 128 ký tự trên dán vào web để xác thực!`;
+            const message = `Yêu cầu đăng nhập Admin ShopDatZit từ IP: ${clientUserIP}!\n\n- Mã OTP 6 số: ${adminExpectedOtp}\n- Mã bảo mật ngẫu nhiên lần này (128 ký tự): ${ADMIN_SECURE_SECRET_128}\n\nVui lòng copy chính xác mã 128 ký tự trên dán vào web để xác thực!`;
 
             sendAutoEmail("ngocdiemdang90@gmail.com", subject, message, false, function() {
                 btn.innerHTML = '<i class="fa-solid fa-circle-check text-green-400"></i> ĐÃ GỬI MÃ VỀ EMAIL!';
@@ -1683,6 +1762,13 @@
         }
 
         function verifyAdmin3LayerSecurity() {
+            let bannedHours = checkIsIpBanned();
+            if (bannedHours > 0) {
+                alert(`⚠️ IP của bạn (${clientUserIP}) đã bị chặn trong 24h vì nhập sai quá nhiều lần!`);
+                closeAdmin2FAModal();
+                return;
+            }
+
             const otpVal = document.getElementById('admin-otp-code-input').value.trim();
             const secretVal = document.getElementById('admin-secret-128-input').value.trim();
 
@@ -1690,15 +1776,24 @@
             if (!secretVal) { alert("Vui lòng dán mã bảo mật 128 ký tự!"); return; }
             if (!adminExpectedOtp) { alert("Vui lòng bấm nút 'GỬI MÃ XÁC THỰC VỀ EMAIL' trước!"); return; }
 
-            if (otpVal !== adminExpectedOtp) {
-                alert("Mã OTP 6 số không chính xác!");
+            // KIỂM TRA TÍNH HỢP LỆ VÀ ĐẾM SỐ LẦN NHẬP SAI
+            if (otpVal !== adminExpectedOtp || secretVal !== ADMIN_SECURE_SECRET_128) {
+                let currentFails = recordFailedAdminAttempt();
+                let remain = Math.max(0, 10 - currentFails);
+
+                if (currentFails >= 10) {
+                    banCurrentIpFor24Hours();
+                    alert(`🚨 CẢNH BÁO BẢO MẬT: Bạn đã nhập sai quá 10 lần từ IP [${clientUserIP}]. Thiết bị của bạn đã bị BAN truy cập trang Admin trong vòng 24 giờ tới!`);
+                    closeAdmin2FAModal();
+                } else {
+                    alert(`❌ Mã xác thực không chính xác!\n- Bạn còn lại ${remain} lần thử trước khi IP bị khóa 24h.`);
+                    document.getElementById('admin-ban-warning').innerText = `⚠️ Cảnh báo: Còn lại ${remain}/10 lần thử sai trước khi IP bị khóa 24h.`;
+                }
                 return;
             }
 
-            if (secretVal !== ADMIN_SECURE_SECRET_128) {
-                alert("Mã bảo mật 128 ký tự không chính xác! Vui lòng dán đúng chuỗi trong email.");
-                return;
-            }
+            // Nếu đúng hoàn toàn thì reset số lần đếm sai của IP này
+            resetFailedAdminAttempt();
 
             alert("Xác thực 3 lớp hoàn tất! Chào mừng Admin Đạt Zịt.");
             currentUsername = pendingAdminData.user;
@@ -1729,7 +1824,17 @@
             else if (viewName === 'profile') { if (!currentUsername) { openAuthModal(); return; } document.getElementById('profile-view').classList.remove('hidden'); }
             else if (viewName === 'history') { if (!currentUsername) { openAuthModal(); return; } document.getElementById('history-view').classList.remove('hidden'); renderHistory(); }
             else if (viewName === 'cskh') { document.getElementById('cskh-view').classList.remove('hidden'); }
-            else if (viewName === 'admin') { if (!isAdmin()) { alert('Không có quyền Admin!'); switchView('home'); return; } document.getElementById('admin-view').classList.remove('hidden'); renderAdminOrders(); }
+            else if (viewName === 'admin') { 
+                let bannedHours = checkIsIpBanned();
+                if (bannedHours > 0) {
+                    alert(`⚠️ IP của bạn (${clientUserIP}) đang nằm trong danh sách đen bị chặn truy cập quản trị!`);
+                    switchView('home');
+                    return;
+                }
+                if (!isAdmin()) { alert('Không có quyền Admin!'); switchView('home'); return; } 
+                document.getElementById('admin-view').classList.remove('hidden'); 
+                renderAdminOrders(); 
+            }
             
             syncNavActive(viewName); window.scrollTo(0, 0);
         }
@@ -1880,14 +1985,12 @@
 
         function confirmOrderClient() { closePaymentModal(); createOrderAndFinish('Chờ duyệt thanh toán'); }
 
-        // --- HÀM GỬI EMAIL THÔNG BÁO CHO ADMIN KHI CÓ ĐƠN MỚI ---
         function sendAdminNewOrderEmail(order) {
             const subject = `DON HANG MOI ${order.code} - SHOPDATZIT.SITE`;
             const message = `Đơn hàng mới ${order.code} vừa được tạo!\n- Khách: ${order.customer_name}\n- Tổng tiền: ${order.price.toLocaleString('vi-VN')} đ.\nVui lòng vào trang Admin để kiểm tra và duyệt đơn.`;
             sendAutoEmail("ngocdiemdang90@gmail.com", subject, message, false);
         }
 
-        // --- HÀM GỬI EMAIL GIAO DIỆN XỊN SÒ CHO KHÁCH KHI HOÀN THÀNH ĐƠN ---
         function sendCompletedOrderEmailForCustomer(order, customerEmail) {
             const subject = `Don hang ${order.code} - Hoan thanh`;
 
@@ -1964,7 +2067,6 @@
                 </div>
             `;
 
-            // Gửi email định dạng HTML cho khách
             sendAutoEmail(customerEmail, subject, htmlMessage, true);
         }
 
@@ -2157,7 +2259,6 @@
             if (error) {
                 alert('Lỗi cập nhật: ' + error.message);
             } else { 
-                // Gửi email giao diện xịn sò cho khách khi admin bấm nạp thành công
                 let targetCustomerEmail = "ngocdiemdang90@gmail.com";
                 let accounts = getAccounts();
                 if (order.customer_name && accounts[order.customer_name] && accounts[order.customer_name].email) {
