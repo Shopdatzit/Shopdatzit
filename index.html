@@ -69,6 +69,16 @@
             --ux-danger: #ef4444;
         }
 
+        body { 
+            background-color: var(--body-bg) !important; 
+            color: var(--text-color) !important; 
+            font-family: 'Poppins', sans-serif;
+            -webkit-user-select: text !important;
+            -moz-user-select: text !important;
+            -ms-user-select: text !important;
+            user-select: text !important;
+        }
+
         html.light body { background-color: #f3f4f6 !important; color: #1f2937 !important; }
         html.light .bg-cardBg { background-color: #ffffff !important; border-color: #e5e7eb !important; color: #1f2937 !important; }
         html.light .bg-gray-900 { background-color: #f9fafb !important; color: #1f2937 !important; border-color: #e5e7eb !important; }
@@ -77,8 +87,79 @@
         html.light .text-gray-400 { color: #6b7280 !important; }
         html.light input, html.light select, html.light textarea { background-color: #ffffff !important; color: #111827 !important; border-color: #d1d5db !important; }
         
-        .loader { border: 2px solid #f3f3f3; border-top: 2px solid #3b82f6; border-radius: 50%; width: 14px; height: 14px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 5px; }
+        .loader-spin { border: 2px solid #f3f3f3; border-top: 2px solid #3b82f6; border-radius: 50%; width: 14px; height: 14px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 5px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* --- MÀN HÌNH LOADING TRONG SUỐT MỜ THEO MẪU VIDEO TIKTOK --- */
+        #global-page-loader {
+            position: fixed;
+            inset: 0;
+            background: rgba(18, 18, 18, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            transition: opacity 0.4s ease-out;
+        }
+        #global-page-loader.loader-hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader-bounce-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+        }
+
+        /* 3 Chấm nhảy (Bouncing Dots) */
+        .bounce-dots {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 12px;
+            height: 40px;
+        }
+
+        .bounce-dots .dot {
+            width: 12px;
+            height: 12px;
+            background-color: #ffffff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.9), 0 4px 12px rgba(59, 130, 246, 0.6);
+            animation: bounceAnim 1.2s infinite ease-in-out;
+        }
+
+        .bounce-dots .dot:nth-child(1) { animation-delay: -0.32s; }
+        .bounce-dots .dot:nth-child(2) { animation-delay: -0.16s; }
+        .bounce-dots .dot:nth-child(3) { animation-delay: 0s; }
+
+        @keyframes bounceAnim {
+            0%, 80%, 100% {
+                transform: translateY(0) scale(0.8);
+                opacity: 0.6;
+            }
+            40% {
+                transform: translateY(-22px) scale(1.15);
+                opacity: 1;
+                box-shadow: 0 0 15px rgba(255, 255, 255, 1), 0 0 25px rgba(59, 130, 246, 0.9);
+            }
+        }
+
+        .loading-text-white {
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
 
         .animated-shop-logo {
             display: inline-flex;
@@ -252,7 +333,19 @@
         .u026-real:focus-visible{outline:none}
     </style>
 </head>
-<body class="bg-darkBg text-gray-100 font-sans min-h-screen flex flex-col pb-28 md:pb-12 select-none transition-colors duration-300">
+<body class="bg-darkBg text-gray-100 font-sans min-h-screen flex flex-col pb-28 md:pb-12 transition-colors duration-300">
+
+    <!-- MÀN HÌNH LOADING THEO MẪU TIKTOK VÀ TỰ ĐỘNG THEO TỐC ĐỘ MẠNG KHÁCH -->
+    <div id="global-page-loader">
+        <div class="loader-bounce-container">
+            <div class="bounce-dots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+            <div class="loading-text-white">Loading</div>
+        </div>
+    </div>
 
     <header class="bg-cardBg border-b border-gray-800 sticky top-0 z-40 transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-3 h-16 flex items-center justify-between">
@@ -507,11 +600,11 @@
                     </div>
                     <div class="flex items-center space-x-2.5">
                         <i class="fa-regular fa-envelope text-accentBlue w-4 text-center"></i>
-                        <span>Email: <strong class="text-white">ngocdiemdang90@gmail.com</strong></span>
+                        <span>Email: <strong class="text-white select-all">ngocdiemdang90@gmail.com</strong></span>
                     </div>
                     <div class="flex items-center space-x-2.5">
                         <i class="fa-solid fa-phone text-accentBlue w-4 text-center"></i>
-                        <span>Hotline / Zalo: <strong class="text-accentBlue font-bold">0358108139</strong></span>
+                        <span>Hotline / Zalo: <strong class="text-accentBlue font-bold select-all">0358108139</strong></span>
                     </div>
                 </div>
             </div>
@@ -556,7 +649,7 @@
                         <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                     </span>
                     <p class="u026-t">1. Nhập mã OTP 6 số</p>
-                    <p class="u026-s">Mã gồm 6 chữ số gửi qua email <b>ngocdiemdang90@gmail.com</b></p>
+                    <p class="u026-s">Mã gồm 6 chữ số gửi qua email <b class="select-all">ngocdiemdang90@gmail.com</b></p>
                     
                     <div class="u026-row">
                         <span class="u026-c" style="--i:0"></span><span class="u026-c" style="--i:1"></span><span class="u026-c" style="--i:2"></span>
@@ -568,12 +661,11 @@
                     <span class="u026-live" aria-live="polite"></span>
                 </div>
 
-                <!-- Ô NHẬP MÃ BẢO MẬT 128 KÝ TỰ BỔ SUNG -->
                 <div class="space-y-1 text-left pt-1 border-t border-gray-800">
                     <label class="text-[11px] font-bold text-yellow-400 block flex items-center">
                         <i class="fa-solid fa-key mr-1.5"></i> 2. Nhập Mã Bảo Mật (128 Ký Tự):
                     </label>
-                    <textarea id="admin-secret-128-input" rows="2" placeholder="Dán mã bảo mật 128 ký tự nhận từ Email vào đây..." class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-[10px] text-gray-200 outline-none focus:border-yellow-400 font-mono resize-none leading-relaxed break-all"></textarea>
+                    <textarea id="admin-secret-128-input" rows="2" placeholder="Dán mã bảo mật 128 ký tự nhận từ Email vào đây..." class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-[10px] text-gray-200 outline-none focus:border-yellow-400 font-mono resize-none leading-relaxed break-all select-all"></textarea>
                     <div id="admin-ban-warning" class="text-[10px] text-red-400 font-bold mt-1"></div>
                 </div>
 
@@ -641,11 +733,11 @@
 
             <div class="text-left bg-gray-900 p-3 rounded-lg text-xs space-y-1.5 border border-gray-800">
                 <div class="flex justify-between"><span>Ngân hàng:</span> <span class="font-bold text-gray-200">Vietcombank</span></div>
-                <div class="flex justify-between"><span>Số tài khoản:</span> <span class="font-bold text-accentBlue text-sm">1065342786</span></div>
-                <div class="flex justify-between"><span>Chủ tài khoản:</span> <span class="font-bold text-gray-200">DANG VAN TIEN DAT</span></div>
+                <div class="flex justify-between"><span>Số tài khoản:</span> <span class="font-bold text-accentBlue text-sm select-all">1065342786</span></div>
+                <div class="flex justify-between"><span>Chủ tài khoản:</span> <span class="font-bold text-gray-200 select-all">DANG VAN TIEN DAT</span></div>
                 <div class="flex justify-between items-center border-t border-gray-800 pt-2">
                     <span>Số tiền cần trả:</span> 
-                    <span id="modal-amount" class="font-bold text-green-400 text-sm">0 đ</span>
+                    <span id="modal-amount" class="font-bold text-green-400 text-sm select-all">0 đ</span>
                 </div>
             </div>
 
@@ -843,8 +935,6 @@
             if (e.ctrlKey && e.keyCode === 85) { e.preventDefault(); return false; }
         });
 
-        window.addEventListener('contextmenu', function (e) { e.preventDefault(); });
-
         const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxV8J9cGa6YaYkkzxvx3CKt6mX318xkrtL0mxU3MidJ4EOwVhcf8zLdTHdLdv71B2s/exec";
 
         const SUPABASE_URL = 'https://iopcnnbcjycgfnpbeqvo.supabase.co';
@@ -874,8 +964,38 @@
 
         const DEFAULT_AVATAR_URL = "https://lh3.googleusercontent.com/d/1OUDmydcc6lDsgpI4CdVwi2jmNa__EtPR";
 
-        // --- HỆ THỐNG GHI NHỚ IP & CHẶN HACKER 24H ---
         let clientUserIP = "IP_CHUA_XAC_DINH";
+
+        // --- TÍNH TOÁN THỜI GIAN LOADING THEO TỐC ĐỘ MẠNG CỦA KHÁCH ---
+        let loaderTimer = null;
+        function triggerGlobalLoader(baseDurationMs = 600) {
+            const loader = document.getElementById('global-page-loader');
+            if (!loader) return;
+            if (loaderTimer) clearTimeout(loaderTimer);
+            
+            // Tự động check tốc độ mạng qua Network Information API (nếu thiết bị hỗ trợ)
+            let speedMultiplier = 1.0;
+            if (navigator.connection) {
+                const effectiveType = navigator.connection.effectiveType; // '4g', '3g', '2g', 'slow-2g'
+                const downlink = navigator.connection.downlink; // Tốc độ Mbps ước tính
+
+                if (effectiveType === 'slow-2g' || effectiveType === '2g' || (downlink && downlink < 1.5)) {
+                    speedMultiplier = 2.2; // Mạng yếu -> hiện lâu hơn để chờ tải
+                } else if (effectiveType === '3g' || (downlink && downlink < 4)) {
+                    speedMultiplier = 1.5; // Mạng trung bình
+                } else {
+                    speedMultiplier = 0.7; // Mạng wifi / 4G mạnh -> ẩn nhanh mượt mà
+                }
+            }
+
+            let calculatedTime = Math.round(baseDurationMs * speedMultiplier);
+            calculatedTime = Math.max(350, Math.min(calculatedTime, 2500)); // Giới hạn từ 0.35s đến 2.5s
+
+            loader.classList.remove('loader-hidden');
+            loaderTimer = setTimeout(() => {
+                loader.classList.add('loader-hidden');
+            }, calculatedTime);
+        }
 
         async function initVisitorIPTracking() {
             try {
@@ -886,7 +1006,6 @@
                 clientUserIP = "IP_LOCAL_" + Math.random().toString(36).substring(7);
             }
 
-            // Ghi nhận log lịch sử truy cập vào bộ nhớ tạm / localStorage để phân biệt khách thường và bot/hacker
             let visitorLogs = JSON.parse(localStorage.getItem('shopdatzit_visitors') || '{}');
             if (!visitorLogs[clientUserIP]) {
                 visitorLogs[clientUserIP] = { first_seen: new Date().toLocaleString('vi-VN'), visits: 1, status: 'Normal User' };
@@ -933,10 +1052,9 @@
 
         function banCurrentIpFor24Hours() {
             let banList = JSON.parse(localStorage.getItem('shopdatzit_banned_ips') || '{}');
-            banList[clientUserIP] = Date.now() + (24 * 60 * 60 * 1000); // Ban 24h
+            banList[clientUserIP] = Date.now() + (24 * 60 * 60 * 1000);
             localStorage.setItem('shopdatzit_banned_ips', JSON.stringify(banList));
 
-            // Đánh dấu IP này là Hacker trong visitor log
             let visitorLogs = JSON.parse(localStorage.getItem('shopdatzit_visitors') || '{}');
             if (visitorLogs[clientUserIP]) {
                 visitorLogs[clientUserIP].status = 'Hacker / Blocked';
@@ -963,12 +1081,6 @@
                     { name: 'Thẻ Garena 200.000', price: 194000 },
                     { name: 'Thẻ Garena 500.000', price: 486000 }
                 ]
-            },
-            'robux120h': {
-                name: 'Robux 120h',
-                realImg: 'https://lh3.googleusercontent.com/d/1SLqz0SUZwgGle5Y5fwZ9WppbqhQGUvYS',
-                note: 'Dự Kiến Sắp Có',
-                packages: []
             },
             'aniimo': { 
                 name: 'Aniimo', 
@@ -1114,7 +1226,7 @@
                     { name: '1980 + 260 Film Trắng Đen (30$)', price: calcPrice(615000) },
                     { name: '3280 + 600 Film Trắng Đen (50$)', price: calcPrice(1025000) },
                     { name: '6480 + 1600 Film Trắng Đen (100$)', price: calcPrice(2000000) },
-                    { name: 'Ridu Chào Đón', price: calcPrice(22000) },
+                    { name: 'Ridu Chào Đốn', price: calcPrice(22000) },
                     { name: 'Lời Mời Chân Thành (5$)', price: calcPrice(102500) },
                     { name: 'Lời Mời Yêu Thích (10$)', price: calcPrice(205000) },
                     { name: 'Lời Mời Độc Quyền (15$)', price: calcPrice(307500) }
@@ -1168,6 +1280,7 @@
         }
 
         window.onload = async function() {
+            triggerGlobalLoader(800);
             await initVisitorIPTracking();
             initAdminAccount();
             initTheme();
@@ -1484,7 +1597,7 @@
             changeEmailOTP = Math.floor(100000 + Math.random() * 900000).toString();
             const btn = document.getElementById('btn-send-email-otp');
             const originalText = btn.innerHTML;
-            btn.innerHTML = '<span class="loader"></span> Đang gửi OTP...';
+            btn.innerHTML = '<span class="loader-spin"></span> Đang gửi OTP...';
             btn.disabled = true;
 
             sendAutoEmail(oldEmailInput, "Mã OTP Đổi Email - ShopDatZit", "Mã OTP xác thực đổi Email của bạn là: " + changeEmailOTP, false, function() {
@@ -1551,7 +1664,7 @@
         function saveNewAvatar() {
             if (!currentUsername || !tempAvatarBase64) return;
             const btn = document.getElementById('btn-save-avatar');
-            btn.innerHTML = '<span class="loader"></span> Đang cập nhật...';
+            btn.innerHTML = '<span class="loader-spin"></span> Đang cập nhật...';
             setTimeout(() => {
                 let accounts = getAccounts();
                 if (accounts[currentUsername]) {
@@ -1603,7 +1716,7 @@
 
             const btn = document.getElementById('btn-send-otp');
             const originalText = btn.innerHTML;
-            btn.innerHTML = '<span class="loader"></span> Đang gửi OTP...';
+            btn.innerHTML = '<span class="loader-spin"></span> Đang gửi OTP...';
             btn.disabled = true;
 
             sendAutoEmail(emailInput, "Mã OTP Khôi Phục Mật Khẩu - ShopDatZit", "Mã OTP khôi phục mật khẩu là: " + generatedOTP, false, function() {
@@ -1643,7 +1756,7 @@
             if (accounts[u.toLowerCase()]) { alert('Tài khoản này đã tồn tại!'); return; }
             
             const btn = document.getElementById('btn-register');
-            btn.innerHTML = '<span class="loader"></span> Đang xử lý...';
+            btn.innerHTML = '<span class="loader-spin"></span> Đang xử lý...';
             setTimeout(() => {
                 const randomUid = Math.floor(10000 + Math.random() * 90000).toString();
                 const key = u.toLowerCase();
@@ -1658,7 +1771,6 @@
         }
 
         function handleLogin() {
-            // Kiểm tra IP có đang bị ban không trước khi cho phép vào luồng đăng nhập Admin
             let bannedHours = checkIsIpBanned();
             if (bannedHours > 0) {
                 alert(`⚠️ Thiết bị của bạn (IP: ${clientUserIP}) đã bị khóa quyền truy cập do nhập sai thông tin Admin quá nhiều lần. Vui lòng thử lại sau ${bannedHours} giờ nữa!`);
@@ -1741,7 +1853,7 @@
 
         function sendAdminEmail3LayerSecurity() {
             const btn = document.getElementById('btn-send-admin-3layer');
-            btn.innerHTML = '<span class="loader"></span> ĐANG GỬI MÃ VỀ EMAIL...';
+            btn.innerHTML = '<span class="loader-spin"></span> ĐANG GỬI MÃ VỀ EMAIL...';
             btn.disabled = true;
 
             adminExpectedOtp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -1776,7 +1888,6 @@
             if (!secretVal) { alert("Vui lòng dán mã bảo mật 128 ký tự!"); return; }
             if (!adminExpectedOtp) { alert("Vui lòng bấm nút 'GỬI MÃ XÁC THỰC VỀ EMAIL' trước!"); return; }
 
-            // KIỂM TRA TÍNH HỢP LỆ VÀ ĐẾM SỐ LẦN NHẬP SAI
             if (otpVal !== adminExpectedOtp || secretVal !== ADMIN_SECURE_SECRET_128) {
                 let currentFails = recordFailedAdminAttempt();
                 let remain = Math.max(0, 10 - currentFails);
@@ -1792,7 +1903,6 @@
                 return;
             }
 
-            // Nếu đúng hoàn toàn thì reset số lần đếm sai của IP này
             resetFailedAdminAttempt();
 
             alert("Xác thực 3 lớp hoàn tất! Chào mừng Admin Đạt Zịt.");
@@ -1813,6 +1923,9 @@
         }
 
         async function switchView(viewName) {
+            const loadDuration = (viewName === 'home') ? 800 : 450;
+            triggerGlobalLoader(loadDuration);
+
             document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
             document.getElementById('user-dropdown').classList.add('hidden');
             
@@ -1840,6 +1953,7 @@
         }
 
         function openGameDetail(gameKey) {
+            triggerGlobalLoader(450);
             currentGameKey = gameKey;
             currentGame = gamesData[gameKey];
             if (!currentGame) return;
@@ -1938,11 +2052,11 @@
                         <div class="flex justify-between items-center pt-1 border-t border-gray-800/60">
                             <div class="flex items-center space-x-1.5 bg-gray-800 rounded-md p-0.5 border border-gray-700">
                                 <button onclick="updateCartQty(${idx}, -1)" class="w-4 h-4 flex items-center justify-center text-xs font-bold text-gray-300 hover:bg-gray-700 rounded cursor-pointer">-</button>
-                                <span class="text-xs font-bold text-white px-1">${item.qty}</span>
+                                <span class="text-xs font-bold text-white px-1 select-all">${item.qty}</span>
                                 <button onclick="updateCartQty(${idx}, 1)" class="w-4 h-4 flex items-center justify-center text-xs font-bold text-gray-300 hover:bg-gray-700 rounded cursor-pointer">+</button>
                             </div>
                             <div class="text-right">
-                                <span class="font-bold text-xs text-green-400">${itemTotal.toLocaleString('vi-VN')} đ</span>
+                                <span class="font-bold text-xs text-green-400 select-all">${itemTotal.toLocaleString('vi-VN')} đ</span>
                             </div>
                         </div>
                     </div>
@@ -2143,31 +2257,31 @@
             if (order.items && order.items.length > 0) {
                 itemsListHtml = `<div class="bg-gray-950 p-2.5 rounded-lg border border-gray-800 space-y-1.5"><div class="font-bold text-accentBlue text-xs mb-1 border-b border-gray-800 pb-1">🛒 Các món đã đặt mua (${order.total_qty || order.items.length} cái):</div>`;
                 order.items.forEach(item => {
-                    itemsListHtml += `<div class="flex justify-between items-center text-[10px] sm:text-[11px] border-b border-gray-800/40 pb-1"><div><span class="text-white font-bold">${item.gameName}</span> - <span class="text-gray-300">${item.pkgName}</span><span class="text-yellow-400 font-bold ml-1">x${item.qty}</span></div><span class="text-green-400 font-bold">${(item.price * item.qty).toLocaleString('vi-VN')} đ</span></div>`;
+                    itemsListHtml += `<div class="flex justify-between items-center text-[10px] sm:text-[11px] border-b border-gray-800/40 pb-1"><div><span class="text-white font-bold select-all">${item.gameName}</span> - <span class="text-gray-300 select-all">${item.pkgName}</span><span class="text-yellow-400 font-bold ml-1">x${item.qty}</span></div><span class="text-green-400 font-bold select-all">${(item.price * item.qty).toLocaleString('vi-VN')} đ</span></div>`;
                 });
                 itemsListHtml += `</div>`;
             } else {
-                itemsListHtml = `<div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Dịch vụ/Game:</span><span class="font-bold text-white">${order.game}</span></div><div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Gói nạp / Mệnh giá:</span><span class="font-bold text-accentBlue">${order.package}</span></div>`;
+                itemsListHtml = `<div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Dịch vụ/Game:</span><span class="font-bold text-white select-all">${order.game}</span></div><div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Gói nạp / Mệnh giá:</span><span class="font-bold text-accentBlue select-all">${order.package}</span></div>`;
             }
 
             let statusRenderHtml = (displayStatus === 'Admin Đã Hoàn Thành Đơn' || (order.status.includes('Chờ duyệt') && is24hPassed)) ? `<span class="px-2 py-0.5 rounded-lg border text-[11px] font-bold text-green-400 bg-green-950/50 border-green-800 flex items-center space-x-1 w-max"><i class="fa-solid fa-circle-check"></i> <span>Admin Đã Hoàn Thành Đơn</span></span>` : `<span class="font-bold ${displayStatus.includes('Thành Công') ? 'text-green-400' : (displayStatus.includes('Hủy') ? 'text-red-400' : 'text-yellow-400')}">${displayStatus}</span>`;
 
-            let cancelReasonHtml = (order.cancel_reason && order.status.includes('Hủy')) ? `<div class="bg-red-950/40 p-2.5 rounded-lg border border-red-800/80 text-red-300 font-bold text-[11px] mt-1"><i class="fa-solid fa-circle-exclamation mr-1"></i> Lý do hủy đơn từ Admin: <span class="text-white font-normal">${order.cancel_reason}</span></div>` : '';
+            let cancelReasonHtml = (order.cancel_reason && order.status.includes('Hủy')) ? `<div class="bg-red-950/40 p-2.5 rounded-lg border border-red-800/80 text-red-300 font-bold text-[11px] mt-1"><i class="fa-solid fa-circle-exclamation mr-1"></i> Lý do hủy đơn từ Admin: <span class="text-white font-normal select-all">${order.cancel_reason}</span></div>` : '';
 
-            let userNoteHtml = (order.input_note && order.input_note !== 'Không có') ? `<div class="flex justify-between items-start border-t border-gray-800/60 pt-1.5 mt-1"><span class="text-gray-400">Ghi chú của khách:</span><span class="font-bold text-yellow-300 text-right max-w-[180px]">${order.input_note}</span></div>` : '';
+            let userNoteHtml = (order.input_note && order.input_note !== 'Không có') ? `<div class="flex justify-between items-start border-t border-gray-800/60 pt-1.5 mt-1"><span class="text-gray-400">Ghi chú của khách:</span><span class="font-bold text-yellow-300 text-right max-w-[180px] select-all">${order.input_note}</span></div>` : '';
 
             body.innerHTML = `
-                <div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Mã đơn:</span><span class="font-bold text-white">${order.code}</span></div>
-                <div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Thời gian:</span><span class="text-gray-200">${order.time}</span></div>
-                <div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Khách hàng:</span><span class="font-bold text-accentBlue">${order.customer_name} (UID: ${order.uid})</span></div>
+                <div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Mã đơn:</span><span class="font-bold text-white select-all">${order.code}</span></div>
+                <div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Thời gian:</span><span class="text-gray-200 select-all">${order.time}</span></div>
+                <div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Khách hàng:</span><span class="font-bold text-accentBlue select-all">${order.customer_name} (UID: ${order.uid})</span></div>
                 ${itemsListHtml}
-                <div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Tổng thanh toán:</span><span class="font-bold text-green-400 text-xs sm:text-sm">${order.price.toLocaleString('vi-VN')} đ</span></div>
+                <div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Tổng thanh toán:</span><span class="font-bold text-green-400 text-xs sm:text-sm select-all">${order.price.toLocaleString('vi-VN')} đ</span></div>
                 <div class="flex justify-between border-b border-gray-800 pb-1.5 items-center"><span class="text-gray-400">Trạng thái:</span>${statusRenderHtml}</div>
                 ${cancelReasonHtml}
                 <div class="bg-gray-950 p-2.5 rounded-lg border border-gray-800 space-y-1.5 mt-2">
                     <div class="flex justify-between items-center"><span class="text-gray-400">Tài khoản / SĐT:</span><span class="font-bold text-white select-all">${order.input_user}</span></div>
                     <div class="flex justify-between items-center"><span class="text-gray-400">Mật khẩu game:</span><div class="flex items-center space-x-2"><input type="password" id="modal-pass-${order.id}" value="${order.input_pass}" readonly class="bg-transparent text-right font-bold text-white w-24 focus:outline-none select-all"><i class="fa-solid fa-eye text-gray-400 cursor-pointer text-xs" onclick="toggleModalPass('${order.id}')"></i></div></div>
-                    <div class="flex justify-between items-center"><span class="text-gray-400">Server / Ghi chú:</span><span class="font-bold text-white">${order.input_server}</span></div>
+                    <div class="flex justify-between items-center"><span class="text-gray-400">Server / Ghi chú:</span><span class="font-bold text-white select-all">${order.input_server}</span></div>
                     ${userNoteHtml}
                 </div>
             `;
@@ -2196,14 +2310,14 @@
             orders.forEach((ord) => {
                 let is24hPassed = (Date.now() - (ord.timestamp || 0)) >= EXPIRE_TIME_MS;
                 let displayStatus = ord.status;
-                let statusBadgeHtml = (displayStatus === 'Admin Đã Hoàn Thành Đơn' || (ord.status.includes('Chờ duyệt') && is24hPassed)) ? `<span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-green-400 border-green-800 bg-green-950/50 flex items-center space-x-1"><i class="fa-solid fa-circle-check"></i> <span>Admin Đã Hoàn Thành Đơn</span></span>` : (displayStatus.includes('Thành Công') ? `<span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-green-400 border-green-800 bg-green-950/50">${displayStatus}</span>` : (displayStatus.includes('Hủy') ? `<span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-red-400 border-red-800 bg-red-950/50">${displayStatus}</span>` : `<span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-yellow-400 border-yellow-800 bg-yellow-950/50">${displayStatus}</span>`));
+                let statusBadgeHtml = (displayStatus === 'Admin Đã Hoàn Thành Đơn' || (ord.status.includes('Chờ duyệt') && is24hPassed)) ? `<span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-green-400 border-green-800 bg-green-950/50 flex items-center space-x-1"><i class="fa-solid fa-circle-check"></i> <span>Admin Đã Hoàn Thành Đơn</span></span>` : (displayStatus.includes('Thành Công') ? `<span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-green-400 border-green-800 bg-green-950/50">${displayStatus}</span>` : (displayStatus.includes('Hủy') ? `<span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-red-400 border-red-800 bg-green-950/50">${displayStatus}</span>` : `<span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-yellow-400 border-yellow-800 bg-yellow-950/50">${displayStatus}</span>`));
 
-                let cancelReasonShort = (ord.cancel_reason && ord.status.includes('Hủy')) ? `<div class="text-[11px] text-red-400 mt-1 flex items-center"><i class="fa-solid fa-circle-info mr-1"></i> Lý do hủy: ${ord.cancel_reason}</div>` : '';
+                let cancelReasonShort = (ord.cancel_reason && ord.status.includes('Hủy')) ? `<div class="text-[11px] text-red-400 mt-1 flex items-center select-all"><i class="fa-solid fa-circle-info mr-1"></i> Lý do hủy: ${ord.cancel_reason}</div>` : '';
 
                 container.innerHTML += `
                     <div class="bg-cardBg p-3.5 rounded-xl border border-gray-800 space-y-2.5 shadow-sm hover:border-accentBlue transition">
-                        <div class="flex justify-between items-center border-b border-gray-800 pb-2"><span class="font-bold text-white text-xs">${ord.code}</span><span class="text-[10px] text-gray-400">${ord.time}</span></div>
-                        <div class="flex justify-between items-center text-xs"><div><div class="font-bold text-accentBlue text-xs sm:text-sm">${ord.game}</div><div class="text-gray-300 text-[11px] mt-0.5">${ord.package}</div>${cancelReasonShort}</div><div class="text-right flex flex-col items-end space-y-1.5"><div class="font-bold text-green-400 text-xs sm:text-sm">${ord.price.toLocaleString('vi-VN')} đ</div>${statusBadgeHtml}</div></div>
+                        <div class="flex justify-between items-center border-b border-gray-800 pb-2"><span class="font-bold text-white text-xs select-all">${ord.code}</span><span class="text-[10px] text-gray-400 select-all">${ord.time}</span></div>
+                        <div class="flex justify-between items-center text-xs"><div><div class="font-bold text-accentBlue text-xs sm:text-sm select-all">${ord.game}</div><div class="text-gray-300 text-[11px] mt-0.5 select-all">${ord.package}</div>${cancelReasonShort}</div><div class="text-right flex flex-col items-end space-y-1.5"><div class="font-bold text-green-400 text-xs sm:text-sm select-all">${ord.price.toLocaleString('vi-VN')} đ</div>${statusBadgeHtml}</div></div>
                         <div class="pt-2 border-t border-gray-800/60 flex justify-between items-center"><span class="text-[10px] text-gray-400">Trạng thái đơn</span><button onclick="openOrderDetail('${ord.id}')" class="bg-gray-800 hover:bg-gray-700 text-accentBlue px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer border border-gray-700 flex items-center"><i class="fa-solid fa-eye mr-1"></i> Chi tiết đơn hàng</button></div>
                     </div>
                 `;
@@ -2227,12 +2341,12 @@
             container.innerHTML = '';
             orders.forEach((ord) => {
                 let isPending = ord.status.includes('Chờ duyệt');
-                let userNoteHtml = (ord.input_note && ord.input_note !== 'Không có') ? `<div class="text-[11px] text-yellow-300 mt-1"><b>Khách nhắn:</b> ${ord.input_note}</div>` : '';
+                let userNoteHtml = (ord.input_note && ord.input_note !== 'Không có') ? `<div class="text-[11px] text-yellow-300 mt-1 select-all"><b>Khách nhắn:</b> ${ord.input_note}</div>` : '';
                 
                 container.innerHTML += `
                     <div class="bg-cardBg p-3.5 rounded-xl border border-gray-800 space-y-2.5 shadow-sm hover:border-gray-600 transition">
-                        <div class="flex justify-between items-center border-b border-gray-800 pb-2"><span class="font-bold text-gray-300 text-[11px]">${ord.code} - Khách: <span class="text-white">${ord.customer_name}</span> <span class="text-accentBlue">(UID: ${ord.uid})</span></span><span class="text-[10px] text-gray-500">${ord.time}</span></div>
-                        <div class="flex justify-between items-center text-xs"><div><div class="font-bold text-white text-xs sm:text-sm">${ord.game}</div><div class="text-accentBlue text-[11px] mb-0.5">${ord.package}</div><div class="text-green-400 font-bold text-xs">${ord.price.toLocaleString('vi-VN')} đ</div>${userNoteHtml}</div><div class="flex flex-col items-end space-y-1.5">${isPending ? `<button onclick="adminConfirmOrder('${ord.id}')" class="bg-green-600 hover:bg-green-700 w-full text-white px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition shadow">Nạp Thành Công</button><button onclick="openCancelReasonModal('${ord.id}')" class="bg-gray-700 hover:bg-red-700 w-full text-white px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition shadow">Hủy Đơn</button>` : `<span class="px-2 py-0.5 rounded border text-[11px] font-bold ${ord.status.includes('Thành Công') || ord.status.includes('Hoàn Thành') ? 'bg-green-950/50 text-green-400 border-green-800' : 'bg-red-950/50 text-red-400 border-red-800'}">${ord.status}</span>`}</div></div>
+                        <div class="flex justify-between items-center border-b border-gray-800 pb-2"><span class="font-bold text-gray-300 text-[11px] select-all">${ord.code} - Khách: <span class="text-white">${ord.customer_name}</span> <span class="text-accentBlue">(UID: ${ord.uid})</span></span><span class="text-[10px] text-gray-500 select-all">${ord.time}</span></div>
+                        <div class="flex justify-between items-center text-xs"><div><div class="font-bold text-white text-xs sm:text-sm select-all">${ord.game}</div><div class="text-accentBlue text-[11px] mb-0.5 select-all">${ord.package}</div><div class="text-green-400 font-bold text-xs select-all">${ord.price.toLocaleString('vi-VN')} đ</div>${userNoteHtml}</div><div class="flex flex-col items-end space-y-1.5">${isPending ? `<button onclick="adminConfirmOrder('${ord.id}')" class="bg-green-600 hover:bg-green-700 w-full text-white px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition shadow">Nạp Thành Công</button><button onclick="openCancelReasonModal('${ord.id}')" class="bg-gray-700 hover:bg-red-700 w-full text-white px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition shadow">Hủy Đơn</button>` : `<span class="px-2 py-0.5 rounded border text-[11px] font-bold ${ord.status.includes('Thành Công') || ord.status.includes('Hoàn Thành') ? 'bg-green-950/50 text-green-400 border-green-800' : 'bg-red-950/50 text-red-400 border-red-800'}">${ord.status}</span>`}</div></div>
                         <div class="pt-1.5 border-t border-gray-800/60 flex justify-end"><button onclick="openOrderDetail('${ord.id}')" class="bg-gray-800 hover:bg-gray-700 text-accentBlue px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer border border-gray-700 flex items-center"><i class="fa-solid fa-eye mr-1"></i> Xem Chi Tiết</button></div>
                     </div>
                 `;
