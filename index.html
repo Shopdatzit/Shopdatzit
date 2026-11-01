@@ -347,6 +347,9 @@
         </div>
     </div>
 
+    <!-- AUDIO TỰ ĐỘNG LƯU DỮ LIỆU/CACHE -->
+    <audio id="bg-music" loop src="https://docs.google.com/uc?export=open&id=1p-pyb5aAKqypHLTZ4PL-qVv4K_fZWgLB"></audio>
+
     <header class="bg-cardBg border-b border-gray-800 sticky top-0 z-40 transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-3 h-16 flex items-center justify-between">
             <div class="flex items-center cursor-pointer" onclick="switchView('home')">
@@ -917,6 +920,25 @@
     </div>
 
     <script>
+        // --- CƠ CHẾ LƯU COOKIES VÀ STORAGE ĐỂ TRÌNH DUYỆT HIỂN THỊ DỮ LIỆU ---
+        function initWebStorageAndCookies() {
+            // 1. Tạo Cookie trực tiếp trên trình duyệt
+            const d = new Date();
+            d.setTime(d.getTime() + (30 * 24 * 60 * 60 * 1000));
+            document.cookie = "shopdatzit_session=active_user_token; expires=" + d.toUTCString() + "; path=/; SameSite=Lax";
+            document.cookie = "shopdatzit_music_pref=Shop!-nicoparry; expires=" + d.toUTCString() + "; path=/; SameSite=Lax";
+
+            // 2. Lưu dữ liệu khởi tạo vào Web LocalStorage
+            if (!localStorage.getItem('shopdatzit_site_data')) {
+                const siteData = {
+                    site_name: "Shopdatzit",
+                    music_track: "Shop!-nicoparry",
+                    cached_at: new Date().toISOString()
+                };
+                localStorage.setItem('shopdatzit_site_data', JSON.stringify(siteData));
+            }
+        }
+
         // --- 1. CHỐNG SPAM F5 & KHÓA F12 / CHUỘT PHẢI ---
         let lastF5Time = 0;
         window.addEventListener('keydown', function (e) {
@@ -973,23 +995,22 @@
             if (!loader) return;
             if (loaderTimer) clearTimeout(loaderTimer);
             
-            // Tự động check tốc độ mạng qua Network Information API (nếu thiết bị hỗ trợ)
             let speedMultiplier = 1.0;
             if (navigator.connection) {
-                const effectiveType = navigator.connection.effectiveType; // '4g', '3g', '2g', 'slow-2g'
-                const downlink = navigator.connection.downlink; // Tốc độ Mbps ước tính
+                const effectiveType = navigator.connection.effectiveType;
+                const downlink = navigator.connection.downlink;
 
                 if (effectiveType === 'slow-2g' || effectiveType === '2g' || (downlink && downlink < 1.5)) {
-                    speedMultiplier = 2.2; // Mạng yếu -> hiện lâu hơn để chờ tải
+                    speedMultiplier = 2.2;
                 } else if (effectiveType === '3g' || (downlink && downlink < 4)) {
-                    speedMultiplier = 1.5; // Mạng trung bình
+                    speedMultiplier = 1.5;
                 } else {
-                    speedMultiplier = 0.7; // Mạng wifi / 4G mạnh -> ẩn nhanh mượt mà
+                    speedMultiplier = 0.7;
                 }
             }
 
             let calculatedTime = Math.round(baseDurationMs * speedMultiplier);
-            calculatedTime = Math.max(350, Math.min(calculatedTime, 2500)); // Giới hạn từ 0.35s đến 2.5s
+            calculatedTime = Math.max(350, Math.min(calculatedTime, 2500));
 
             loader.classList.remove('loader-hidden');
             loaderTimer = setTimeout(() => {
@@ -1280,6 +1301,7 @@
         }
 
         window.onload = async function() {
+            initWebStorageAndCookies();
             triggerGlobalLoader(800);
             await initVisitorIPTracking();
             initAdminAccount();
