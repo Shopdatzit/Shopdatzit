@@ -1525,11 +1525,11 @@
                 if (gameKey === 'identityv') {
                     inputContainer.innerHTML = `
                         <div>
-                            <label class="text-xs text-gray-400 block mb-1">Game ID (UID)</label>
+                            <label class="text-xs text-gray-400 block mb-1">Game ID (UID) <span class="text-red-400">*</span></label>
                             <input type="text" id="input-username" placeholder="Nhập game id" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
                         </div>
                         <div>
-                            <label class="text-xs text-gray-400 block mb-1">Server / Máy chủ</label>
+                            <label class="text-xs text-gray-400 block mb-1">Server / Máy chủ <span class="text-red-400">*</span></label>
                             <select id="input-server" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
                                 <option value="">Vui lòng chọn server</option>
                                 <option value="Asia">Asia</option>
@@ -1548,18 +1548,18 @@
                 } else {
                     inputContainer.innerHTML = `
                         <div>
-                            <label class="text-xs text-gray-400 block mb-1">Email / Tài khoản đăng nhập</label>
+                            <label class="text-xs text-gray-400 block mb-1">Email / Tài khoản đăng nhập <span class="text-red-400">*</span></label>
                             <input type="text" id="input-username" placeholder="Nhập email/tài khoản game" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
                         </div>
                         <div>
-                            <label class="text-xs text-gray-400 block mb-1">Mật khẩu</label>
+                            <label class="text-xs text-gray-400 block mb-1">Mật khẩu <span class="text-red-400">*</span></label>
                             <div class="relative">
                                 <input type="password" id="input-password" placeholder="Nhập mật khẩu" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100 pr-10">
                                 <i class="fa-solid fa-eye absolute right-3 top-3 text-gray-400 cursor-pointer text-xs" onclick="togglePasswordVisibility('input-password')"></i>
                             </div>
                         </div>
                         <div>
-                            <label class="text-xs text-gray-400 block mb-1">Server / Máy chủ</label>
+                            <label class="text-xs text-gray-400 block mb-1">Server / Máy chủ <span class="text-red-400">*</span></label>
                             <select id="input-server" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
                                 <option value="">Chọn máy chủ</option>
                                 <option value="Thẻ Cào / Mặc định">Thẻ Cào / Mặc định</option>
@@ -1650,6 +1650,29 @@
             if (!currentUsername) { openAuthModal(); return; }
             if (!cart || cart.length === 0) { alert("Giỏ hàng trống!"); return; }
 
+            // KIỂM TRA BẮT BUỘC ĐIỀN ĐỦ THÔNG TIN
+            const inputUser = document.getElementById('input-username');
+            const inputPass = document.getElementById('input-password');
+            const inputServer = document.getElementById('input-server');
+
+            if (!inputUser || !inputUser.value.trim()) {
+                alert('Vui lòng nhập UID / Tài khoản game!');
+                if (inputUser) inputUser.focus();
+                return;
+            }
+
+            if (inputPass && !inputPass.value.trim()) {
+                alert('Vui lòng nhập Mật khẩu tài khoản game!');
+                inputPass.focus();
+                return;
+            }
+
+            if (!inputServer || !inputServer.value || inputServer.value === '' || inputServer.value.includes('Chọn') || inputServer.value.includes('Vui lòng')) {
+                alert('Vui lòng chọn Máy chủ (Server) hợp lệ (Server mặc định không được chấp nhận)!');
+                if (inputServer) inputServer.focus();
+                return;
+            }
+
             const amount = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
             document.getElementById('modal-amount').innerText = amount.toLocaleString('vi-VN') + ' đ';
             document.getElementById('viet-qr-img').src = `https://img.vietqr.io/image/VCB-1065342786-compact.png?amount=${amount}&addInfo=datzit312&accountName=DANG%20VAN%20TIEN%20DAT`;
@@ -1700,12 +1723,25 @@
                 const { error } = await supabaseClient.from('orders').insert([newOrder]);
                 if (error) { alert('Lỗi tạo đơn: ' + error.message); return; }
 
+                // Gửi email thông báo cho Admin (Tiêu đề không chứa emoji gây lỗi dấu hỏi)
                 sendAutoEmail(
                     "ngocdiemdang90@gmail.com",
-                    `🛒 Có đơn hàng mới #${randomCode} từ ${currentUsername}`,
+                    `Có đơn hàng mới #${randomCode} từ ${currentUsername}`,
                     `Khách hàng <b>${currentUsername}</b> vừa đặt đơn hàng mới <b>#${randomCode}</b>.<br>Tổng tiền: <b>${totalAmount.toLocaleString('vi-VN')} đ</b>.<br>Trạng thái: ${status}`,
                     true
                 );
+
+                // Gửi email thông báo tới Khách hàng về đơn hàng vừa đặt
+                let custAcc = accounts[currentUsername];
+                let custEmail = custAcc ? custAcc.email : currentUsername;
+                if (custEmail && custEmail.includes('@')) {
+                    sendAutoEmail(
+                        custEmail,
+                        `Xác nhận đơn hàng #${randomCode} tại ShopDatZit`,
+                        `Xin chào <b>${currentUsername}</b>,<br>Đơn hàng <b>#${randomCode}</b> của bạn đã được tiếp nhận thành công!<br>Tổng thanh toán: <b>${totalAmount.toLocaleString('vi-VN')} đ</b>.<br>Trạng thái: <b>${status}</b>.<br>Cảm ơn bạn đã mua hàng tại ShopDatZit!`,
+                        true
+                    );
+                }
 
                 clearCart(); 
                 await fetchAndCalculateSolds();
@@ -1843,7 +1879,7 @@
                     if (custEmail && custEmail.includes('@')) {
                         sendAutoEmail(
                             custEmail,
-                            `✅ Đơn hàng ${ord.code} đã hoàn thành`,
+                            `Đơn hàng ${ord.code} đã hoàn thành`,
                             `Xin chào <b>${ord.customer_name}</b>,<br>Đơn hàng <b>${ord.code}</b> của bạn đã được duyệt và nạp thành công!<br>Tổng cộng: <b>${ord.price.toLocaleString('vi-VN')} đ</b>.<br><br><b>💬 Ghi chú từ Admin:</b><br><i>"${adminNote}"</i><br><br>Cảm ơn bạn đã ủng hộ ShopDatZit!`,
                             true
                         );
@@ -1882,7 +1918,7 @@
                     if (custEmail && custEmail.includes('@')) {
                         sendAutoEmail(
                             custEmail,
-                            `❌ Đơn hàng ${ord.code} đã bị hủy`,
+                            `Đơn hàng ${ord.code} đã bị hủy`,
                             `Xin chào <b>${ord.customer_name}</b>,<br>Đơn hàng <b>${ord.code}</b> của bạn đã bị hủy.<br>Lý do: <b>${reason}</b>.<br>Mọi thắc mắc vui lòng liên hệ CSKH.`,
                             true
                         );
