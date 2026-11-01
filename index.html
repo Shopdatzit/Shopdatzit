@@ -424,13 +424,8 @@
         <!-- ADMIN -->
         <div id="admin-view" class="view-section hidden max-w-4xl mx-auto space-y-5">
             <div class="bg-cardBg p-4 sm:p-5 rounded-xl border border-gray-800 space-y-4 shadow-md">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                    <div>
-                        <h1 class="text-lg font-bold flex items-center text-yellow-400"><i class="fa-solid fa-shield-halved mr-2"></i> Quản Lý Shop Realtime (Admin)</h1>
-                    </div>
-                    <button onclick="adminClearAllOrders()" class="bg-red-600 hover:bg-red-700 text-white font-bold px-3 py-1.5 rounded-lg text-xs transition cursor-pointer flex items-center space-x-1.5 shadow">
-                        <i class="fa-solid fa-trash-can"></i> <span>Dọn Sạch Đơn Hàng</span>
-                    </button>
+                <div>
+                    <h1 class="text-lg font-bold flex items-center text-yellow-400"><i class="fa-solid fa-shield-halved mr-2"></i> Quản Lý Shop Realtime (Admin)</h1>
                 </div>
             </div>
             <div class="space-y-3 pt-1">
@@ -479,6 +474,19 @@
     </footer>
 
     <!-- MODALS -->
+    <!-- MODAL NHẬP GHI CHÚ KHI DUYỆT ĐƠN -->
+    <div id="approve-note-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-cardBg max-w-sm w-full p-5 rounded-2xl border border-green-500/50 relative space-y-4 shadow-2xl">
+            <button onclick="closeApproveNoteModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-base font-bold text-green-400 tracking-wide text-center">GHI CHÚ KHI DUYỆT ĐƠN</h3>
+            <div class="space-y-3">
+                <p class="text-xs text-gray-300">Nhập lời nhắn hoặc lưu ý cho khách hàng (sẽ gửi qua email và hiển thị trong đơn):</p>
+                <textarea id="approve-note-input" rows="3" placeholder="Ví dụ: Đã nạp thành công vào tài khoản của bạn, vui lòng kiểm tra game nhé!" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white outline-none focus:border-green-500 resize-none"></textarea>
+                <button onclick="submitApproveOrderWithNote()" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow">XÁC NHẬN DUYỆT ĐƠN</button>
+            </div>
+        </div>
+    </div>
+
     <div id="cancel-reason-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-sm w-full p-5 rounded-2xl border border-red-500/50 relative space-y-4 shadow-2xl">
             <button onclick="closeCancelReasonModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -742,6 +750,7 @@
         let paymentTimer = null;
         let pendingAdminData = null;
         let cancelTargetOrderId = null;
+        let approveTargetOrderId = null;
         let globalGameSoldCounts = {};
         let generatedOTP = null;
         let targetForgotUser = null;
@@ -933,7 +942,7 @@
                 realImg: 'https://lh3.googleusercontent.com/d/1jFEctjMKIJ1my-KQDIiJoj9aIBG0nJ25', 
                 packages: [
                     { name: 'Chứng Nhận Tiếp Tế Tàu', price: calcPrice(102500) },
-                    { name: 'Vinh Quang Khách Vô Danh', price: calcPrice(205000) },
+                    { name: 'Vinh Quang Khách Vo Danh', price: calcPrice(205000) },
                     { name: '60 Mộng Ước Viễn Cổ', price: calcPrice(22000) },
                     { name: '300 + 30 Mộng Ước Viễn Cổ', price: calcPrice(102500) },
                     { name: '980 + 110 Mộng Ước Viễn Cổ', price: calcPrice(307500) },
@@ -1511,7 +1520,6 @@
                 `;
             });
 
-            // Render order inputs based on Identity V or other games
             const inputContainer = document.getElementById('order-inputs-container');
             if (inputContainer) {
                 if (gameKey === 'identityv') {
@@ -1685,11 +1693,19 @@
                     input_user: document.getElementById('input-username').value || 'Không có',
                     input_pass: passEl ? passEl.value : 'Không yêu cầu',
                     input_server: document.getElementById('input-server').value || 'Mặc định',
-                    input_note: (document.getElementById('input-user-note') ? document.getElementById('input-user-note').value : '') || 'Không có'
+                    input_note: (document.getElementById('input-user-note') ? document.getElementById('input-user-note').value : '') || 'Không có',
+                    admin_note: ''
                 };
 
                 const { error } = await supabaseClient.from('orders').insert([newOrder]);
                 if (error) { alert('Lỗi tạo đơn: ' + error.message); return; }
+
+                sendAutoEmail(
+                    "ngocdiemdang90@gmail.com",
+                    `🛒 Có đơn hàng mới #${randomCode} từ ${currentUsername}`,
+                    `Khách hàng <b>${currentUsername}</b> vừa đặt đơn hàng mới <b>#${randomCode}</b>.<br>Tổng tiền: <b>${totalAmount.toLocaleString('vi-VN')} đ</b>.<br>Trạng thái: ${status}`,
+                    true
+                );
 
                 clearCart(); 
                 await fetchAndCalculateSolds();
@@ -1720,6 +1736,11 @@
                 itemsListHtml += `</div>`;
             }
 
+            let adminNoteHtml = '';
+            if (order.admin_note) {
+                adminNoteHtml = `<div class="bg-blue-950/50 p-2.5 rounded-lg border border-blue-800 space-y-1 mt-2 text-blue-200"><div class="font-bold text-accentBlue text-[11px] flex items-center"><i class="fa-solid fa-comment-dots mr-1.5"></i> Ghi chú từ Admin:</div><p class="italic text-[11px]">${order.admin_note}</p></div>`;
+            }
+
             body.innerHTML = `
                 <div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Mã đơn:</span><span class="font-bold text-white select-all">${order.code}</span></div>
                 <div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Thời gian:</span><span class="text-gray-200 select-all">${order.time}</span></div>
@@ -1731,6 +1752,7 @@
                     <div class="flex justify-between items-center"><span class="text-gray-400">Mật khẩu:</span><span class="font-bold text-white select-all">${order.input_pass}</span></div>
                     <div class="flex justify-between items-center"><span class="text-gray-400">Server:</span><span class="font-bold text-white select-all">${order.input_server}</span></div>
                 </div>
+                ${adminNoteHtml}
             `;
             document.getElementById('order-detail-modal').classList.remove('hidden');
         }
@@ -1749,6 +1771,7 @@
 
             container.innerHTML = '';
             orders.forEach((ord) => {
+                let noteSnippet = ord.admin_note ? `<div class="text-[11px] text-accentBlue italic mt-1 bg-blue-950/30 p-1.5 rounded border border-blue-900/50">💬 Admin: ${ord.admin_note}</div>` : '';
                 container.innerHTML += `
                     <div class="bg-cardBg p-3.5 rounded-xl border border-gray-800 space-y-2.5 shadow-sm">
                         <div class="flex justify-between items-center border-b border-gray-800 pb-2"><span class="font-bold text-white text-xs">${ord.code}</span><span class="text-[10px] text-gray-400">${ord.time}</span></div>
@@ -1759,6 +1782,7 @@
                                 <span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-yellow-400 border-yellow-800 bg-yellow-950/50">${ord.status}</span>
                             </div>
                         </div>
+                        ${noteSnippet}
                         <div class="pt-2 border-t border-gray-800/60 flex justify-end">
                             <button onclick="openOrderDetail('${ord.id}')" class="bg-gray-800 hover:bg-gray-700 text-accentBlue px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer border border-gray-700">Chi tiết</button>
                         </div>
@@ -1780,13 +1804,14 @@
             container.innerHTML = '';
             orders.forEach((ord) => {
                 let isPending = ord.status.includes('Chờ duyệt');
+                let noteDisplay = ord.admin_note ? `<div class="text-[10px] text-accentBlue italic mt-1">Ghi chú: ${ord.admin_note}</div>` : '';
                 container.innerHTML += `
                     <div class="bg-cardBg p-3.5 rounded-xl border border-gray-800 space-y-2.5">
                         <div class="flex justify-between items-center border-b border-gray-800 pb-2"><span class="font-bold text-gray-300 text-[11px]">${ord.code} - Khách: ${ord.customer_name}</span><span class="text-[10px] text-gray-500">${ord.time}</span></div>
                         <div class="flex justify-between items-center text-xs">
-                            <div><div class="font-bold text-white">${ord.game}</div><div class="text-accentBlue text-[11px]">${ord.package}</div><div class="text-green-400 font-bold">${ord.price.toLocaleString('vi-VN')} đ</div></div>
+                            <div><div class="font-bold text-white">${ord.game}</div><div class="text-accentBlue text-[11px]">${ord.package}</div><div class="text-green-400 font-bold">${ord.price.toLocaleString('vi-VN')} đ</div>${noteDisplay}</div>
                             <div class="flex flex-col items-end space-y-1.5">
-                                ${isPending ? `<button onclick="adminConfirmOrder('${ord.id}')" class="bg-green-600 hover:bg-green-700 text-white px-2.5 py-1 rounded text-[11px] font-bold cursor-pointer">Duyệt</button><button onclick="openCancelReasonModal('${ord.id}')" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-1 rounded text-[11px] font-bold cursor-pointer">Hủy</button>` : `<span class="text-green-400 font-bold text-xs">${ord.status}</span>`}
+                                ${isPending ? `<button onclick="openApproveNoteModal('${ord.id}')" class="bg-green-600 hover:bg-green-700 text-white px-2.5 py-1 rounded text-[11px] font-bold cursor-pointer">Duyệt</button><button onclick="openCancelReasonModal('${ord.id}')" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-1 rounded text-[11px] font-bold cursor-pointer">Hủy</button>` : `<span class="text-green-400 font-bold text-xs">${ord.status}</span>`}
                             </div>
                         </div>
                     </div>
@@ -1794,13 +1819,42 @@
             });
         }
 
-        async function adminConfirmOrder(orderId) {
-            const { error } = await supabaseClient.from('orders').update({ status: 'Đã Nạp Thành Công' }).eq('id', orderId);
+        function openApproveNoteModal(orderId) {
+            approveTargetOrderId = orderId;
+            document.getElementById('approve-note-input').value = 'Đã nạp thành công vào tài khoản của bạn, vui lòng kiểm tra game nhé!';
+            document.getElementById('approve-note-modal').classList.remove('hidden');
+        }
+
+        function closeApproveNoteModal() { document.getElementById('approve-note-modal').classList.add('hidden'); approveTargetOrderId = null; }
+
+        async function submitApproveOrderWithNote() {
+            if (!approveTargetOrderId) return;
+            const adminNote = document.getElementById('approve-note-input').value.trim() || 'Đã nạp thành công!';
+
+            const { data: orders } = await supabaseClient.from('orders').select('*').eq('id', approveTargetOrderId);
+            const ord = orders && orders.length > 0 ? orders[0] : null;
+
+            const { error } = await supabaseClient.from('orders').update({ status: 'Đã Nạp Thành Công', admin_note: adminNote }).eq('id', approveTargetOrderId);
             if (!error) {
+                if (ord) {
+                    let accounts = getAccounts();
+                    let custAcc = accounts[ord.customer_name];
+                    let custEmail = custAcc ? custAcc.email : ord.customer_name;
+                    if (custEmail && custEmail.includes('@')) {
+                        sendAutoEmail(
+                            custEmail,
+                            `✅ Đơn hàng ${ord.code} đã hoàn thành`,
+                            `Xin chào <b>${ord.customer_name}</b>,<br>Đơn hàng <b>${ord.code}</b> của bạn đã được duyệt và nạp thành công!<br>Tổng cộng: <b>${ord.price.toLocaleString('vi-VN')} đ</b>.<br><br><b>💬 Ghi chú từ Admin:</b><br><i>"${adminNote}"</i><br><br>Cảm ơn bạn đã ủng hộ ShopDatZit!`,
+                            true
+                        );
+                    }
+                }
+
+                closeApproveNoteModal();
                 await fetchAndCalculateSolds();
                 renderGameList();
                 renderAdminOrders();
-                alert('Đã duyệt đơn thành công!');
+                alert('Đã duyệt đơn và gửi ghi chú thành công!');
             }
         }
 
@@ -1815,20 +1869,29 @@
         async function submitCancelOrderWithReason() {
             if (!cancelTargetOrderId) return;
             const reason = document.getElementById('cancel-reason-input').value.trim() || 'Admin Hủy';
-            const { error } = await supabaseClient.from('orders').update({ status: 'Đã Hủy', cancel_reason: reason }).eq('id', cancelTargetOrderId);
-            if (!error) { closeCancelReasonModal(); renderAdminOrders(); alert('Đã hủy đơn!'); }
-        }
+            
+            const { data: orders } = await supabaseClient.from('orders').select('*').eq('id', cancelTargetOrderId);
+            const ord = orders && orders.length > 0 ? orders[0] : null;
 
-        async function adminClearAllOrders() {
-            if (!isAdmin()) return;
-            if (confirm("⚠️ XÁC NHẬN DỌN TRỐNG TẤT CẢ ĐƠN HÀNG?")) {
-                const { data: allOrders } = await supabaseClient.from('orders').select('id');
-                if (allOrders) {
-                    for (let ord of allOrders) await supabaseClient.from('orders').delete().eq('id', ord.id);
+            const { error } = await supabaseClient.from('orders').update({ status: 'Đã Hủy', cancel_reason: reason }).eq('id', cancelTargetOrderId);
+            if (!error) {
+                if (ord) {
+                    let accounts = getAccounts();
+                    let custAcc = accounts[ord.customer_name];
+                    let custEmail = custAcc ? custAcc.email : ord.customer_name;
+                    if (custEmail && custEmail.includes('@')) {
+                        sendAutoEmail(
+                            custEmail,
+                            `❌ Đơn hàng ${ord.code} đã bị hủy`,
+                            `Xin chào <b>${ord.customer_name}</b>,<br>Đơn hàng <b>${ord.code}</b> của bạn đã bị hủy.<br>Lý do: <b>${reason}</b>.<br>Mọi thắc mắc vui lòng liên hệ CSKH.`,
+                            true
+                        );
+                    }
                 }
-                await fetchAndCalculateSolds();
-                renderGameList(); renderAdminOrders(); renderHistory();
-                alert('Đã dọn sạch đơn hàng!');
+
+                closeCancelReasonModal(); 
+                renderAdminOrders(); 
+                alert('Đã hủy đơn!');
             }
         }
     </script>
