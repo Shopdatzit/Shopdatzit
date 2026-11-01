@@ -49,7 +49,6 @@
             --ux-accent-soft: rgba(59,130,246,0.15);
             --ux-mint: #22c55e;
             --ux-danger: #ef4444;
-            --ux-ease: cubic-bezier(.2,.8,.2,1);
             --ux-spring: cubic-bezier(.34,1.45,.64,1);
         }
 
@@ -425,10 +424,27 @@
                 <div>
                     <h1 class="text-lg font-bold flex items-center text-yellow-400"><i class="fa-solid fa-shield-halved mr-2"></i> Quản Lý Shop Realtime (Admin)</h1>
                 </div>
+                <!-- 2 TAB CHỌN CHO ADMIN -->
+                <div class="flex space-x-2 border-b border-gray-800 pb-3 pt-2">
+                    <button onclick="switchAdminTab('orders')" id="admin-tab-orders" class="bg-accentBlue text-white font-bold px-4 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2">
+                        <i class="fa-solid fa-box"></i> <span>Quản Lý Đơn Hàng</span>
+                    </button>
+                    <button onclick="switchAdminTab('payments')" id="admin-tab-payments" class="bg-gray-800 text-gray-300 hover:bg-gray-700 font-bold px-4 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2">
+                        <i class="fa-solid fa-money-bill-transfer"></i> <span>Duyệt Chuyển Tiền (<span id="pending-pay-count">0</span>)</span>
+                    </button>
+                </div>
             </div>
-            <div class="space-y-3 pt-1">
-                <h3 class="font-bold text-sm text-white flex items-center"><i class="fa-solid fa-receipt text-accentBlue mr-2"></i> Danh Sách Tất Cả Đơn Hàng (Realtime)</h3>
+
+            <!-- PHẦN 1: QUẢN LÝ ĐƠN HÀNG -->
+            <div id="admin-section-orders" class="space-y-3 pt-1">
+                <h3 class="font-bold text-sm text-white flex items-center"><i class="fa-solid fa-receipt text-accentBlue mr-2"></i> Danh Sách Tất Cả Đơn Hàng</h3>
                 <div id="admin-orders-container" class="space-y-3"></div>
+            </div>
+
+            <!-- PHẦN 2: DUYỆT CHUYỂN TIỀN -->
+            <div id="admin-section-payments" class="space-y-3 pt-1 hidden">
+                <h3 class="font-bold text-sm text-yellow-400 flex items-center"><i class="fa-solid fa-money-bill-transfer mr-2"></i> Đơn Chờ Duyệt Tiền (Khách Đã Chuyển Khoản)</h3>
+                <div id="admin-payments-container" class="space-y-3"></div>
             </div>
         </div>
     </main>
@@ -480,7 +496,7 @@
             </div>
             <div>
                 <h3 class="text-base font-bold text-white">Đang Chờ Admin Xác Nhận Duyệt Tiền...</h3>
-                <p class="text-xs text-yellow-400 mt-1.5 font-medium">Hệ thống sẽ tự động cập nhật ngay khi Admin xác nhận tiền vào. Bạn không cần F5!</p>
+                <p class="text-xs text-yellow-400 mt-1.5 font-medium">Hệ thống đã ghi nhận đơn hàng và đang chờ Admin xác nhận duyệt tiền. Bạn không cần F5!</p>
             </div>
             <div class="pt-2 border-t border-gray-800">
                 <button onclick="closePendingModalAndGoHistory()" class="w-full bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold py-2 rounded-xl text-xs cursor-pointer">
@@ -602,6 +618,7 @@
         </div>
     </div>
 
+    <!-- MODAL QUÉT QR CHUYỂN KHOẢN (ĐÃ BỎ NÚT XANH LÁ, TỰ ĐỘNG TẠO ĐƠN VÀ CHUYỂN TRẠNG THÁI) -->
     <div id="payment-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-md w-full p-5 rounded-2xl border border-gray-800 relative text-center space-y-4 shadow-2xl">
             <button onclick="closePaymentModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -617,9 +634,7 @@
                     <span>Số tiền:</span> <span id="modal-amount" class="font-bold text-green-400 text-sm select-all">0 đ</span>
                 </div>
             </div>
-            <button onclick="confirmOrderClient()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 rounded-xl transition text-xs shadow-md cursor-pointer">
-                Tôi Đã Thanh Toán Thành Công
-            </button>
+            <p class="text-[11px] text-yellow-400 font-medium">💡 Vui lòng quét mã chuyển khoản. Hệ thống tự động tạo đơn và chuyển sang trạng thái chờ duyệt tiền ngay lập tức!</p>
         </div>
     </div>
 
@@ -772,7 +787,8 @@
         let targetForgotUser = null;
         let changeEmailOTP = null;
         let adminExpectedOtp = null;
-        let currentActiveOrderId = null; // Lưu ID đơn hàng hiện tại khách vừa tạo để lắng nghe realtime
+        let currentActiveOrderId = null; 
+        let currentAdminTab = 'orders'; // Quản lý tab admin hiện tại
         const DEFAULT_AVATAR_URL = "https://lh3.googleusercontent.com/d/1OUDmydcc6lDsgpI4CdVwi2jmNa__EtPR";
         let clientUserIP = "IP_CHUA_XAC_DINH";
 
@@ -1004,12 +1020,10 @@
             initOtpWidget('change-email-otp-widget', changeEmailVerifyCallback);
         };
 
-        // LẮNG NGHE REALTIME SUPABASE ĐỂ TỰ ĐỘNG CẬP NHẬT TRẠNG THÁI CHO KHÁCH & ADMIN
         function initRealtimeListener() {
             supabaseClient.channel('public:orders').on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, async (payload) => {
                 const updatedOrder = payload.new;
 
-                // Nếu khách hàng đang bật màn hình và đơn hàng của chính họ được Admin duyệt tiền thành "Chờ duyệt đơn"
                 if (updatedOrder && updatedOrder.id === currentActiveOrderId) {
                     if (updatedOrder.status === 'Chờ duyệt đơn') {
                         document.getElementById('pending-payment-approval-modal').classList.add('hidden');
@@ -1021,6 +1035,7 @@
                 renderGameList();
                 renderHistory();
                 renderAdminOrders();
+                renderAdminPayments();
             }).subscribe();
         }
 
@@ -1250,6 +1265,7 @@
             }
             renderHistory();
             renderAdminOrders();
+            renderAdminPayments();
         }
 
         function saveNewUsername() {
@@ -1518,9 +1534,32 @@
             else if (viewName === 'cskh') { document.getElementById('cskh-view').classList.remove('hidden'); }
             else if (viewName === 'admin') {
                 if (checkIsIpBanned() > 0 || !isAdmin()) { alert('Không có quyền!'); switchView('home'); return; }
-                document.getElementById('admin-view').classList.remove('hidden'); renderAdminOrders();
+                document.getElementById('admin-view').classList.remove('hidden'); 
+                renderAdminOrders();
+                renderAdminPayments();
             }
             syncNavActive(viewName); window.scrollTo(0, 0);
+        }
+
+        // HÀM CHUYỂN TAB TRONG TRANG ADMIN
+        function switchAdminTab(tabName) {
+            currentAdminTab = tabName;
+            const tabOrdersBtn = document.getElementById('admin-tab-orders');
+            const tabPaymentsBtn = document.getElementById('admin-tab-payments');
+            const secOrders = document.getElementById('admin-section-orders');
+            const secPayments = document.getElementById('admin-section-payments');
+
+            if (tabName === 'orders') {
+                tabOrdersBtn.className = "bg-accentBlue text-white font-bold px-4 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2";
+                tabPaymentsBtn.className = "bg-gray-800 text-gray-300 hover:bg-gray-700 font-bold px-4 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2";
+                secOrders.classList.remove('hidden');
+                secPayments.classList.add('hidden');
+            } else {
+                tabPaymentsBtn.className = "bg-yellow-600 text-white font-bold px-4 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2";
+                tabOrdersBtn.className = "bg-gray-800 text-gray-300 hover:bg-gray-700 font-bold px-4 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2";
+                secPayments.classList.remove('hidden');
+                secOrders.classList.add('hidden');
+            }
         }
 
         function openGameDetail(gameKey) {
@@ -1674,7 +1713,8 @@
             if (checkoutSection) checkoutSection.classList.remove('hidden');
         }
 
-        function openPaymentModal() {
+        // TỰ ĐỘNG TẠO ĐƠN VÀ CHUYỂN TRẠNG THÁI NGAY KHI MỞ QR CODE (BỎ NÚT XANH LÁ)
+        async function openPaymentModal() {
             if (!currentUsername) { openAuthModal(); return; }
             if (!cart || cart.length === 0) { alert("Giỏ hàng trống!"); return; }
 
@@ -1703,14 +1743,20 @@
             const amount = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
             document.getElementById('modal-amount').innerText = amount.toLocaleString('vi-VN') + ' đ';
             document.getElementById('viet-qr-img').src = `https://img.vietqr.io/image/VCB-1065342786-compact.png?amount=${amount}&addInfo=datzit312&accountName=DANG%20VAN%20TIEN%20DAT`;
+            
+            // Tự động tạo đơn hàng và chuyển ngay sang "Chờ duyệt thanh toán"
+            await confirmOrderClientAutomatically();
+            
             document.getElementById('payment-modal').classList.remove('hidden');
         }
 
-        function closePaymentModal() { document.getElementById('payment-modal').classList.add('hidden'); }
+        function closePaymentModal() { 
+            document.getElementById('payment-modal').classList.add('hidden'); 
+            // Sau khi đóng QR, hiện popup thông báo đang chờ admin duyệt tiền và hướng dẫn sang lịch sử
+            document.getElementById('pending-payment-approval-modal').classList.remove('hidden');
+        }
 
-        // KHI KHÁCH BẤM XÁC NHẬN ĐÃ THANH TOÁN -> TRẠNG THÁI LÀ "Chờ duyệt thanh toán"
-        async function confirmOrderClient() {
-            closePaymentModal();
+        async function confirmOrderClientAutomatically() {
             const randomCode = Math.floor(100000 + Math.random() * 900000);
             let accounts = getAccounts();
             if (currentUsername && accounts[currentUsername]) {
@@ -1741,22 +1787,19 @@
                 };
 
                 const { error } = await supabaseClient.from('orders').insert([newOrder]);
-                if (error) { alert('Lỗi tạo đơn: ' + error.message); return; }
+                if (error) { console.error('Lỗi tạo đơn:', error.message); return; }
 
                 // Gửi email báo cho Admin có đơn chuyển tiền mới cần duyệt
                 sendAutoEmail(
                     "ngocdiemdang90@gmail.com",
                     `Yêu cầu duyệt tiền đơn #${randomCode} từ ${currentUsername}`,
-                    `Khách hàng <b>${currentUsername}</b> vừa chuyển khoản thanh toán cho đơn hàng <b>#${randomCode}</b>.<br>Tổng tiền: <b>${totalAmount.toLocaleString('vi-VN')} đ</b>.<br>Vui lòng vào trang quản trị để duyệt tiền!`,
+                    `Khách hàng <b>${currentUsername}</b> vừa tạo đơn hàng <b>#${randomCode}</b> và quét QR chuyển khoản.<br>Tổng tiền: <b>${totalAmount.toLocaleString('vi-VN')} đ</b>.<br>Vui lòng vào trang quản trị (Mục Duyệt Chuyển Tiền) để xác nhận!`,
                     true
                 );
 
                 clearCart(); 
                 await fetchAndCalculateSolds();
                 renderGameList();
-                
-                // Mở modal chờ Admin duyệt thanh toán ở máy khách
-                document.getElementById('pending-payment-approval-modal').classList.remove('hidden');
             }
         }
 
@@ -1777,7 +1820,6 @@
 
             const { error } = await supabaseClient.from('orders').update({ status: 'Chờ duyệt đơn' }).eq('id', orderId);
             if (!error) {
-                // Gửi email thông báo cho Khách hàng là đã được duyệt tiền -> đang chờ duyệt đơn nạp game
                 if (ord) {
                     let accounts = getAccounts();
                     let custAcc = accounts[ord.customer_name];
@@ -1793,6 +1835,7 @@
                 }
                 alert('Đã duyệt tiền thành công! Đơn hàng chuyển sang trạng thái Chờ duyệt đơn.');
                 renderAdminOrders();
+                renderAdminPayments();
             } else {
                 alert('Lỗi cập nhật: ' + error.message);
             }
@@ -1869,6 +1912,7 @@
             });
         }
 
+        // TAB 1: QUẢN LÝ TẤT CẢ ĐƠN HÀNG
         async function renderAdminOrders() {
             const container = document.getElementById('admin-orders-container');
             if (!container || !isAdmin()) return;
@@ -1883,7 +1927,7 @@
             orders.forEach((ord) => {
                 let actionBtn = '';
                 if (ord.status === 'Chờ duyệt thanh toán') {
-                    actionBtn = `<button onclick="approvePaymentByAdmin('${ord.id}')" class="bg-yellow-600 hover:bg-yellow-500 text-white px-2.5 py-1.5 rounded text-[11px] font-bold cursor-pointer shadow">Duyệt Tiền (Tiền Vào)</button>`;
+                    actionBtn = `<span class="text-yellow-400 font-bold text-[11px]">Chờ khách chuyển tiền</span>`;
                 } else if (ord.status === 'Chờ duyệt đơn') {
                     actionBtn = `<button onclick="openApproveNoteModal('${ord.id}')" class="bg-green-600 hover:bg-green-500 text-white px-2.5 py-1.5 rounded text-[11px] font-bold cursor-pointer shadow">Duyệt Nạp Xong</button>`;
                 } else {
@@ -1898,6 +1942,49 @@
                             <div><div class="font-bold text-white">${ord.game}</div><div class="text-accentBlue text-[11px]">${ord.package}</div><div class="text-green-400 font-bold">${ord.price.toLocaleString('vi-VN')} đ</div>${noteDisplay}</div>
                             <div class="flex flex-col items-end space-y-1.5">
                                 ${actionBtn}
+                                <button onclick="openOrderDetail('${ord.id}')" class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-2 py-1 rounded text-[10px]">Xem</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // TAB 2: DUYỆT CHUYỂN TIỀN (DANH SÁCH ĐƠN CHỜ DUYỆT TIỀN)
+        async function renderAdminPayments() {
+            const container = document.getElementById('admin-payments-container');
+            const countEl = document.getElementById('pending-pay-count');
+            if (!container || !isAdmin()) return;
+
+            const { data: orders } = await supabaseClient.from('orders').select('*').eq('status', 'Chờ duyệt thanh toán').order('timestamp', { ascending: false });
+            
+            if (countEl) countEl.innerText = orders ? orders.length : 0;
+
+            if (!orders || orders.length === 0) {
+                container.innerHTML = `<div class="bg-cardBg p-6 rounded-xl border border-gray-800 text-center text-gray-400 text-xs">Không có đơn nào đang chờ duyệt tiền.</div>`;
+                return;
+            }
+
+            container.innerHTML = '';
+            orders.forEach((ord) => {
+                container.innerHTML += `
+                    <div class="bg-cardBg p-4 rounded-xl border border-yellow-500/40 space-y-2.5 shadow-md">
+                        <div class="flex justify-between items-center border-b border-gray-800 pb-2">
+                            <span class="font-bold text-yellow-400 text-xs">${ord.code} - Khách: ${ord.customer_name}</span>
+                            <span class="text-[10px] text-gray-400">${ord.time}</span>
+                        </div>
+                        <div class="flex justify-between items-center text-xs">
+                            <div>
+                                <div class="font-bold text-white">${ord.game}</div>
+                                <div class="text-accentBlue text-[11px]">${ord.package}</div>
+                                <div class="text-green-400 font-bold mt-1 text-sm">${ord.price.toLocaleString('vi-VN')} đ</div>
+                                <div class="text-[11px] text-gray-300 mt-1">UID/TK: <b class="text-white">${ord.input_user}</b> | Server: <b class="text-white">${ord.input_server}</b></div>
+                            </div>
+                            <div class="flex flex-col items-end space-y-2">
+                                <button onclick="approvePaymentByAdmin('${ord.id}')" class="bg-yellow-600 hover:bg-yellow-500 text-white px-3 py-2 rounded-xl text-xs font-bold cursor-pointer shadow transition flex items-center space-x-1.5">
+                                    <i class="fa-solid fa-check"></i> <span>Duyệt Tiền (Tiền Vào)</span>
+                                </button>
+                                <button onclick="openOrderDetail('${ord.id}')" class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-2.5 py-1 rounded text-[11px]">Chi tiết đơn</button>
                             </div>
                         </div>
                     </div>
@@ -1940,44 +2027,8 @@
                 await fetchAndCalculateSolds();
                 renderGameList();
                 renderAdminOrders();
+                renderAdminPayments();
                 alert('Đã hoàn tất đơn hàng!');
-            }
-        }
-
-        function openCancelReasonModal(orderId) {
-            cancelTargetOrderId = orderId;
-            document.getElementById('cancel-reason-input').value = '';
-            document.getElementById('cancel-reason-modal').classList.remove('hidden');
-        }
-
-        function closeCancelReasonModal() { document.getElementById('cancel-reason-modal').classList.add('hidden'); cancelTargetOrderId = null; }
-
-        async function submitCancelOrderWithReason() {
-            if (!cancelTargetOrderId) return;
-            const reason = document.getElementById('cancel-reason-input').value.trim() || 'Admin Hủy';
-            
-            const { data: orders } = await supabaseClient.from('orders').select('*').eq('id', cancelTargetOrderId);
-            const ord = orders && orders.length > 0 ? orders[0] : null;
-
-            const { error } = await supabaseClient.from('orders').update({ status: 'Đã Hủy', cancel_reason: reason }).eq('id', cancelTargetOrderId);
-            if (!error) {
-                if (ord) {
-                    let accounts = getAccounts();
-                    let custAcc = accounts[ord.customer_name];
-                    let custEmail = custAcc ? custAcc.email : ord.customer_name;
-                    if (custEmail && custEmail.includes('@')) {
-                        sendAutoEmail(
-                            custEmail,
-                            `Đơn hàng ${ord.code} đã bị hủy`,
-                            `Xin chào <b>${ord.customer_name}</b>,<br>Đơn hàng <b>${ord.code}</b> của bạn đã bị hủy.<br>Lý do: <b>${reason}</b>.`,
-                            true
-                        );
-                    }
-                }
-
-                closeCancelReasonModal(); 
-                renderAdminOrders(); 
-                alert('Đã hủy đơn!');
             }
         }
     </script>
