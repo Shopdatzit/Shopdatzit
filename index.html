@@ -418,13 +418,13 @@
             </div>
         </div>
 
-        <!-- ADMIN (ĐÃ TÁCH RIÊNG 2 PHẦN HOÀN TOÀN) -->
+        <!-- ADMIN -->
         <div id="admin-view" class="view-section hidden max-w-4xl mx-auto space-y-5">
             <div class="bg-cardBg p-4 sm:p-5 rounded-xl border border-gray-800 space-y-4 shadow-md">
                 <div>
                     <h1 class="text-lg font-bold flex items-center text-yellow-400"><i class="fa-solid fa-shield-halved mr-2"></i> Quản Lý Shop Realtime (Admin)</h1>
                 </div>
-                <!-- 2 TAB CHỌN CHO ADMIN (TÁCH BIỆT RIÊNG RẼ) -->
+                <!-- 2 TAB CHỌN CHO ADMIN -->
                 <div class="flex space-x-2 border-b border-gray-800 pb-3 pt-2">
                     <button onclick="switchAdminTab('orders')" id="admin-tab-orders" class="bg-accentBlue text-white font-bold px-4 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2">
                         <i class="fa-solid fa-box"></i> <span>Quản Lý Đơn Hàng (<span id="admin-orders-count">0</span>)</span>
@@ -435,13 +435,13 @@
                 </div>
             </div>
 
-            <!-- PHẦN 1: QUẢN LÝ ĐƠN HÀNG (CHỈ HIỂN THỊ ĐƠN CHỜ DUYỆT ĐƠN - CÓ NÚT DUYỆT NẠP & NÚT HỦY ĐƠN) -->
+            <!-- PHẦN 1: QUẢN LÝ ĐƠN HÀNG -->
             <div id="admin-section-orders" class="space-y-3 pt-1">
                 <h3 class="font-bold text-sm text-white flex items-center"><i class="fa-solid fa-receipt text-accentBlue mr-2"></i> Danh Sách Đơn Hàng Đang Chờ Nạp (Chờ Duyệt Đơn)</h3>
                 <div id="admin-orders-container" class="space-y-3"></div>
             </div>
 
-            <!-- PHẦN 2: DUYỆT CHUYỂN TIỀN (CHỈ HIỂN THỊ ĐƠN CHỜ DUYỆT THANH TOÁN) -->
+            <!-- PHẦN 2: DUYỆT CHUYỂN TIỀN -->
             <div id="admin-section-payments" class="space-y-3 pt-1 hidden">
                 <h3 class="font-bold text-sm text-yellow-400 flex items-center"><i class="fa-solid fa-money-bill-transfer mr-2"></i> Đơn Chờ Duyệt Tiền (Khách Đã Chuyển Khoản)</h3>
                 <div id="admin-payments-container" class="space-y-3"></div>
@@ -1027,6 +1027,8 @@
 
                 if (updatedOrder && updatedOrder.id === currentActiveOrderId) {
                     if (updatedOrder.status === 'Chờ duyệt đơn') {
+                        // TỰ ĐỘNG TẮT CẢ MÃ QR VÀ BẢNG CHỜ KHI ADMIN DUYỆT TIỀN
+                        document.getElementById('payment-modal').classList.add('hidden');
                         document.getElementById('pending-payment-approval-modal').classList.add('hidden');
                         document.getElementById('payment-approved-success-modal').classList.remove('hidden');
                     }
@@ -1906,7 +1908,6 @@
             });
         }
 
-        // TAB 1: QUẢN LÝ ĐƠN HÀNG (CHỈ HIỂN THỊ ĐƠN "Chờ duyệt đơn")
         async function renderAdminOrders() {
             const container = document.getElementById('admin-orders-container');
             const countEl = document.getElementById('admin-orders-count');
@@ -1953,7 +1954,6 @@
             });
         }
 
-        // TAB 2: DUYỆT CHUYỂN TIỀN (CHỈ HIỂN THỊ ĐƠN "Chờ duyệt thanh toán")
         async function renderAdminPayments() {
             const container = document.getElementById('admin-payments-container');
             const countEl = document.getElementById('pending-pay-count');
@@ -2045,7 +2045,7 @@
 
         async function submitCancelOrderWithReason() {
             if (!cancelTargetOrderId) return;
-            const reason = document.getElementById('cancel-reason-input').value.trim() || 'Admin Hủy';
+            const reason = document.getElementById('cancel-reason-input'].value.trim() || 'Admin Hủy';
             
             const { data: orders } = await supabaseClient.from('orders').select('*').eq('id', cancelTargetOrderId);
             const ord = orders && orders.length > 0 ? orders[0] : null;
