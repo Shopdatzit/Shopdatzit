@@ -328,9 +328,7 @@
 
                     <div class="bg-cardBg p-4 sm:p-5 rounded-xl border border-gray-800 space-y-4 shadow-md">
                         <h3 class="font-bold text-accentBlue text-xs sm:text-sm flex items-center"><i class="fa-solid fa-id-card mr-2"></i> Thông Tin Đơn Hàng</h3>
-                        <div id="order-inputs-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                            <!-- Dynamic inputs generated based on game -->
-                        </div>
+                        <div id="order-inputs-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5"></div>
                     </div>
                 </div>
 
@@ -474,7 +472,43 @@
     </footer>
 
     <!-- MODALS -->
-    <!-- MODAL NHẬP GHI CHÚ KHI DUYỆT ĐƠN -->
+    <!-- MODAL ĐANG CHỜ ADMIN DUYỆT TIỀN (HIỂN THỊ BÊN KHÁCH HÀNG) -->
+    <div id="pending-payment-approval-modal" class="fixed inset-0 bg-black/85 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-cardBg max-w-md w-full p-6 rounded-2xl border border-yellow-500/60 relative space-y-4 shadow-2xl text-center">
+            <div class="w-14 h-14 bg-yellow-950 text-yellow-400 rounded-full flex items-center justify-center mx-auto text-2xl border border-yellow-700 animate-spin">
+                <i class="fa-solid fa-spinner"></i>
+            </div>
+            <div>
+                <h3 class="text-base font-bold text-white">Đang Chờ Admin Xác Nhận Duyệt Tiền...</h3>
+                <p class="text-xs text-yellow-400 mt-1.5 font-medium">Hệ thống sẽ tự động cập nhật ngay khi Admin xác nhận tiền vào. Bạn không cần F5!</p>
+            </div>
+            <div class="pt-2 border-t border-gray-800">
+                <button onclick="closePendingModalAndGoHistory()" class="w-full bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold py-2 rounded-xl text-xs cursor-pointer">
+                    Xem Lịch Sử Đơn Hàng
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL ĐÃ DUYỆT TIỀN -> CHUYỂN SANG CHỜ DUYỆT ĐƠN (TỰ BẬT KHI ADMIN DUYỆT) -->
+    <div id="payment-approved-success-modal" class="fixed inset-0 bg-black/85 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-cardBg max-w-md w-full p-6 rounded-2xl border border-green-500/60 relative space-y-4 shadow-2xl text-center">
+            <div class="w-14 h-14 bg-green-950 text-green-400 rounded-full flex items-center justify-center mx-auto text-2xl border border-green-700 animate-bounce">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <div>
+                <h3 class="text-base font-bold text-white">Đã Duyệt Thanh Toán Thành Công!</h3>
+                <p class="text-xs text-green-400 mt-1.5 font-bold">🎉 Tiền đã vào tài khoản Shop. Đơn hàng chuyển sang trạng thái <b>CHỜ DUYỆT ĐƠN</b> (Admin đang tiến hành nạp game).</p>
+            </div>
+            <div class="pt-2 border-t border-gray-800">
+                <button onclick="closeApprovedSuccessModal()" class="w-full bg-accentBlue hover:bg-blue-600 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer shadow transition">
+                    OK, Đã Hiểu
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL NHẬP GHI CHÚ KHI DUYỆT ĐƠN CUỐI CÙNG -->
     <div id="approve-note-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-sm w-full p-5 rounded-2xl border border-green-500/50 relative space-y-4 shadow-2xl">
             <button onclick="closeApproveNoteModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -482,7 +516,7 @@
             <div class="space-y-3">
                 <p class="text-xs text-gray-300">Nhập lời nhắn hoặc lưu ý cho khách hàng (sẽ gửi qua email và hiển thị trong đơn):</p>
                 <textarea id="approve-note-input" rows="3" placeholder="Ví dụ: Đã nạp thành công vào tài khoản của bạn, vui lòng kiểm tra game nhé!" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white outline-none focus:border-green-500 resize-none"></textarea>
-                <button onclick="submitApproveOrderWithNote()" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow">XÁC NHẬN DUYỆT ĐƠN</button>
+                <button onclick="submitApproveOrderWithNote()" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow">XÁC NHẬN DUYỆT HOÀN THÀNH</button>
             </div>
         </div>
     </div>
@@ -572,7 +606,6 @@
         <div class="bg-cardBg max-w-md w-full p-5 rounded-2xl border border-gray-800 relative text-center space-y-4 shadow-2xl">
             <button onclick="closePaymentModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
             <h3 class="text-base font-bold text-accentBlue">Quét Mã QR Chuyển Khoản</h3>
-            <p class="text-xs text-gray-400">Tự động đóng sau <span id="payment-countdown" class="text-yellow-400 font-bold">30</span> giây.</p>
             <div class="bg-white p-2.5 rounded-xl inline-block mx-auto border border-gray-700 shadow-inner">
                 <img id="viet-qr-img" src="" alt="Mã QR" class="w-44 h-44 object-contain mx-auto">
             </div>
@@ -587,23 +620,6 @@
             <button onclick="confirmOrderClient()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 rounded-xl transition text-xs shadow-md cursor-pointer">
                 Tôi Đã Thanh Toán Thành Công
             </button>
-        </div>
-    </div>
-
-    <div id="success-token-modal" class="fixed inset-0 bg-black/85 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-cardBg max-w-md w-full p-5 rounded-2xl border border-green-600/60 relative space-y-4 shadow-2xl text-center">
-            <div class="w-12 h-12 bg-green-950 text-green-400 rounded-full flex items-center justify-center mx-auto text-xl border border-green-700 animate-bounce">
-                <i class="fa-solid fa-circle-check"></i>
-            </div>
-            <div>
-                <h3 class="text-base font-bold text-white">Đặt Hàng Thành Công!</h3>
-                <p class="text-xs text-green-400 mt-1 font-bold">🎉 Đơn hàng đã đồng bộ lên hệ thống Realtime!</p>
-            </div>
-            <div class="pt-2 border-t border-gray-800">
-                <button onclick="finishAndGoToHistory()" class="w-full bg-accentBlue hover:bg-blue-600 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer shadow transition">
-                    Xem Lịch Sử Đơn Hàng
-                </button>
-            </div>
         </div>
     </div>
 
@@ -756,6 +772,7 @@
         let targetForgotUser = null;
         let changeEmailOTP = null;
         let adminExpectedOtp = null;
+        let currentActiveOrderId = null; // Lưu ID đơn hàng hiện tại khách vừa tạo để lắng nghe realtime
         const DEFAULT_AVATAR_URL = "https://lh3.googleusercontent.com/d/1OUDmydcc6lDsgpI4CdVwi2jmNa__EtPR";
         let clientUserIP = "IP_CHUA_XAC_DINH";
 
@@ -987,8 +1004,19 @@
             initOtpWidget('change-email-otp-widget', changeEmailVerifyCallback);
         };
 
+        // LẮNG NGHE REALTIME SUPABASE ĐỂ TỰ ĐỘNG CẬP NHẬT TRẠNG THÁI CHO KHÁCH & ADMIN
         function initRealtimeListener() {
-            supabaseClient.channel('public:orders').on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, async () => {
+            supabaseClient.channel('public:orders').on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, async (payload) => {
+                const updatedOrder = payload.new;
+
+                // Nếu khách hàng đang bật màn hình và đơn hàng của chính họ được Admin duyệt tiền thành "Chờ duyệt đơn"
+                if (updatedOrder && updatedOrder.id === currentActiveOrderId) {
+                    if (updatedOrder.status === 'Chờ duyệt đơn') {
+                        document.getElementById('pending-payment-approval-modal').classList.add('hidden');
+                        document.getElementById('payment-approved-success-modal').classList.remove('hidden');
+                    }
+                }
+
                 await fetchAndCalculateSolds();
                 renderGameList();
                 renderHistory();
@@ -1650,7 +1678,6 @@
             if (!currentUsername) { openAuthModal(); return; }
             if (!cart || cart.length === 0) { alert("Giỏ hàng trống!"); return; }
 
-            // KIỂM TRA BẮT BUỘC ĐIỀN ĐỦ THÔNG TIN
             const inputUser = document.getElementById('input-username');
             const inputPass = document.getElementById('input-password');
             const inputServer = document.getElementById('input-server');
@@ -1668,7 +1695,7 @@
             }
 
             if (!inputServer || !inputServer.value || inputServer.value === '' || inputServer.value.includes('Chọn') || inputServer.value.includes('Vui lòng')) {
-                alert('Vui lòng chọn Máy chủ (Server) hợp lệ (Server mặc định không được chấp nhận)!');
+                alert('Vui lòng chọn Máy chủ (Server) hợp lệ!');
                 if (inputServer) inputServer.focus();
                 return;
             }
@@ -1677,31 +1704,24 @@
             document.getElementById('modal-amount').innerText = amount.toLocaleString('vi-VN') + ' đ';
             document.getElementById('viet-qr-img').src = `https://img.vietqr.io/image/VCB-1065342786-compact.png?amount=${amount}&addInfo=datzit312&accountName=DANG%20VAN%20TIEN%20DAT`;
             document.getElementById('payment-modal').classList.remove('hidden');
-
-            let countdown = 30;
-            document.getElementById('payment-countdown').innerText = countdown;
-            if (paymentTimer) clearInterval(paymentTimer);
-            paymentTimer = setInterval(() => {
-                countdown--;
-                document.getElementById('payment-countdown').innerText = countdown;
-                if (countdown <= 0) { clearInterval(paymentTimer); closePaymentModal(); createOrderAndFinish('Chờ duyệt thanh toán'); }
-            }, 1000);
         }
 
-        function closePaymentModal() { if (paymentTimer) clearInterval(paymentTimer); document.getElementById('payment-modal').classList.add('hidden'); }
-        function confirmOrderClient() { closePaymentModal(); createOrderAndFinish('Chờ duyệt thanh toán'); }
+        function closePaymentModal() { document.getElementById('payment-modal').classList.add('hidden'); }
 
-        async function createOrderAndFinish(status) {
+        // KHI KHÁCH BẤM XÁC NHẬN ĐÃ THANH TOÁN -> TRẠNG THÁI LÀ "Chờ duyệt thanh toán"
+        async function confirmOrderClient() {
+            closePaymentModal();
             const randomCode = Math.floor(100000 + Math.random() * 900000);
             let accounts = getAccounts();
             if (currentUsername && accounts[currentUsername]) {
                 const now = Date.now();
                 const totalAmount = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
                 const totalQty = cart.reduce((sum, i) => sum + i.qty, 0);
+                currentActiveOrderId = 'ORD_' + now;
 
                 const passEl = document.getElementById('input-password');
                 const newOrder = {
-                    id: 'ORD_' + now, 
+                    id: currentActiveOrderId, 
                     code: '#' + randomCode, 
                     customer_name: currentUsername,
                     uid: accounts[currentUsername].uid || '10000', 
@@ -1712,7 +1732,7 @@
                     price: totalAmount,
                     time: new Date().toLocaleString('vi-VN'), 
                     timestamp: now, 
-                    status: status,
+                    status: 'Chờ duyệt thanh toán',
                     input_user: document.getElementById('input-username').value || 'Không có',
                     input_pass: passEl ? passEl.value : 'Không yêu cầu',
                     input_server: document.getElementById('input-server').value || 'Mặc định',
@@ -1723,36 +1743,59 @@
                 const { error } = await supabaseClient.from('orders').insert([newOrder]);
                 if (error) { alert('Lỗi tạo đơn: ' + error.message); return; }
 
-                // Gửi email thông báo cho Admin (Tiêu đề không chứa emoji gây lỗi dấu hỏi)
+                // Gửi email báo cho Admin có đơn chuyển tiền mới cần duyệt
                 sendAutoEmail(
                     "ngocdiemdang90@gmail.com",
-                    `Có đơn hàng mới #${randomCode} từ ${currentUsername}`,
-                    `Khách hàng <b>${currentUsername}</b> vừa đặt đơn hàng mới <b>#${randomCode}</b>.<br>Tổng tiền: <b>${totalAmount.toLocaleString('vi-VN')} đ</b>.<br>Trạng thái: ${status}`,
+                    `Yêu cầu duyệt tiền đơn #${randomCode} từ ${currentUsername}`,
+                    `Khách hàng <b>${currentUsername}</b> vừa chuyển khoản thanh toán cho đơn hàng <b>#${randomCode}</b>.<br>Tổng tiền: <b>${totalAmount.toLocaleString('vi-VN')} đ</b>.<br>Vui lòng vào trang quản trị để duyệt tiền!`,
                     true
                 );
-
-                // Gửi email thông báo tới Khách hàng về đơn hàng vừa đặt
-                let custAcc = accounts[currentUsername];
-                let custEmail = custAcc ? custAcc.email : currentUsername;
-                if (custEmail && custEmail.includes('@')) {
-                    sendAutoEmail(
-                        custEmail,
-                        `Xác nhận đơn hàng #${randomCode} tại ShopDatZit`,
-                        `Xin chào <b>${currentUsername}</b>,<br>Đơn hàng <b>#${randomCode}</b> của bạn đã được tiếp nhận thành công!<br>Tổng thanh toán: <b>${totalAmount.toLocaleString('vi-VN')} đ</b>.<br>Trạng thái: <b>${status}</b>.<br>Cảm ơn bạn đã mua hàng tại ShopDatZit!`,
-                        true
-                    );
-                }
 
                 clearCart(); 
                 await fetchAndCalculateSolds();
                 renderGameList();
-                document.getElementById('success-token-modal').classList.remove('hidden');
+                
+                // Mở modal chờ Admin duyệt thanh toán ở máy khách
+                document.getElementById('pending-payment-approval-modal').classList.remove('hidden');
             }
         }
 
-        function finishAndGoToHistory() {
-            document.getElementById('success-token-modal').classList.add('hidden');
+        function closePendingModalAndGoHistory() {
+            document.getElementById('pending-payment-approval-modal').classList.add('hidden');
             switchView('history');
+        }
+
+        function closeApprovedSuccessModal() {
+            document.getElementById('payment-approved-success-modal').classList.add('hidden');
+            switchView('history');
+        }
+
+        // HÀM ADMIN DUYỆT TIỀN (CHUYỂN SANG "Chờ duyệt đơn")
+        async function approvePaymentByAdmin(orderId) {
+            const { data: orders } = await supabaseClient.from('orders').select('*').eq('id', orderId);
+            const ord = orders ? orders[0] : null;
+
+            const { error } = await supabaseClient.from('orders').update({ status: 'Chờ duyệt đơn' }).eq('id', orderId);
+            if (!error) {
+                // Gửi email thông báo cho Khách hàng là đã được duyệt tiền -> đang chờ duyệt đơn nạp game
+                if (ord) {
+                    let accounts = getAccounts();
+                    let custAcc = accounts[ord.customer_name];
+                    let custEmail = custAcc ? custAcc.email : ord.customer_name;
+                    if (custEmail && custEmail.includes('@')) {
+                        sendAutoEmail(
+                            custEmail,
+                            `Xác nhận thanh toán đơn hàng ${ord.code}`,
+                            `Xin chào <b>${ord.customer_name}</b>,<br>Thanh toán cho đơn hàng <b>${ord.code}</b> của bạn đã được Admin xác nhận thành công!<br>Hiện tại đơn đang chuyển sang trạng thái <b>ĐANG CHỜ DUYỆT ĐƠN</b> để tiến hành nạp game.<br>Cảm ơn bạn!`,
+                            true
+                        );
+                    }
+                }
+                alert('Đã duyệt tiền thành công! Đơn hàng chuyển sang trạng thái Chờ duyệt đơn.');
+                renderAdminOrders();
+            } else {
+                alert('Lỗi cập nhật: ' + error.message);
+            }
         }
 
         async function openOrderDetail(orderId) {
@@ -1760,8 +1803,7 @@
             if (!orders || orders.length === 0) return;
             const order = orders[0];
             const body = document.getElementById('order-detail-body');
-            const is24hPassed = (Date.now() - (order.timestamp || 0)) >= EXPIRE_TIME_MS;
-            let displayStatus = (order.status.includes('Chờ duyệt') && is24hPassed) ? 'Admin Đã Hoàn Thành Đơn' : order.status;
+            let displayStatus = order.status;
 
             let itemsListHtml = '';
             if (order.items && order.items.length > 0) {
@@ -1839,7 +1881,15 @@
 
             container.innerHTML = '';
             orders.forEach((ord) => {
-                let isPending = ord.status.includes('Chờ duyệt');
+                let actionBtn = '';
+                if (ord.status === 'Chờ duyệt thanh toán') {
+                    actionBtn = `<button onclick="approvePaymentByAdmin('${ord.id}')" class="bg-yellow-600 hover:bg-yellow-500 text-white px-2.5 py-1.5 rounded text-[11px] font-bold cursor-pointer shadow">Duyệt Tiền (Tiền Vào)</button>`;
+                } else if (ord.status === 'Chờ duyệt đơn') {
+                    actionBtn = `<button onclick="openApproveNoteModal('${ord.id}')" class="bg-green-600 hover:bg-green-500 text-white px-2.5 py-1.5 rounded text-[11px] font-bold cursor-pointer shadow">Duyệt Nạp Xong</button>`;
+                } else {
+                    actionBtn = `<span class="text-green-400 font-bold text-xs">${ord.status}</span>`;
+                }
+
                 let noteDisplay = ord.admin_note ? `<div class="text-[10px] text-accentBlue italic mt-1">Ghi chú: ${ord.admin_note}</div>` : '';
                 container.innerHTML += `
                     <div class="bg-cardBg p-3.5 rounded-xl border border-gray-800 space-y-2.5">
@@ -1847,7 +1897,7 @@
                         <div class="flex justify-between items-center text-xs">
                             <div><div class="font-bold text-white">${ord.game}</div><div class="text-accentBlue text-[11px]">${ord.package}</div><div class="text-green-400 font-bold">${ord.price.toLocaleString('vi-VN')} đ</div>${noteDisplay}</div>
                             <div class="flex flex-col items-end space-y-1.5">
-                                ${isPending ? `<button onclick="openApproveNoteModal('${ord.id}')" class="bg-green-600 hover:bg-green-700 text-white px-2.5 py-1 rounded text-[11px] font-bold cursor-pointer">Duyệt</button><button onclick="openCancelReasonModal('${ord.id}')" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-1 rounded text-[11px] font-bold cursor-pointer">Hủy</button>` : `<span class="text-green-400 font-bold text-xs">${ord.status}</span>`}
+                                ${actionBtn}
                             </div>
                         </div>
                     </div>
@@ -1880,7 +1930,7 @@
                         sendAutoEmail(
                             custEmail,
                             `Đơn hàng ${ord.code} đã hoàn thành`,
-                            `Xin chào <b>${ord.customer_name}</b>,<br>Đơn hàng <b>${ord.code}</b> của bạn đã được duyệt và nạp thành công!<br>Tổng cộng: <b>${ord.price.toLocaleString('vi-VN')} đ</b>.<br><br><b>💬 Ghi chú từ Admin:</b><br><i>"${adminNote}"</i><br><br>Cảm ơn bạn đã ủng hộ ShopDatZit!`,
+                            `Xin chào <b>${ord.customer_name}</b>,<br>Đơn hàng <b>${ord.code}</b> của bạn đã được hoàn thành!<br>Tổng cộng: <b>${ord.price.toLocaleString('vi-VN')} đ</b>.<br><br><b>💬 Ghi chú từ Admin:</b><br><i>"${adminNote}"</i><br><br>Cảm ơn bạn đã ủng hộ ShopDatZit!`,
                             true
                         );
                     }
@@ -1890,7 +1940,7 @@
                 await fetchAndCalculateSolds();
                 renderGameList();
                 renderAdminOrders();
-                alert('Đã duyệt đơn và gửi ghi chú thành công!');
+                alert('Đã hoàn tất đơn hàng!');
             }
         }
 
@@ -1919,7 +1969,7 @@
                         sendAutoEmail(
                             custEmail,
                             `Đơn hàng ${ord.code} đã bị hủy`,
-                            `Xin chào <b>${ord.customer_name}</b>,<br>Đơn hàng <b>${ord.code}</b> của bạn đã bị hủy.<br>Lý do: <b>${reason}</b>.<br>Mọi thắc mắc vui lòng liên hệ CSKH.`,
+                            `Xin chào <b>${ord.customer_name}</b>,<br>Đơn hàng <b>${ord.code}</b> của bạn đã bị hủy.<br>Lý do: <b>${reason}</b>.`,
                             true
                         );
                     }
