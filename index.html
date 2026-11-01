@@ -506,19 +506,22 @@
         </div>
     </div>
 
-    <!-- MODAL ĐÃ DUYỆT TIỀN -> CHUYỂN SANG CHỜ DUYỆT ĐƠN (TỰ BẬT KHI ADMIN DUYỆT) -->
+    <!-- MODAL POPUP THÔNG BÁO ĐÃ DUYỆT CHUYỂN TIỀN KÈM NÚT QUAY LẠI LỊCH SỬ ĐƠN HÀNG -->
     <div id="payment-approved-success-modal" class="fixed inset-0 bg-black/85 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-md w-full p-6 rounded-2xl border border-green-500/60 relative space-y-4 shadow-2xl text-center">
             <div class="w-14 h-14 bg-green-950 text-green-400 rounded-full flex items-center justify-center mx-auto text-2xl border border-green-700 animate-bounce">
                 <i class="fa-solid fa-circle-check"></i>
             </div>
             <div>
-                <h3 class="text-base font-bold text-white">Đã Duyệt Thanh Toán Thành Công!</h3>
-                <p class="text-xs text-green-400 mt-1.5 font-bold">🎉 Tiền đã vào tài khoản Shop. Đơn hàng chuyển sang trạng thái <b>CHỜ DUYỆT ĐƠN</b> (Admin đang tiến hành nạp game).</p>
+                <h3 class="text-base font-bold text-white">Đã Duyệt Chuyển Tiền Thành Công! 🎉</h3>
+                <p class="text-xs text-green-400 mt-1.5 font-medium">Admin đã xác nhận nhận được tiền chuyển khoản của bạn. Đơn hàng đã chuyển sang trạng thái <b>CHỜ DUYỆT ĐƠN</b> để tiến hành nạp game.</p>
             </div>
-            <div class="pt-2 border-t border-gray-800">
-                <button onclick="closeApprovedSuccessModal()" class="w-full bg-accentBlue hover:bg-blue-600 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer shadow transition">
-                    OK, Đã Hiểu
+            <div class="pt-2 border-t border-gray-800 space-y-2">
+                <button onclick="closeApprovedSuccessModalToGoHistory()" class="w-full bg-accentBlue hover:bg-blue-600 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer shadow transition flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-clock-rotate-left"></i> <span>Quay lại Lịch Sử Đơn Hàng</span>
+                </button>
+                <button onclick="closeApprovedSuccessModal()" class="w-full bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold py-2 rounded-xl text-xs cursor-pointer">
+                    Ở lại trang này
                 </button>
             </div>
         </div>
@@ -1027,7 +1030,7 @@
 
                 if (updatedOrder && updatedOrder.id === currentActiveOrderId) {
                     if (updatedOrder.status === 'Chờ duyệt đơn') {
-                        // TỰ ĐỘNG TẮT CẢ MÃ QR VÀ BẢNG CHỜ KHI ADMIN DUYỆT TIỀN
+                        // TỰ ĐỘNG TẮT CẢ MÃ QR VÀ BẢNG CHỜ, ĐỒNG THỜI BẬT POPUP THÀNH CÔNG VỚI NÚT XEM LỊCH SỬ
                         document.getElementById('payment-modal').classList.add('hidden');
                         document.getElementById('pending-payment-approval-modal').classList.add('hidden');
                         document.getElementById('payment-approved-success-modal').classList.remove('hidden');
@@ -1807,6 +1810,10 @@
 
         function closeApprovedSuccessModal() {
             document.getElementById('payment-approved-success-modal').classList.add('hidden');
+        }
+
+        function closeApprovedSuccessModalToGoHistory() {
+            document.getElementById('payment-approved-success-modal').classList.add('hidden');
             switchView('history');
         }
 
@@ -2045,7 +2052,7 @@
 
         async function submitCancelOrderWithReason() {
             if (!cancelTargetOrderId) return;
-            const reason = document.getElementById('cancel-reason-input'].value.trim() || 'Admin Hủy';
+            const reason = document.getElementById('cancel-reason-input').value.trim() || 'Admin Hủy';
             
             const { data: orders } = await supabaseClient.from('orders').select('*').eq('id', cancelTargetOrderId);
             const ord = orders && orders.length > 0 ? orders[0] : null;
