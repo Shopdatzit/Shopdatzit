@@ -74,8 +74,6 @@
             color: var(--text-color) !important; 
             font-family: 'Poppins', sans-serif;
             -webkit-user-select: text !important;
-            -moz-user-select: text !important;
-            -ms-user-select: text !important;
             user-select: text !important;
         }
 
@@ -90,7 +88,6 @@
         .loader-spin { border: 2px solid #f3f3f3; border-top: 2px solid #3b82f6; border-radius: 50%; width: 14px; height: 14px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 5px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* --- MÀN HÌNH LOADING TRONG SUỐT MỜ THEO MẪU VIDEO TIKTOK --- */
         #global-page-loader {
             position: fixed;
             inset: 0;
@@ -118,7 +115,6 @@
             gap: 14px;
         }
 
-        /* 3 Chấm nhảy (Bouncing Dots) */
         .bounce-dots {
             display: flex;
             align-items: flex-end;
@@ -141,15 +137,8 @@
         .bounce-dots .dot:nth-child(3) { animation-delay: 0s; }
 
         @keyframes bounceAnim {
-            0%, 80%, 100% {
-                transform: translateY(0) scale(0.8);
-                opacity: 0.6;
-            }
-            40% {
-                transform: translateY(-22px) scale(1.15);
-                opacity: 1;
-                box-shadow: 0 0 15px rgba(255, 255, 255, 1), 0 0 25px rgba(59, 130, 246, 0.9);
-            }
+            0%, 80%, 100% { transform: translateY(0) scale(0.8); opacity: 0.6; }
+            40% { transform: translateY(-22px) scale(1.15); opacity: 1; box-shadow: 0 0 15px rgba(255, 255, 255, 1), 0 0 25px rgba(59, 130, 246, 0.9); }
         }
 
         .loading-text-white {
@@ -158,7 +147,6 @@
             font-size: 14px;
             letter-spacing: 0.25em;
             text-transform: uppercase;
-            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
 
         .animated-shop-logo {
@@ -170,8 +158,6 @@
             border-radius: 12px;
             box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
             cursor: pointer;
-            position: relative;
-            overflow: hidden;
         }
 
         .logo-text-anim {
@@ -194,22 +180,11 @@
             100% { background-position: 300% 50%; }
         }
 
-        .view-section {
-            animation: fadeInView 0.3s ease-in-out forwards;
-        }
-        @keyframes fadeInView {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .view-section { animation: fadeInView 0.3s ease-in-out forwards; }
+        @keyframes fadeInView { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-        .pkg-animate {
-            animation: fadeInUpItem 0.4s ease-out forwards;
-            opacity: 0;
-        }
-        @keyframes fadeInUpItem {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .pkg-animate { animation: fadeInUpItem 0.4s ease-out forwards; opacity: 0; }
+        @keyframes fadeInUpItem { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
         .mobile-nav-container {
             position: fixed;
@@ -227,106 +202,34 @@
             border-radius: 16px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.4);
             border: 1px solid rgba(255,255,255,0.08);
-            transition: background 0.3s;
         }
 
-        .navigation-ul {
-            position: relative;
-            display: flex;
-            width: 100%;
-            height: 100%;
-            justify-content: space-around;
-            align-items: center;
-            padding: 0;
-            margin: 0;
-        }
+        .navigation-ul { position: relative; display: flex; width: 100%; height: 100%; justify-content: space-around; align-items: center; padding: 0; margin: 0; }
+        .navigation-ul li { position: relative; list-style: none; flex: 1; height: 65px; z-index: 1; text-align: center; }
+        .navigation-ul li a { position: relative; display: flex; justify-content: center; align-items: center; flex-direction: column; width: 100%; height: 100%; text-decoration: none; }
+        .navigation-ul li a .icon { position: relative; display: block; line-height: 65px; font-size: 1.25em; text-align: center; transition: 0.5s; color: #9ca3af; }
+        .navigation-ul li.active a .icon { transform: translateY(-26px); color: var(--icon-active); }
+        .navigation-ul li a .text { position: absolute; color: var(--text-color); font-weight: 600; font-size: 0.62em; transition: 0.5s; opacity: 0; transform: translateY(18px); white-space: nowrap; }
+        .navigation-ul li.active a .text { opacity: 1; transform: translateY(8px); }
 
-        .navigation-ul li {
-            position: relative;
-            list-style: none;
-            flex: 1;
-            height: 65px;
-            z-index: 1;
-            text-align: center;
-        }
-
-        .navigation-ul li a {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            width: 100%;
-            height: 100%;
-            text-decoration: none;
-        }
-
-        .navigation-ul li a .icon {
-            position: relative;
-            display: block;
-            line-height: 65px;
-            font-size: 1.25em;
-            text-align: center;
-            transition: 0.5s;
-            color: #9ca3af;
-        }
-
-        .navigation-ul li.active a .icon {
-            transform: translateY(-26px);
-            color: var(--icon-active);
-        }
-
-        .navigation-ul li a .text {
-            position: absolute;
-            color: var(--text-color);
-            font-weight: 600;
-            font-size: 0.62em;
-            letter-spacing: 0.02em;
-            transition: 0.5s;
-            opacity: 0;
-            transform: translateY(18px);
-            white-space: nowrap;
-        }
-
-        .navigation-ul li.active a .text {
-            opacity: 1;
-            transform: translateY(8px);
-        }
-
-        #user-dropdown {
-            transform-origin: top right;
-            animation: dropdownScale 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
-        @keyframes dropdownScale {
-            0% { opacity: 0; transform: scale(0.8) translateY(-10px); }
-            100% { opacity: 1; transform: scale(1) translateY(0); }
-        }
+        #user-dropdown { transform-origin: top right; animation: dropdownScale 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+        @keyframes dropdownScale { 0% { opacity: 0; transform: scale(0.8) translateY(-10px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
 
         .u026{position:relative;width:100%;display:flex;flex-direction:column;align-items:center;text-align:center}
-        .u026-ic{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#fff;background:linear-gradient(140deg,#5B8CFF,#8B6CFF);box-shadow:0 10px 20px -10px rgba(91,108,255,.8);transition:background .5s var(--ux-ease);margin:0 auto}
+        .u026-ic{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;color:#fff;background:linear-gradient(140deg,#5B8CFF,#8B6CFF);box-shadow:0 10px 20px -10px rgba(91,108,255,.8);margin:0 auto}
         .u026-ic svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
         .u026.is-ok .u026-ic{background:linear-gradient(140deg,#2FD8A8,#119C72)}
-        .u026-t{margin:10px 0 0;font-size:15px;font-weight:700;letter-spacing:-.03em;color:var(--ux-ink)}
+        .u026-t{margin:10px 0 0;font-size:15px;font-weight:700;color:var(--ux-ink)}
         .u026-s{margin:4px 0 12px;font-size:11px;color:var(--ux-ink-3)}
         .u026-s b{color:var(--ux-ink-2);font-weight:600}
         .u026-row{position:relative;display:flex;gap:5px;justify-content:center}
         .u026-row i.sep{width:8px;align-self:center;height:2px;border-radius:2px;background:var(--ux-line-2)}
-        .u026-c{position:relative;width:36px;height:46px;border-radius:10px;background:var(--ux-surface);box-shadow:inset 0 0 0 1.5px var(--ux-line-2);display:grid;place-items:center;overflow:hidden;
-          font-size:20px;font-weight:700;font-variant-numeric:tabular-nums;transition:box-shadow .25s var(--ux-ease),background-color .4s var(--ux-ease),color .4s,transform .45s var(--ux-spring)}
+        .u026-c{position:relative;width:36px;height:46px;border-radius:10px;background:var(--ux-surface);box-shadow:inset 0 0 0 1.5px var(--ux-line-2);display:grid;place-items:center;overflow:hidden;font-size:20px;font-weight:700;transition:all .3s}
         .u026-c span{display:block;animation:u026-in .4s var(--ux-spring)}
         @keyframes u026-in{from{transform:translateY(70%);opacity:0}}
         .u026-c.cur{box-shadow:inset 0 0 0 2px var(--ux-accent),0 0 0 3px var(--ux-accent-soft)}
-        .u026-c.cur::after{content:"";position:absolute;left:50%;top:10px;bottom:10px;width:2px;margin-left:-1px;border-radius:1px;background:var(--ux-accent);animation:u026-blink 1s steps(1) infinite}
-        .u026-c.cur.has::after{display:none}
-        @keyframes u026-blink{50%{opacity:0}}
-        .u026.is-check .u026-c{animation:u026-wave .5s var(--ux-ease);animation-delay:calc(var(--i) * 60ms)}
-        @keyframes u026-wave{40%{transform:translateY(-6px)}}
-        .u026.is-ok .u026-c{background:color-mix(in srgb,var(--ux-mint) 14%,var(--ux-surface));box-shadow:inset 0 0 0 2px var(--ux-mint);color:var(--ux-mint);transition-delay:calc(var(--i) * 50ms)}
-        .u026.is-bad .u026-row{animation:u026-shake .45s var(--ux-ease)}
-        .u026.is-bad .u026-c{box-shadow:inset 0 0 0 2px var(--ux-danger);color:var(--ux-danger)}
-        @keyframes u026-shake{20%{transform:translateX(-6px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(1px)}}
-        .u026-real{position:absolute;inset:0;width:100%;height:100%;opacity:0;border:0;padding:0;font-size:16px;cursor:text;caret-color:transparent;color:transparent;background:transparent}
-        .u026-msg{height:16px;margin:8px 0 0;font-size:11px;font-weight:600;color:var(--ux-ink-3);transition:color .3s var(--ux-ease)}
+        .u026-real{position:absolute;inset:0;width:100%;height:100%;opacity:0;border:0;padding:0;font-size:16px;cursor:text;background:transparent}
+        .u026-msg{height:16px;margin:8px 0 0;font-size:11px;font-weight:600;color:var(--ux-ink-3)}
         .u026.is-ok .u026-msg{color:var(--ux-mint)}
         .u026.is-bad .u026-msg{color:var(--ux-danger)}
         .u026-live{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
@@ -335,10 +238,6 @@
 </head>
 <body class="bg-darkBg text-gray-100 font-sans min-h-screen flex flex-col pb-28 md:pb-12 transition-colors duration-300">
 
-    <!-- PHÁT NHẠC NỀN CHẠY NGẨM (KHÔNG HIỂN THỊ NÚT BẤM) -->
-    <audio id="bg-music" src="https://docs.google.com/uc?export=open&id=1p-pyb5aAKqypHLTZ4PL-qVv4K_fZWgLB" loop preload="auto"></audio>
-
-    <!-- MÀN HÌNH LOADING THEO MẪU TIKTOK VÀ TỰ ĐỘNG THEO TỐC ĐỘ MẠNG KHÁCH -->
     <div id="global-page-loader">
         <div class="loader-bounce-container">
             <div class="bounce-dots">
@@ -368,13 +267,13 @@
 
                 <div class="relative">
                     <div id="auth-btn-container" onclick="toggleUserDropdown()" class="bg-gray-800 hover:bg-gray-700 cursor-pointer px-2.5 py-1.5 rounded-full text-xs flex items-center space-x-1.5 transition border border-gray-700 max-w-[140px]">
-                        <img id="header-user-avatar" src="" class="w-5 h-5 rounded-full object-cover border border-accentBlue flex-shrink-0" alt="Avatar Mặc Định">
+                        <img id="header-user-avatar" src="" class="w-5 h-5 rounded-full object-cover border border-accentBlue flex-shrink-0" alt="Avatar">
                         <span id="user-display-name" class="truncate font-medium text-[11px]">Đăng Nhập</span>
                     </div>
 
-                    <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-64 bg-cardBg border border-gray-800 rounded-xl shadow-2xl py-2 z-50 text-xs transition-colors">
+                    <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-64 bg-cardBg border border-gray-800 rounded-xl shadow-2xl py-2 z-50 text-xs">
                         <div class="px-4 py-2 border-b border-gray-800 flex items-center space-x-3">
-                            <img id="dropdown-user-avatar" src="" class="w-10 h-10 rounded-full object-cover border border-accentBlue" alt="Avatar Mặc Định">
+                            <img id="dropdown-user-avatar" src="" class="w-10 h-10 rounded-full object-cover border border-accentBlue" alt="Avatar">
                             <div>
                                 <div id="dropdown-username" class="font-bold text-sm text-white">Khách</div>
                                 <div class="text-[10px] text-gray-400">UID: <span id="dropdown-uid">60742</span></div>
@@ -382,7 +281,6 @@
                         </div>
                         <a href="#" onclick="switchView('profile')" class="block px-4 py-2.5 hover:bg-gray-800 text-gray-300 transition"><i class="fa-solid fa-user mr-2 text-accentBlue"></i> Thông tin chung</a>
                         <a href="#" onclick="switchView('history')" class="block px-4 py-2.5 hover:bg-gray-800 text-gray-300 transition"><i class="fa-solid fa-clock-rotate-left mr-2 text-accentBlue"></i> Lịch sử mua hàng</a>
-                        
                         <div class="border-t border-gray-800 my-1"></div>
                         <a href="#" onclick="handleLogout()" class="block px-4 py-2.5 hover:bg-red-950/40 text-red-400 transition font-bold"><i class="fa-solid fa-right-from-bracket mr-2"></i> Đăng xuất</a>
                     </div>
@@ -394,7 +292,7 @@
     <main class="flex-grow max-w-7xl mx-auto px-4 py-5 w-full space-y-4">
         <!-- TRANG CHỦ -->
         <div id="home-view" class="view-section space-y-4">
-            <div class="bg-cardBg border border-gray-800 p-3.5 rounded-xl text-center shadow-md transition-colors">
+            <div class="bg-cardBg border border-gray-800 p-3.5 rounded-xl text-center shadow-md">
                 <h2 class="text-base sm:text-lg font-bold rgb-text">🔥 NẠP GAME & THẺ CÀO NHANH CHÓNG - UY TÍN 24/7 🔥</h2>
                 <p class="text-[11px] sm:text-xs text-white font-bold mt-1">Lưu ý: hãy copy link dán lên google</p>
             </div>
@@ -403,13 +301,13 @@
             <div id="game-list-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3"></div>
         </div>
 
-        <!-- CHI TIẾT NẠP GAME / THẺ CÀO -->
+        <!-- CHI TIẾT NẠP GAME -->
         <div id="detail-view" class="view-section hidden space-y-5">
             <button onclick="switchView('home')" class="text-xs bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded-lg transition flex items-center w-max border border-gray-700 cursor-pointer">
                 <i class="fa-solid fa-arrow-left mr-2"></i> Quay lại trang chủ
             </button>
 
-            <div class="bg-cardBg p-4 rounded-xl border border-gray-800 flex items-center space-x-4 shadow-md transition-colors">
+            <div class="bg-cardBg p-4 rounded-xl border border-gray-800 flex items-center space-x-4 shadow-md">
                 <img id="detail-game-img" src="" alt="" class="w-14 h-14 rounded-xl object-cover border border-gray-700">
                 <div>
                     <h2 id="detail-game-name" class="text-base font-bold"></h2>
@@ -420,7 +318,7 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
                 <div class="lg:col-span-2 space-y-5">
-                    <div class="bg-cardBg p-4 sm:p-5 rounded-xl border border-gray-800 shadow-md space-y-4 transition-colors">
+                    <div class="bg-cardBg p-4 sm:p-5 rounded-xl border border-gray-800 shadow-md space-y-4">
                         <div class="flex items-center justify-between border-b border-gray-800 pb-3">
                             <h3 class="font-bold text-accentBlue text-xs sm:text-sm flex items-center"><i class="fa-solid fa-box-open mr-2"></i> Chọn Gói / Mệnh Giá</h3>
                             <span class="text-[10px] text-gray-400">💡 Bấm để thêm giỏ hàng</span>
@@ -428,53 +326,20 @@
                         <div id="package-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-3"></div>
                     </div>
 
-                    <div class="bg-cardBg p-4 sm:p-5 rounded-xl border border-gray-800 space-y-4 shadow-md transition-colors">
+                    <div class="bg-cardBg p-4 sm:p-5 rounded-xl border border-gray-800 space-y-4 shadow-md">
                         <h3 class="font-bold text-accentBlue text-xs sm:text-sm flex items-center"><i class="fa-solid fa-id-card mr-2"></i> Thông Tin Đơn Hàng</h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-                            <div>
-                                <label class="text-xs text-gray-400 block mb-1">Email / Tài khoản đăng nhập</label>
-                                <input type="text" id="input-username" placeholder="Nhập email/tài khoản game" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
-                            </div>
-                            <div>
-                                <label class="text-xs text-gray-400 block mb-1">Mật khẩu</label>
-                                <div class="relative">
-                                    <input type="password" id="input-password" placeholder="Nhập mật khẩu" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100 pr-10">
-                                    <i class="fa-solid fa-eye absolute right-3 top-3 text-gray-400 cursor-pointer text-xs" onclick="togglePasswordVisibility('input-password')"></i>
-                                </div>
-                            </div>
-                            <div>
-                                <label class="text-xs text-gray-400 block mb-1">Server / Máy chủ</label>
-                                <select id="input-server" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
-                                    <option value="">Chọn máy chủ / Loại dịch vụ</option>
-                                    <option value="Thẻ Cào / Mặc định">Thẻ Cào / Mặc định</option>
-                                    <option value="Asia">Asia</option>
-                                    <option value="America">America</option>
-                                    <option value="Europe">Europe</option>
-                                    <option value="TW/HK/MO">TW/HK/MO</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="text-xs text-gray-400 block mb-1">Số điện thoại / Zalo nhận thẻ</label>
-                                <input type="text" id="input-phone" placeholder="Nhập SĐT/Zalo" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
-                            </div>
-                            <div class="sm:col-span-2">
-                                <label class="text-xs text-gray-400 block mb-1">Ghi chú từ khách hàng (Tùy chọn)</label>
-                                <textarea id="input-user-note" rows="2" placeholder="Ví dụ: Nhờ admin nạp nhanh giúp em..." class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100 resize-none"></textarea>
-                            </div>
+                        <div id="order-inputs-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                            <!-- Dynamic inputs generated based on game -->
                         </div>
                     </div>
                 </div>
 
                 <div class="space-y-4">
-                    <div class="bg-cardBg p-4 sm:p-5 rounded-xl border border-gray-800 sticky top-20 shadow-md transition-colors">
+                    <div class="bg-cardBg p-4 sm:p-5 rounded-xl border border-gray-800 sticky top-20 shadow-md">
                         <h3 class="font-bold mb-3 border-b border-gray-800 pb-2 text-xs sm:text-sm flex items-center justify-between">
                             <span class="flex items-center"><i class="fa-solid fa-cart-shopping mr-2 text-accentBlue"></i> Giỏ Hàng</span>
                         </h3>
-                        
-                        <div id="cart-summary" class="text-xs text-gray-400 mb-4">
-                            Chưa chọn gói nạp nào.
-                        </div>
-
+                        <div id="cart-summary" class="text-xs text-gray-400 mb-4">Chưa chọn gói nạp nào.</div>
                         <div id="checkout-section" class="hidden space-y-3">
                             <div class="flex justify-between font-bold text-sm border-t border-gray-800 pt-3">
                                 <span>Tổng cộng:</span>
@@ -494,9 +359,9 @@
         <!-- HỒ SƠ CÁ NHÂN -->
         <div id="profile-view" class="view-section hidden max-w-xl mx-auto space-y-5">
             <h1 class="text-lg font-bold flex items-center"><i class="fa-solid fa-user-gear mr-2 text-accentBlue"></i> Thông Tin Tài Khoản</h1>
-            <div class="bg-cardBg p-5 rounded-2xl border border-gray-800 shadow-xl space-y-5 transition-colors">
+            <div class="bg-cardBg p-5 rounded-2xl border border-gray-800 shadow-xl space-y-5">
                 <div class="flex items-center space-x-4 border-b border-gray-800 pb-5">
-                    <img id="profile-user-avatar" src="" class="w-14 h-14 rounded-full object-cover border-2 border-accentBlue" alt="Avatar Mặc Định">
+                    <img id="profile-user-avatar" src="" class="w-14 h-14 rounded-full object-cover border-2 border-accentBlue" alt="Avatar">
                     <div>
                         <div id="profile-name" class="font-bold text-base text-white">Khách</div>
                         <button onclick="openAvatarModal()" class="text-[11px] text-accentBlue hover:underline mt-0.5 block cursor-pointer">Đổi ảnh đại diện</button>
@@ -507,23 +372,20 @@
                         <span class="text-gray-400">UID</span>
                         <span id="profile-uid" class="font-bold text-white">60742</span>
                     </div>
-
                     <div class="flex justify-between items-center border-b border-gray-800/50 pb-2.5">
                         <span class="text-gray-400">Tên Đăng Nhập</span>
                         <div class="flex items-center space-x-2">
-                            <input type="text" id="profile-username-input" class="bg-gray-900 border border-gray-700 rounded px-2 py-1 text-xs text-white text-right font-bold w-40 outline-none focus:border-accentBlue" placeholder="Nhập tên tài khoản">
-                            <button onclick="saveNewUsername()" class="bg-accentBlue hover:bg-blue-600 text-white px-2.5 py-1 rounded text-[11px] font-bold cursor-pointer transition">Lưu</button>
+                            <input type="text" id="profile-username-input" class="bg-gray-900 border border-gray-700 rounded px-2 py-1 text-xs text-white text-right font-bold w-40 outline-none focus:border-accentBlue" placeholder="Nhập tên">
+                            <button onclick="saveNewUsername()" class="bg-accentBlue hover:bg-blue-600 text-white px-2.5 py-1 rounded text-[11px] font-bold cursor-pointer">Lưu</button>
                         </div>
                     </div>
-
                     <div class="flex justify-between items-center border-b border-gray-800/50 pb-2.5">
                         <span class="text-gray-400">Email</span>
                         <div class="flex items-center space-x-2">
                             <span id="profile-email-text" class="font-bold text-white truncate max-w-[150px]">Chưa đăng nhập</span>
-                            <button onclick="openChangeEmailModal()" class="bg-yellow-600 hover:bg-yellow-500 text-white px-2 py-1 rounded text-[10px] font-bold cursor-pointer transition">Đổi Email</button>
+                            <button onclick="openChangeEmailModal()" class="bg-yellow-600 hover:bg-yellow-500 text-white px-2 py-1 rounded text-[10px] font-bold cursor-pointer">Đổi Email</button>
                         </div>
                     </div>
-
                     <div class="flex justify-between items-center pb-1">
                         <span class="text-gray-400">Nhóm tài khoản</span>
                         <span id="profile-role" class="bg-yellow-950 text-yellow-400 px-2 py-0.5 rounded text-[11px] border border-yellow-700 font-bold">Chủ Shop (Admin)</span>
@@ -538,14 +400,13 @@
             <div id="history-container" class="space-y-3"></div>
         </div>
 
-        <!-- TRANG CHĂM SÓC KHÁCH HÀNG (CSKH) -->
+        <!-- CSKH -->
         <div id="cskh-view" class="view-section hidden max-w-md mx-auto space-y-4">
             <div class="bg-cardBg p-5 sm:p-6 rounded-2xl border border-gray-800 shadow-xl space-y-4 text-center">
                 <div class="w-12 h-12 bg-blue-950 text-accentBlue rounded-full flex items-center justify-center mx-auto text-xl border border-blue-800">
                     <i class="fa-solid fa-headset"></i>
                 </div>
                 <h3 class="text-base font-bold text-white">Hỗ Trợ Khách Hàng 24/7</h3>
-
                 <div class="space-y-2.5 pt-1">
                     <a href="https://www.facebook.com/share/1eUqgvpGFf/" target="_blank" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl flex items-center justify-center space-x-2 shadow-md cursor-pointer transition text-xs">
                         <i class="fa-brands fa-facebook text-sm"></i><span>Nhắn tin qua Facebook</span>
@@ -560,7 +421,7 @@
             </div>
         </div>
 
-        <!-- QUẢN LÝ ADMIN -->
+        <!-- ADMIN -->
         <div id="admin-view" class="view-section hidden max-w-4xl mx-auto space-y-5">
             <div class="bg-cardBg p-4 sm:p-5 rounded-xl border border-gray-800 space-y-4 shadow-md">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
@@ -572,7 +433,6 @@
                     </button>
                 </div>
             </div>
-
             <div class="space-y-3 pt-1">
                 <h3 class="font-bold text-sm text-white flex items-center"><i class="fa-solid fa-receipt text-accentBlue mr-2"></i> Danh Sách Tất Cả Đơn Hàng (Realtime)</h3>
                 <div id="admin-orders-container" class="space-y-3"></div>
@@ -612,157 +472,126 @@
                 </div>
             </div>
         </div>
-
         <div class="max-w-7xl mx-auto border-t border-gray-800/80 mt-6 pt-4 text-center space-y-1">
             <p class="font-bold text-gray-300 text-xs">© 2026 SHOPDATZIT.SITE - DỊCH VỤ TRUNG GIAN NẠP GAME 24/7</p>
             <p class="text-[10px] text-gray-500">Shopdatzit là hệ thống dịch vụ trung gian. Tất cả bản quyền hình ảnh, tên game thuộc về nhà phát hành tương ứng.</p>
         </div>
     </footer>
 
-    <!-- MODAL HỦY ĐƠN VÀ NHẬP LÝ DO -->
+    <!-- MODALS -->
     <div id="cancel-reason-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-sm w-full p-5 rounded-2xl border border-red-500/50 relative space-y-4 shadow-2xl">
             <button onclick="closeCancelReasonModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
             <h3 class="text-base font-bold text-red-400 tracking-wide text-center">NHẬP LÝ DO HỦY ĐƠN</h3>
-            
             <div class="space-y-3">
-                <p class="text-xs text-gray-300">Lý do này sẽ được hiển thị trực tiếp cho khách hàng xem trong lịch sử đơn:</p>
-                <textarea id="cancel-reason-input" rows="3" placeholder="Nhập lý do hủy (ví dụ: Sai mật khẩu, Sai tài khoản...)" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white outline-none focus:border-red-500 resize-none"></textarea>
+                <textarea id="cancel-reason-input" rows="3" placeholder="Nhập lý do hủy..." class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white outline-none focus:border-red-500 resize-none"></textarea>
                 <button onclick="submitCancelOrderWithReason()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow">XÁC NHẬN HỦY ĐƠN</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL BẢO MẬT 3 LỚP CHO ADMIN -->
     <div id="admin-2fa-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-md w-full p-5 rounded-2xl border border-yellow-500/50 relative space-y-3.5 shadow-2xl">
             <button onclick="closeAdmin2FAModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
             <div class="text-center space-y-1">
                 <h3 class="text-base font-bold text-yellow-400 tracking-wide">XÁC THỰC BẢO MẬT 3 LỚP ADMIN</h3>
-                <p class="text-[11px] text-gray-300">Mã OTP 6 số và khóa bảo mật siêu dài sẽ được gửi trực tiếp đến Gmail Admin của m:</p>
+                <p class="text-[11px] text-gray-300">Mã OTP 6 số và khóa bảo mật được gửi đến Gmail Admin:</p>
             </div>
-
             <div class="space-y-3">
                 <button onclick="sendAdminEmail3LayerSecurity()" id="btn-send-admin-3layer" class="w-full bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center justify-center space-x-1.5">
                     <i class="fa-solid fa-paper-plane"></i> <span>GỬI MÃ XÁC THỰC VỀ EMAIL</span>
                 </button>
-
                 <div class="ux u026 py-1" id="admin-otp-widget">
                     <span class="u026-ic" aria-hidden="true">
                         <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
                     </span>
                     <p class="u026-t">1. Nhập mã OTP 6 số</p>
                     <p class="u026-s">Mã gồm 6 chữ số gửi qua email <b class="select-all">ngocdiemdang90@gmail.com</b></p>
-                    
                     <div class="u026-row">
                         <span class="u026-c" style="--i:0"></span><span class="u026-c" style="--i:1"></span><span class="u026-c" style="--i:2"></span>
                         <i class="sep" aria-hidden="true"></i>
                         <span class="u026-c" style="--i:3"></span><span class="u026-c" style="--i:4"></span><span class="u026-c" style="--i:5"></span>
-                        <input class="u026-real" id="admin-otp-code-input" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" aria-label="Mã xác thực 6 chữ số">
+                        <input class="u026-real" id="admin-otp-code-input" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6">
                     </div>
                     <p class="u026-msg">Gửi lại mã sau 2:59</p>
                     <span class="u026-live" aria-live="polite"></span>
                 </div>
-
                 <div class="space-y-1 text-left pt-1 border-t border-gray-800">
                     <label class="text-[11px] font-bold text-yellow-400 block flex items-center">
                         <i class="fa-solid fa-key mr-1.5"></i> 2. Nhập Mã Bảo Mật (128 Ký Tự):
                     </label>
-                    <textarea id="admin-secret-128-input" rows="2" placeholder="Dán mã bảo mật 128 ký tự nhận từ Email vào đây..." class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-[10px] text-gray-200 outline-none focus:border-yellow-400 font-mono resize-none leading-relaxed break-all select-all"></textarea>
+                    <textarea id="admin-secret-128-input" rows="2" placeholder="Dán mã 128 ký tự..." class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-[10px] text-gray-200 outline-none focus:border-yellow-400 font-mono resize-none leading-relaxed break-all select-all"></textarea>
                     <div id="admin-ban-warning" class="text-[10px] text-red-400 font-bold mt-1"></div>
                 </div>
-
-                <button onclick="verifyAdmin3LayerSecurity()" id="btn-verify-admin" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2.5 rounded-xl text-xs transition cursor-pointer shadow mt-1">
+                <button onclick="verifyAdmin3LayerSecurity()" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2.5 rounded-xl text-xs transition cursor-pointer shadow mt-1">
                     XÁC NHẬN ĐĂNG NHẬP ADMIN
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL ĐỔI EMAIL XÁC THỰC OTP -->
     <div id="change-email-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-sm w-full p-5 rounded-2xl border border-gray-800 relative space-y-4 shadow-2xl">
             <button onclick="closeChangeEmailModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
             <h3 class="text-base font-bold text-white tracking-wide text-center">THAY ĐỔI EMAIL TÀI KHOẢN</h3>
-            
             <div id="email-step-1" class="space-y-3">
-                <p class="text-xs text-gray-300 text-center">Nhập chính xác Email cũ hiện tại để nhận mã OTP xác thực.</p>
-                <div>
-                    <label class="text-[10px] text-gray-400 block mb-1">Email cũ hiện tại:</label>
-                    <input type="text" id="change-old-email" placeholder="Nhập email cũ" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white outline-none focus:border-accentBlue">
-                </div>
+                <p class="text-xs text-gray-300 text-center">Nhập Email cũ hiện tại để nhận mã OTP.</p>
+                <input type="text" id="change-old-email" placeholder="Nhập email cũ" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white outline-none focus:border-accentBlue">
                 <button onclick="sendEmailChangeOTP()" id="btn-send-email-otp" class="w-full bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow">GỬI MÃ OTP XÁC THỰC</button>
             </div>
-
             <div id="email-step-2" class="hidden space-y-3">
-                <p class="text-xs text-green-400 text-center font-bold">Mã OTP đã được gửi đến email cũ của bạn!</p>
-                
+                <p class="text-xs text-green-400 text-center font-bold">Mã OTP đã được gửi!</p>
                 <div class="ux u026 py-2" id="change-email-otp-widget">
-                    <span class="u026-ic" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                    </span>
+                    <span class="u026-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
                     <p class="u026-t">Xác thực email</p>
-                    <p class="u026-s">Nhập mã 6 số từ email cũ</p>
-                    
+                    <p class="u026-s">Nhập mã 6 số</p>
                     <div class="u026-row">
                         <span class="u026-c" style="--i:0"></span><span class="u026-c" style="--i:1"></span><span class="u026-c" style="--i:2"></span>
                         <i class="sep" aria-hidden="true"></i>
                         <span class="u026-c" style="--i:3"></span><span class="u026-c" style="--i:4"></span><span class="u026-c" style="--i:5"></span>
-                        <input class="u026-real" id="change-email-otp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" aria-label="Mã xác thực 6 chữ số">
+                        <input class="u026-real" id="change-email-otp" type="text" inputmode="numeric" maxlength="6">
                     </div>
-                    <p class="u026-msg">Đã gửi mã xác nhận</p>
+                    <p class="u026-msg">Đã gửi mã</p>
                     <span class="u026-live" aria-live="polite"></span>
                 </div>
-
-                <div>
-                    <label class="text-[10px] text-gray-400 block mb-1">Email mới muốn đổi:</label>
-                    <input type="text" id="change-new-email" placeholder="Nhập email mới" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white outline-none focus:border-accentBlue">
-                </div>
-                <button onclick="verifyAndChangeEmail()" id="btn-confirm-new-email" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow">XÁC NHẬN ĐỔI EMAIL</button>
+                <input type="text" id="change-new-email" placeholder="Nhập email mới" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white outline-none focus:border-accentBlue">
+                <button onclick="verifyAndChangeEmail()" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow">XÁC NHẬN ĐỔI EMAIL</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL THANH TOÁN (QUÉT QR) -->
     <div id="payment-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-cardBg max-w-md w-full p-5 rounded-2xl border border-gray-800 relative text-center space-y-4 shadow-2xl transition-colors">
+        <div class="bg-cardBg max-w-md w-full p-5 rounded-2xl border border-gray-800 relative text-center space-y-4 shadow-2xl">
             <button onclick="closePaymentModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
             <h3 class="text-base font-bold text-accentBlue">Quét Mã QR Chuyển Khoản</h3>
-            <p class="text-xs text-gray-400">Vui lòng quét mã QR để thanh toán. Giao diện sẽ tự động đóng sau <span id="payment-countdown" class="text-yellow-400 font-bold">30</span> giây.</p>
-            
-            <div class="bg-white p-2.5 rounded-xl inline-block mx-auto border border-gray-700 shadow-inner relative">
-                <img id="viet-qr-img" src="" alt="Mã QR Chuyển Khoản" class="w-44 h-44 object-contain mx-auto">
+            <p class="text-xs text-gray-400">Tự động đóng sau <span id="payment-countdown" class="text-yellow-400 font-bold">30</span> giây.</p>
+            <div class="bg-white p-2.5 rounded-xl inline-block mx-auto border border-gray-700 shadow-inner">
+                <img id="viet-qr-img" src="" alt="Mã QR" class="w-44 h-44 object-contain mx-auto">
             </div>
-
             <div class="text-left bg-gray-900 p-3 rounded-lg text-xs space-y-1.5 border border-gray-800">
                 <div class="flex justify-between"><span>Ngân hàng:</span> <span class="font-bold text-gray-200">Vietcombank</span></div>
                 <div class="flex justify-between"><span>Số tài khoản:</span> <span class="font-bold text-accentBlue text-sm select-all">1065342786</span></div>
                 <div class="flex justify-between"><span>Chủ tài khoản:</span> <span class="font-bold text-gray-200 select-all">DANG VAN TIEN DAT</span></div>
                 <div class="flex justify-between items-center border-t border-gray-800 pt-2">
-                    <span>Số tiền cần trả:</span> 
-                    <span id="modal-amount" class="font-bold text-green-400 text-sm select-all">0 đ</span>
+                    <span>Số tiền:</span> <span id="modal-amount" class="font-bold text-green-400 text-sm select-all">0 đ</span>
                 </div>
             </div>
-
-            <button onclick="confirmOrderClient()" id="btn-confirm-order" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 rounded-xl transition text-xs shadow-md cursor-pointer">
+            <button onclick="confirmOrderClient()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 rounded-xl transition text-xs shadow-md cursor-pointer">
                 Tôi Đã Thanh Toán Thành Công
             </button>
         </div>
     </div>
 
-    <!-- MODAL THÔNG BÁO ĐẶT HÀNG THÀNH CÔNG -->
     <div id="success-token-modal" class="fixed inset-0 bg-black/85 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-md w-full p-5 rounded-2xl border border-green-600/60 relative space-y-4 shadow-2xl text-center">
             <div class="w-12 h-12 bg-green-950 text-green-400 rounded-full flex items-center justify-center mx-auto text-xl border border-green-700 animate-bounce">
                 <i class="fa-solid fa-circle-check"></i>
             </div>
-            
             <div>
                 <h3 class="text-base font-bold text-white">Đặt Hàng Thành Công!</h3>
-                <p class="text-xs text-green-400 mt-1 font-bold">🎉 Đơn hàng đã tự động đồng bộ lên hệ thống Realtime của Admin!</p>
+                <p class="text-xs text-green-400 mt-1 font-bold">🎉 Đơn hàng đã đồng bộ lên hệ thống Realtime!</p>
             </div>
-
-            <div class="pt-2 border-t border-gray-800 space-y-2">
+            <div class="pt-2 border-t border-gray-800">
                 <button onclick="finishAndGoToHistory()" class="w-full bg-accentBlue hover:bg-blue-600 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer shadow transition">
                     Xem Lịch Sử Đơn Hàng
                 </button>
@@ -770,22 +599,18 @@
         </div>
     </div>
 
-    <!-- MODAL CHI TIẾT ĐƠN HÀNG -->
     <div id="order-detail-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-md w-full p-5 rounded-2xl border border-gray-800 relative space-y-4 shadow-2xl">
-            <button onclick="closeOrderDetailModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer text-base"><i class="fa-solid fa-xmark"></i></button>
+            <button onclick="closeOrderDetailModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
             <h3 class="text-base font-bold text-white flex items-center"><i class="fa-solid fa-circle-info mr-2 text-accentBlue"></i> Chi Tiết Đơn Hàng</h3>
-            
             <div id="order-detail-body" class="space-y-2.5 text-xs bg-gray-900 p-3.5 rounded-xl border border-gray-800 max-h-[60vh] overflow-y-auto"></div>
-
             <button onclick="closeOrderDetailModal()" class="w-full bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 rounded-xl text-xs border border-gray-700 cursor-pointer">Đóng</button>
         </div>
     </div>
 
-    <!-- MODAL PHỤ -->
     <div id="avatar-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-sm w-full p-5 rounded-2xl border border-gray-800 relative space-y-4 shadow-2xl">
-            <button onclick="closeAvatarModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer text-base"><i class="fa-solid fa-xmark"></i></button>
+            <button onclick="closeAvatarModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
             <h3 class="font-bold text-sm text-white">Đổi ảnh đại diện</h3>
             <div class="border-2 border-dashed border-gray-700 rounded-xl p-5 text-center cursor-pointer hover:border-accentBlue transition bg-gray-900/50" onclick="document.getElementById('avatar-file-input').click()">
                 <i class="fa-solid fa-cloud-arrow-up text-2xl text-accentBlue mb-1.5"></i>
@@ -799,7 +624,6 @@
         </div>
     </div>
 
-    <!-- Auth Modals -->
     <div id="auth-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-sm w-full p-5 rounded-2xl border border-gray-800 relative space-y-4 shadow-2xl">
             <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -810,10 +634,10 @@
                     <input type="password" id="login-pass" placeholder="Mật khẩu" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white pr-10 outline-none focus:border-accentBlue">
                     <i class="fa-solid fa-eye absolute right-3 top-3 text-gray-400 cursor-pointer text-xs" onclick="togglePasswordVisibility('login-pass')"></i>
                 </div>
-                <button onclick="handleLogin()" id="btn-login" class="w-full bg-accentBlue text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer">ĐĂNG NHẬP</button>
+                <button onclick="handleLogin()" class="w-full bg-accentBlue text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer">ĐĂNG NHẬP</button>
                 <div class="flex justify-between items-center text-[10px] pt-1">
                     <a href="#" onclick="openForgotModal()" class="text-yellow-400 font-bold hover:underline">Quên mật khẩu?</a>
-                    <a href="#" onclick="openRegisterModal()" class="text-accentBlue font-bold hover:underline">Chưa có tài khoản? Đăng ký ngay</a>
+                    <a href="#" onclick="openRegisterModal()" class="text-accentBlue font-bold hover:underline">Chưa có tài khoản? Đăng ký</a>
                 </div>
             </div>
         </div>
@@ -829,54 +653,39 @@
                     <input type="password" id="reg-pass" placeholder="Mật khẩu" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white pr-10 outline-none focus:border-accentBlue">
                     <i class="fa-solid fa-eye absolute right-3 top-3 text-gray-400 cursor-pointer text-xs" onclick="togglePasswordVisibility('reg-pass')"></i>
                 </div>
-                <button onclick="handleRegister()" id="btn-register" class="w-full bg-green-600 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer">ĐĂNG KÝ NGAY</button>
+                <button onclick="handleRegister()" class="w-full bg-green-600 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer">ĐĂNG KÝ NGAY</button>
                 <div class="text-center text-[10px] pt-1"><a href="#" onclick="openAuthModal()" class="text-gray-400 font-bold hover:underline">Quay lại đăng nhập</a></div>
             </div>
         </div>
     </div>
 
-    <!-- MODAL QUÊN MẬT KHẨU -->
     <div id="forgot-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-sm w-full p-5 rounded-2xl border border-gray-800 relative space-y-4 shadow-2xl">
             <button onclick="closeForgotModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
             <h3 class="text-lg font-bold text-white tracking-wide text-center">KHÔI PHỤC MẬT KHẨU</h3>
-            
             <div id="forgot-step-1" class="space-y-3">
-                <p class="text-xs text-gray-300 text-center">Nhập Email / Tên đăng nhập của bạn để nhận mã xác thực OTP 6 chữ số.</p>
+                <p class="text-xs text-gray-300 text-center">Nhập Email / Tên đăng nhập để nhận mã OTP.</p>
                 <input type="text" id="forgot-email" placeholder="Email / Tên đăng nhập" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white outline-none focus:border-accentBlue">
                 <button onclick="handleSendOTP()" id="btn-send-otp" class="w-full bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow">GỬI MÃ OTP QUA EMAIL</button>
             </div>
-
             <div id="forgot-step-2" class="hidden space-y-3">
-                <p class="text-xs text-green-400 text-center font-bold">Mã OTP đã được gửi đến Email của bạn!</p>
-                
+                <p class="text-xs text-green-400 text-center font-bold">Mã OTP đã được gửi!</p>
                 <div class="ux u026 py-2" id="forgot-otp-widget">
-                    <span class="u026-ic" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                    </span>
+                    <span class="u026-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
                     <p class="u026-t">Nhập mã xác nhận</p>
-                    <p class="u026-s">Mã gồm 6 chữ số gửi qua email</p>
-                    
+                    <p class="u026-s">Mã gồm 6 chữ số</p>
                     <div class="u026-row">
                         <span class="u026-c" style="--i:0"></span><span class="u026-c" style="--i:1"></span><span class="u026-c" style="--i:2"></span>
                         <i class="sep" aria-hidden="true"></i>
                         <span class="u026-c" style="--i:3"></span><span class="u026-c" style="--i:4"></span><span class="u026-c" style="--i:5"></span>
-                        <input class="u026-real" id="forgot-otp" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" aria-label="Mã xác thực 6 chữ số">
+                        <input class="u026-real" id="forgot-otp" type="text" inputmode="numeric" maxlength="6">
                     </div>
                     <p class="u026-msg">Gửi lại mã sau 2:59</p>
                     <span class="u026-live" aria-live="polite"></span>
                 </div>
-
-                <div>
-                    <label class="text-[10px] text-gray-400 block mb-1">Mật khẩu mới:</label>
-                    <div class="relative">
-                        <input type="password" id="forgot-new-pass" placeholder="Nhập mật khẩu mới" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white pr-10 outline-none focus:border-accentBlue">
-                        <i class="fa-solid fa-eye absolute right-3 top-3 text-gray-400 cursor-pointer text-xs" onclick="togglePasswordVisibility('forgot-new-pass')"></i>
-                    </div>
-                </div>
-                <button onclick="handleResetPassword()" id="btn-reset-pass" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow">XÁC NHẬN ĐỔI MẬT KHẨU</button>
+                <input type="password" id="forgot-new-pass" placeholder="Nhập mật khẩu mới" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white outline-none focus:border-accentBlue">
+                <button onclick="handleResetPassword()" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow">XÁC NHẬN ĐỔI MẬT KHẨU</button>
             </div>
-
             <div class="text-center text-[10px] pt-1 border-t border-gray-800">
                 <a href="#" onclick="openAuthModal()" class="text-gray-400 font-bold hover:underline">Quay lại đăng nhập</a>
             </div>
@@ -887,84 +696,40 @@
     <div class="mobile-nav-container md:hidden">
         <ul class="navigation-ul" id="mobile-nav-list">
             <li class="list active" onclick="navClick(this, 'home')">
-                <a href="javascript:void(0)">
-                    <span class="icon"><i class="fa-solid fa-house"></i></span>
-                    <span class="text">Trang chủ</span>
-                </a>
+                <a href="javascript:void(0)"><span class="icon"><i class="fa-solid fa-house"></i></span><span class="text">Trang chủ</span></a>
             </li>
             <li class="list" onclick="navClick(this, 'history')">
-                <a href="javascript:void(0)">
-                    <span class="icon"><i class="fa-solid fa-clock-rotate-left"></i></span>
-                    <span class="text">Lịch sử</span>
-                </a>
+                <a href="javascript:void(0)"><span class="icon"><i class="fa-solid fa-clock-rotate-left"></i></span><span class="text">Lịch sử</span></a>
             </li>
             <li class="list" onclick="navClick(this, 'profile')">
-                <a href="javascript:void(0)">
-                    <span class="icon"><i class="fa-solid fa-user"></i></span>
-                    <span class="text">Hồ sơ</span>
-                </a>
+                <a href="javascript:void(0)"><span class="icon"><i class="fa-solid fa-user"></i></span><span class="text">Hồ sơ</span></a>
             </li>
             <li class="list" onclick="navClick(this, 'cskh')">
-                <a href="javascript:void(0)">
-                    <span class="icon"><i class="fa-solid fa-headset"></i></span>
-                    <span class="text">CSKH</span>
-                </a>
+                <a href="javascript:void(0)"><span class="icon"><i class="fa-solid fa-headset"></i></span><span class="text">CSKH</span></a>
             </li>
             <li id="nav-admin-item" class="list hidden" onclick="navClick(this, 'admin')">
-                <a href="javascript:void(0)">
-                    <span class="icon text-yellow-400"><i class="fa-solid fa-shield-halved text-yellow-400"></i></span>
-                    <span class="text text-yellow-400 font-bold">Admin</span>
-                </a>
+                <a href="javascript:void(0)"><span class="icon text-yellow-400"><i class="fa-solid fa-shield-halved text-yellow-400"></i></span><span class="text text-yellow-400 font-bold">Admin</span></a>
             </li>
         </ul>
     </div>
 
     <script>
-        // --- KÍCH HOẠT NHẠC NỀN TỰ ĐỘNG CHẠY NGẨM ---
-        document.addEventListener("DOMContentLoaded", function () {
-            const bgMusic = document.getElementById("bg-music");
-            if (!bgMusic) return;
-            bgMusic.volume = 0.4; // Âm lượng mức vừa phải (40%) tránh làm khách giật mình
-
-            function triggerAudioPlay() {
-                bgMusic.play().then(() => {
-                    window.removeEventListener("click", triggerAudioPlay);
-                    window.removeEventListener("touchstart", triggerAudioPlay);
-                }).catch(error => {
-                    console.log("Trình duyệt chặn autoplay:", error);
-                });
-            }
-
-            window.addEventListener("click", triggerAudioPlay, { once: true });
-            window.addEventListener("touchstart", triggerAudioPlay, { once: true });
-        });
-
-        // --- 1. CHỐNG SPAM F5 & KHÓA F12 / CHUỘT PHẢI ---
         let lastF5Time = 0;
         window.addEventListener('keydown', function (e) {
             if (e.keyCode === 116 || (e.ctrlKey && e.keyCode === 82)) {
                 const now = Date.now();
-                if (now - lastF5Time < 2000) {
-                    e.preventDefault();
-                    alert('⚠️ Vui lòng không spam F5 quá nhanh!');
-                    return false;
-                }
+                if (now - lastF5Time < 2000) { e.preventDefault(); alert('⚠️ Vui lòng không spam F5 quá nhanh!'); return false; }
                 lastF5Time = now;
             }
-            if (e.keyCode === 123) { e.preventDefault(); return false; }
-            if (e.ctrlKey && e.shiftKey && e.keyCode === 73) { e.preventDefault(); return false; }
-            if (e.ctrlKey && e.shiftKey && e.keyCode === 74) { e.preventDefault(); return false; }
-            if (e.ctrlKey && e.keyCode === 85) { e.preventDefault(); return false; }
+            if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || (e.ctrlKey && e.keyCode === 85)) { e.preventDefault(); return false; }
         });
 
         const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxV8J9cGa6YaYkkzxvx3CKt6mX318xkrtL0mxU3MidJ4EOwVhcf8zLdTHdLdv71B2s/exec";
-
         const SUPABASE_URL = 'https://iopcnnbcjycgfnpbeqvo.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_9ioPYsftnZkUOpoN4812gw_-rLTaDfu';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
         let ADMIN_SECURE_SECRET_128 = "JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP";
-
         const STORAGE_KEY = 'shopdatzit_v10_local_data';
         const USER_KEY = 'shopdatzit_v10_user';
         const EXPIRE_TIME_MS = 24 * 60 * 60 * 1000;
@@ -978,45 +743,18 @@
         let pendingAdminData = null;
         let cancelTargetOrderId = null;
         let globalGameSoldCounts = {};
-
         let generatedOTP = null;
         let targetForgotUser = null;
         let changeEmailOTP = null;
         let adminExpectedOtp = null;
-
         const DEFAULT_AVATAR_URL = "https://lh3.googleusercontent.com/d/1OUDmydcc6lDsgpI4CdVwi2jmNa__EtPR";
-
         let clientUserIP = "IP_CHUA_XAC_DINH";
 
-        // --- TÍNH TOÁN THỜI GIAN LOADING THEO TỐC ĐỘ MẠNG CỦA KHÁCH ---
-        let loaderTimer = null;
         function triggerGlobalLoader(baseDurationMs = 600) {
             const loader = document.getElementById('global-page-loader');
             if (!loader) return;
-            if (loaderTimer) clearTimeout(loaderTimer);
-            
-            // Tự động check tốc độ mạng qua Network Information API (nếu thiết bị hỗ trợ)
-            let speedMultiplier = 1.0;
-            if (navigator.connection) {
-                const effectiveType = navigator.connection.effectiveType; // '4g', '3g', '2g', 'slow-2g'
-                const downlink = navigator.connection.downlink; // Tốc độ Mbps ước tính
-
-                if (effectiveType === 'slow-2g' || effectiveType === '2g' || (downlink && downlink < 1.5)) {
-                    speedMultiplier = 2.2; // Mạng yếu -> hiện lâu hơn để chờ tải
-                } else if (effectiveType === '3g' || (downlink && downlink < 4)) {
-                    speedMultiplier = 1.5; // Mạng trung bình
-                } else {
-                    speedMultiplier = 0.7; // Mạng wifi / 4G mạnh -> ẩn nhanh mượt mà
-                }
-            }
-
-            let calculatedTime = Math.round(baseDurationMs * speedMultiplier);
-            calculatedTime = Math.max(350, Math.min(calculatedTime, 2500)); // Giới hạn từ 0.35s đến 2.5s
-
             loader.classList.remove('loader-hidden');
-            loaderTimer = setTimeout(() => {
-                loader.classList.add('loader-hidden');
-            }, calculatedTime);
+            setTimeout(() => loader.classList.add('loader-hidden'), baseDurationMs);
         }
 
         async function initVisitorIPTracking() {
@@ -1027,27 +765,14 @@
             } catch (e) {
                 clientUserIP = "IP_LOCAL_" + Math.random().toString(36).substring(7);
             }
-
-            let visitorLogs = JSON.parse(localStorage.getItem('shopdatzit_visitors') || '{}');
-            if (!visitorLogs[clientUserIP]) {
-                visitorLogs[clientUserIP] = { first_seen: new Date().toLocaleString('vi-VN'), visits: 1, status: 'Normal User' };
-            } else {
-                visitorLogs[clientUserIP].visits += 1;
-            }
-            localStorage.setItem('shopdatzit_visitors', JSON.stringify(visitorLogs));
         }
 
         function checkIsIpBanned() {
             let banList = JSON.parse(localStorage.getItem('shopdatzit_banned_ips') || '{}');
             if (banList[clientUserIP]) {
                 let banTime = banList[clientUserIP];
-                if (Date.now() < banTime) {
-                    let remainingHours = Math.ceil((banTime - Date.now()) / (1000 * 60 * 60));
-                    return remainingHours;
-                } else {
-                    delete banList[clientUserIP];
-                    localStorage.setItem('shopdatzit_banned_ips', JSON.stringify(banList));
-                }
+                if (Date.now() < banTime) return Math.ceil((banTime - Date.now()) / (1000 * 60 * 60));
+                else { delete banList[clientUserIP]; localStorage.setItem('shopdatzit_banned_ips', JSON.stringify(banList)); }
             }
             return 0;
         }
@@ -1068,29 +793,36 @@
 
         function getRemainingFailedAttempts() {
             let attemptsData = JSON.parse(localStorage.getItem('shopdatzit_admin_fails') || '{}');
-            let fails = attemptsData[clientUserIP] || 0;
-            return Math.max(0, 10 - fails);
+            return Math.max(0, 10 - (attemptsData[clientUserIP] || 0));
         }
 
         function banCurrentIpFor24Hours() {
             let banList = JSON.parse(localStorage.getItem('shopdatzit_banned_ips') || '{}');
             banList[clientUserIP] = Date.now() + (24 * 60 * 60 * 1000);
             localStorage.setItem('shopdatzit_banned_ips', JSON.stringify(banList));
-
-            let visitorLogs = JSON.parse(localStorage.getItem('shopdatzit_visitors') || '{}');
-            if (visitorLogs[clientUserIP]) {
-                visitorLogs[clientUserIP].status = 'Hacker / Blocked';
-                localStorage.setItem('shopdatzit_visitors', JSON.stringify(visitorLogs));
-            }
         }
 
         function calcPrice(p) {
             if (p === 0) return 0;
-            if (p > 500000) return p + 15000;
-            return p + 3000;
+            return p > 500000 ? p + 15000 : p + 3000;
         }
 
         const gamesData = {
+            'identityv': {
+                name: 'Identity V',
+                realImg: 'https://lh3.googleusercontent.com/d/1CXdaTdhhBKCkfHp4XcAVTnsG3b3H8A7u',
+                packages: [
+                    { name: '60 Echoes', price: 25000 },
+                    { name: '185 + 18 Echoes', price: 75000 },
+                    { name: '305 + 30 Echoes', price: 126000 },
+                    { name: '690 + 69 Echoes', price: 250000 },
+                    { name: '2025 + 202 Echoes', price: 745000 },
+                    { name: '3330 + 333 Echoes', price: 1240000 },
+                    { name: '6590 + 659 Echoes', price: 2480000 },
+                    { name: 'Memory Sphere Package', price: 265000 },
+                    { name: 'Clues Package', price: 133000 }
+                ]
+            },
             'garena': {
                 name: 'Thẻ Garena',
                 realImg: 'https://inviva.vn/wp-content/uploads/2026/05/logo-garena-vector-08.jpg',
@@ -1110,8 +842,6 @@
                 packages: [
                     { name: 'Thẻ Tháng', price: calcPrice(122500) },
                     { name: 'Cẩm Nang Đồng Hành Nâng Cao', price: calcPrice(240000) },
-                    { name: 'Nâng Cấp của Nâng Cao lên Kỷ Vật', price: calcPrice(219925) },
-                    { name: 'Cẩm Nang Đồng Hành Kỷ Vật', price: calcPrice(480000) },
                     { name: '60 Tinh Thể Nguyên Quang', price: calcPrice(22725) },
                     { name: '300 + 30 Tinh Thể Nguyên Quang', price: calcPrice(122278) },
                     { name: '980 + 98 Tinh Thể Nguyên Quang', price: calcPrice(366835) },
@@ -1129,22 +859,7 @@
                     { name: 'Đảo Mật Ít 2 Origometry (75)', price: calcPrice(48000) },
                     { name: 'Đảo Mật Hộ 21 Origometry (95)', price: calcPrice(203770) },
                     { name: 'Đảo Mật Đồng 34 Origometry (135)', price: calcPrice(273108) },
-                    { name: 'Đảo Mật Túi 57 Origometry (215)', price: calcPrice(475841) },
-                    { name: 'Đảo Mật Hộp 92 Origometry (345)', price: calcPrice(766741) },
-                    { name: 'Đảo Mật Thùng 104 Origometry (705)', price: calcPrice(1543363) },
-                    { name: 'Gói Kho Vũ Khí Tầm Nhìn Lớn (15)', price: calcPrice(20000) },
-                    { name: 'Gói Sửa Tệp Kỹ Thư Vế Nhà (15)', price: calcPrice(20000) },
-                    { name: 'Gói Vật Tư Hàng Tuần (55)', price: calcPrice(102500) },
-                    { name: 'Gói Cập Nhật Thông Tin Định Danh (55)', price: calcPrice(100000) },
-                    { name: 'Gói Phiếu Kho Vũ Khí Giá Trị (145)', price: calcPrice(320210) },
-                    { name: 'Gói Kho Vũ Khí Lễ Hội Ưu Đãi (145)', price: calcPrice(320210) },
-                    { name: 'Gói Chiêu Mộ Cuộc Săn Mùa Đông (155)', price: calcPrice(320825) },
-                    { name: 'Gói Hỗ Trợ HR (155)', price: calcPrice(328819) },
-                    { name: 'Gói Vật Tư Tháng (155)', price: calcPrice(329825) },
-                    { name: 'Gói Kho Vũ Khí Giảm Giá (175)', price: calcPrice(378430) },
-                    { name: 'Gói Đa Năng (205)', price: calcPrice(456146) },
-                    { name: 'Gói Dòng Giao Thức (305)', price: calcPrice(690797) },
-                    { name: 'Gói Mừng Đồng Hành (455)', price: calcPrice(990000) }
+                    { name: 'Đảo Mật Túi 57 Origometry (215)', price: calcPrice(475841) }
                 ]
             },
             'genshin': { 
@@ -1159,8 +874,7 @@
                     { name: '980 + 110 Đá Sáng Thế', price: calcPrice(258000) },
                     { name: '1980 + 260 Đá Sáng Thế', price: calcPrice(515000) },
                     { name: '3280 + 600 Đá Sáng Thế', price: calcPrice(855000) },
-                    { name: '6480 + 1600 Đá Sáng Thế', price: calcPrice(1715000) },
-                    { name: 'Toàn Bộ Gói - Đá Sáng Thế', price: calcPrice(3435000) }
+                    { name: '6480 + 1600 Đá Sáng Thế', price: calcPrice(1715000) }
                 ]
             },
             'hok': { 
@@ -1169,16 +883,11 @@
                 packages: [
                     { name: 'Thẻ tuần', price: calcPrice(25700) },
                     { name: 'Thẻ tuần Plus', price: calcPrice(71368) },
-                    { name: '16++ Tokens', price: calcPrice(4370) },
-                    { name: '80++ Tokens', price: calcPrice(21010) },
-                    { name: '240++ Tokens', price: calcPrice(64005) },
-                    { name: '400++ Tokens', price: calcPrice(100052) },
-                    { name: '560++ Tokens', price: calcPrice(148389) },
-                    { name: '800++ Tokens', price: calcPrice(218065) },
-                    { name: '1200++ Tokens', price: calcPrice(320266) },
-                    { name: '2400++ Tokens', price: calcPrice(654110) },
-                    { name: '4000++ Tokens', price: calcPrice(1090175) },
-                    { name: '8000++ Tokens', price: calcPrice(2170120) }
+                    { name: '80 Tokens', price: calcPrice(21010) },
+                    { name: '240 Tokens', price: calcPrice(64005) },
+                    { name: '400 Tokens', price: calcPrice(100052) },
+                    { name: '800 Tokens', price: calcPrice(218065) },
+                    { name: '2400 Tokens', price: calcPrice(654110) }
                 ]
             },
             'pgr': { 
@@ -1187,9 +896,7 @@
                 packages: [
                     { name: '5 RC', price: calcPrice(22000) },
                     { name: '28 RC', price: calcPrice(90000) },
-                    { name: '34 RC', price: calcPrice(108000) },
                     { name: '59 RC', price: calcPrice(180000) },
-                    { name: '71 RC', price: calcPrice(216000) },
                     { name: '119 RC', price: calcPrice(360000) },
                     { name: '299 RC', price: calcPrice(900000) },
                     { name: '600 RC', price: calcPrice(1775000) }
@@ -1201,38 +908,11 @@
                 packages: [
                     { name: 'Lunite Subscription', price: calcPrice(98501) },
                     { name: 'Insider Channel', price: calcPrice(197001) },
-                    { name: 'Connoisseur Channel', price: calcPrice(394002) },
                     { name: '60 Lunites', price: calcPrice(23453) },
                     { name: '300 + 30 Lunites', price: calcPrice(98501) },
                     { name: '980 + 110 Lunites', price: calcPrice(295502) },
-                    { name: '1980 + 260 Lunites', price: calcPrice(591003) },
                     { name: '3280 + 600 Lunites', price: calcPrice(985005) },
-                    { name: '6480 + 1600 Lunites', price: calcPrice(1914255) },
-                    { name: "Jade Steed's Radiant Chest", price: calcPrice(197001) },
-                    { name: "Jade Steel's Forging Chest", price: calcPrice(197001) },
-                    { name: "Shaftpost Yard's Monthly Aid", price: calcPrice(394002) },
-                    { name: "To the New World - World Tour", price: calcPrice(295502) },
-                    { name: "Shaftpost Yard's Battlesong", price: calcPrice(394002) },
-                    { name: "Shaftpost Yard's Radiant Chest", price: calcPrice(591003) },
-                    { name: 'Xuanfang Support Ration', price: calcPrice(394002) },
-                    { name: 'Spring in Bloom', price: calcPrice(78800) },
-                    { name: 'Glazed Roseate', price: calcPrice(78800) },
-                    { name: 'Hsin and Moon', price: calcPrice(197001) },
-                    { name: '[SKIN XE] Nightvell Piercer', price: calcPrice(591003) },
-                    { name: '[SKIN XE] Crystal Sky Chassis', price: calcPrice(492503) },
-                    { name: '[SKIN XE] Voyaging Star Chassis', price: calcPrice(492503) },
-                    { name: '[SKIN CÁNH] Dawn Upon Thorns', price: calcPrice(197001) },
-                    { name: "Sage's Solvent Aid", price: calcPrice(98501) },
-                    { name: 'Reprise Bounty', price: calcPrice(98501) },
-                    { name: "Returnee's Solvent Aid", price: calcPrice(59100) },
-                    { name: "Returnee's Shell Credit Aid", price: calcPrice(98501) },
-                    { name: "Returnee's Radiant Aid", price: calcPrice(23453) },
-                    { name: "Returnee's Radiant Collection", price: calcPrice(98501) },
-                    { name: "Returnee's Forgery Aid", price: calcPrice(197001) },
-                    { name: 'New Voyage Starter Pack', price: calcPrice(23453) },
-                    { name: 'New Voyage Weekly', price: calcPrice(197001) },
-                    { name: 'New Voyage Radiant Pack', price: calcPrice(197001) },
-                    { name: 'New Voyage Battlesong Pack', price: calcPrice(492503) }
+                    { name: '6480 + 1600 Lunites', price: calcPrice(1914255) }
                 ]
             },
             'zzz': { 
@@ -1241,33 +921,24 @@
                 packages: [
                     { name: 'Hội Viên Inter-Knot (5$)', price: calcPrice(102500) },
                     { name: 'Kế Hoạch Trưởng Thành (10$)', price: calcPrice(205000) },
-                    { name: 'Kế Hoạch Cao Cấp (20$)', price: calcPrice(410000) },
-                    { name: '60 Film Trắng Đен (1$)', price: calcPrice(22000) },
-                    { name: '300 + 30 Film Trắng Đen (5$)', price: calcPrice(102500) },
-                    { name: '980 + 110 Film Trắng Đen (15$)', price: calcPrice(307500) },
-                    { name: '1980 + 260 Film Trắng Đen (30$)', price: calcPrice(615000) },
-                    { name: '3280 + 600 Film Trắng Đen (50$)', price: calcPrice(1025000) },
-                    { name: '6480 + 1600 Film Trắng Đen (100$)', price: calcPrice(2000000) },
-                    { name: 'Ridu Chào Đốn', price: calcPrice(22000) },
-                    { name: 'Lời Mời Chân Thành (5$)', price: calcPrice(102500) },
-                    { name: 'Lời Mời Yêu Thích (10$)', price: calcPrice(205000) },
-                    { name: 'Lời Mời Độc Quyền (15$)', price: calcPrice(307500) }
+                    { name: '60 Film Trắng Đen', price: calcPrice(22000) },
+                    { name: '300 + 30 Film Trắng Đen', price: calcPrice(102500) },
+                    { name: '980 + 110 Film Trắng Đen', price: calcPrice(307500) },
+                    { name: '3280 + 600 Film Trắng Đen', price: calcPrice(1025000) },
+                    { name: '6480 + 1600 Film Trắng Đen', price: calcPrice(2000000) }
                 ]
             },
             'hsr': { 
                 name: 'Honkai: Star Rail', 
                 realImg: 'https://lh3.googleusercontent.com/d/1jFEctjMKIJ1my-KQDIiJoj9aIBG0nJ25', 
                 packages: [
-                    { name: 'Chứng Nhận Tiếp Tế Tàu (5$)', price: calcPrice(102500) },
-                    { name: 'Vinh Quang Khách Vô Danh (10$)', price: calcPrice(205000) },
-                    { name: 'Huân Chương Khách Vô Danh (20$)', price: calcPrice(410000) },
-                    { name: '60 Mộng Ước Viễn Cổ (1$)', price: calcPrice(22000) },
-                    { name: '300 + 30 Mộng Ước Viễn Cổ (5$)', price: calcPrice(102500) },
-                    { name: '980 + 110 Mộng Ước Viễn Cổ (15$)', price: calcPrice(307500) },
-                    { name: '1980 + 260 Mộng Ước Viễn Cổ (30$)', price: calcPrice(615000) },
-                    { name: '3280 + 600 Mộng Ước Viễn Cổ (50$)', price: calcPrice(1025000) },
-                    { name: '6480 + 1600 Mộng Ước Viễn Cổ (100$)', price: calcPrice(2000000) },
-                    { name: 'Phụ Kiện Tốc Thời Thượng (3$)', price: calcPrice(88000) }
+                    { name: 'Chứng Nhận Tiếp Tế Tàu', price: calcPrice(102500) },
+                    { name: 'Vinh Quang Khách Vô Danh', price: calcPrice(205000) },
+                    { name: '60 Mộng Ước Viễn Cổ', price: calcPrice(22000) },
+                    { name: '300 + 30 Mộng Ước Viễn Cổ', price: calcPrice(102500) },
+                    { name: '980 + 110 Mộng Ước Viễn Cổ', price: calcPrice(307500) },
+                    { name: '3280 + 600 Mộng Ước Viễn Cổ', price: calcPrice(1025000) },
+                    { name: '6480 + 1600 Mộng Ước Viễn Cổ', price: calcPrice(2000000) }
                 ]
             },
             'honkai': { 
@@ -1278,16 +949,8 @@
                     { name: '65 Pha Lê', price: calcPrice(13049) },
                     { name: '330 Pha Lê', price: calcPrice(61253) },
                     { name: '660 Pha Lê', price: calcPrice(122834) },
-                    { name: '1320 Pha Lê', price: calcPrice(244398) },
                     { name: '3300 Pha Lê', price: calcPrice(611206) },
-                    { name: '6600 Pha Lê', price: calcPrice(1219698) },
-                    { name: '65 B-chip', price: calcPrice(13049) },
-                    { name: '330 B-chip', price: calcPrice(61253) },
-                    { name: '990 B-chip', price: calcPrice(183969) },
-                    { name: '1320 B-chip', price: calcPrice(245106) },
-                    { name: '1980 B-chip', price: calcPrice(368499) },
-                    { name: '3300 B-chip', price: calcPrice(614165) },
-                    { name: '6600 B-chip', price: calcPrice(1219698) }
+                    { name: '6600 Pha Lê', price: calcPrice(1219698) }
                 ]
             }
         };
@@ -1316,15 +979,12 @@
         };
 
         function initRealtimeListener() {
-            supabaseClient
-              .channel('public:orders')
-              .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, async payload => {
-                  await fetchAndCalculateSolds();
-                  renderGameList();
-                  renderHistory();
-                  renderAdminOrders();
-              })
-              .subscribe();
+            supabaseClient.channel('public:orders').on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, async () => {
+                await fetchAndCalculateSolds();
+                renderGameList();
+                renderHistory();
+                renderAdminOrders();
+            }).subscribe();
         }
 
         function initOtpWidget(widgetId, onCompleteCallback) {
@@ -1353,9 +1013,7 @@
                 input.value = input.value.replace(/\D/g, '').slice(0, 6);
                 if (root.classList.contains('is-ok')) root.classList.remove('is-ok');
                 paint();
-                if (input.value.length === 6) {
-                    if (onCompleteCallback) onCompleteCallback(input.value, root, say, clearInterval, tick, rm);
-                }
+                if (input.value.length === 6 && onCompleteCallback) onCompleteCallback(input.value, root, say, clearInterval, tick, rm);
             });
             input.addEventListener('focus', paint);
             input.addEventListener('blur', paint);
@@ -1364,7 +1022,7 @@
                 if (!root.isConnected) { clearInterval(tick); return; }
                 if (root.classList.contains('is-bad') || root.classList.contains('is-check') || root.classList.contains('is-ok')) return;
                 left = Math.max(0, left - 1);
-                msg.textContent = left ? 'Gửi lại mã sau ' + Math.floor(left / 60) + ':' + String(left % 60).padStart(2, '0') : 'Bạn có thể gửi lại mã ngay';
+                msg.textContent = left ? 'Gửi lại mã sau ' + Math.floor(left / 60) + ':' + String(left % 60).padStart(2, '0') : 'Có thể gửi lại mã';
             }, 1000);
             paint();
         }
@@ -1374,12 +1032,9 @@
             say('Đang kiểm tra...');
             setTimeout(function () {
                 root.classList.remove('is-check');
-                if (code === adminExpectedOtp) {
-                    root.classList.add('is-ok');
-                    say('Mã OTP 6 số chính xác!');
-                } else {
-                    root.classList.add('is-bad');
-                    say('Mã OTP không chính xác!');
+                if (code === adminExpectedOtp) { root.classList.add('is-ok'); say('OTP chính xác!'); }
+                else {
+                    root.classList.add('is-bad'); say('Sai mã OTP!');
                     setTimeout(function () { root.classList.remove('is-bad'); root.querySelector('.u026-real').value = ''; initOtpWidget('admin-otp-widget', adminVerifyCallback); }, rm ? 600 : 900);
                 }
             }, rm ? 60 : 640);
@@ -1387,15 +1042,11 @@
 
         function forgotVerifyCallback(code, root, say, clearIntervalFunc, tick, rm) {
             root.classList.add('is-check');
-            say('Đang kiểm tra...');
             setTimeout(function () {
                 root.classList.remove('is-check');
-                if (code === generatedOTP) {
-                    root.classList.add('is-ok');
-                    say('Mã OTP chính xác!');
-                } else {
-                    root.classList.add('is-bad');
-                    say('Mã không đúng!');
+                if (code === generatedOTP) { root.classList.add('is-ok'); say('OTP chính xác!'); }
+                else {
+                    root.classList.add('is-bad'); say('Sai mã!');
                     setTimeout(function () { root.classList.remove('is-bad'); root.querySelector('.u026-real').value = ''; initOtpWidget('forgot-otp-widget', forgotVerifyCallback); }, rm ? 600 : 900);
                 }
             }, rm ? 60 : 640);
@@ -1403,23 +1054,18 @@
 
         function changeEmailVerifyCallback(code, root, say, clearIntervalFunc, tick, rm) {
             root.classList.add('is-check');
-            say('Đang kiểm tra...');
             setTimeout(function () {
                 root.classList.remove('is-check');
-                if (code === changeEmailOTP) {
-                    root.classList.add('is-ok');
-                    say('Mã OTP chính xác!');
-                } else {
-                    root.classList.add('is-bad');
-                    say('Mã không đúng!');
+                if (code === changeEmailOTP) { root.classList.add('is-ok'); say('OTP chính xác!'); }
+                else {
+                    root.classList.add('is-bad'); say('Sai mã!');
                     setTimeout(function () { root.classList.remove('is-bad'); root.querySelector('.u026-real').value = ''; initOtpWidget('change-email-otp-widget', changeEmailVerifyCallback); }, rm ? 600 : 900);
                 }
             }, rm ? 60 : 640);
         }
 
         function navClick(element, target) {
-            const listItems = document.querySelectorAll('.navigation-ul li');
-            listItems.forEach((item) => item.classList.remove('active'));
+            document.querySelectorAll('.navigation-ul li').forEach(item => item.classList.remove('active'));
             element.classList.add('active');
             switchView(target);
         }
@@ -1428,7 +1074,7 @@
             const navMap = { 'home': 0, 'history': 1, 'profile': 2, 'cskh': 3, 'admin': 4 };
             if (navMap[viewName] !== undefined) {
                 const listItems = document.querySelectorAll('.navigation-ul li');
-                listItems.forEach((item) => item.classList.remove('active'));
+                listItems.forEach(item => item.classList.remove('active'));
                 const targetLi = listItems[navMap[viewName]];
                 if (targetLi && !targetLi.classList.contains('hidden')) targetLi.classList.add('active');
             }
@@ -1443,22 +1089,17 @@
 
         async function fetchAndCalculateSolds() {
             globalGameSoldCounts = {};
-            const { data: orders, error } = await supabaseClient
-                .from('orders')
-                .select('*');
-
-            if (error || !orders) return;
+            const { data: orders } = await supabaseClient.from('orders').select('*');
+            if (!orders) return;
 
             orders.forEach(ord => {
                 const is24hPassed = (Date.now() - (ord.timestamp || 0)) >= EXPIRE_TIME_MS;
                 const isCompleted = ord.status.includes('Thành Công') || ord.status.includes('Hoàn Thành') || (ord.status.includes('Chờ duyệt') && is24hPassed);
 
                 if (isCompleted) {
-                    if (ord.items && Array.isArray(ord.items) && ord.items.length > 0) {
+                    if (ord.items && Array.isArray(ord.items)) {
                         ord.items.forEach(item => {
-                            if (item.gameKey) {
-                                globalGameSoldCounts[item.gameKey] = (globalGameSoldCounts[item.gameKey] || 0) + (item.qty || 1);
-                            }
+                            if (item.gameKey) globalGameSoldCounts[item.gameKey] = (globalGameSoldCounts[item.gameKey] || 0) + (item.qty || 1);
                         });
                     } else if (ord.game) {
                         for (let key in gamesData) {
@@ -1472,9 +1113,7 @@
             });
         }
 
-        function getGameSold(gameKey) {
-            return globalGameSoldCounts[gameKey] || 0;
-        }
+        function getGameSold(gameKey) { return globalGameSoldCounts[gameKey] || 0; }
 
         function initAdminAccount() {
             let accounts = getAccounts();
@@ -1482,21 +1121,22 @@
                 accounts['ngocdiemdang90@gmail.com'] = {
                     username: 'Chủ Shop Admin', email: 'ngocdiemdang90@gmail.com', password: 'Lolkchi2020k', uid: '10000', avatar: ''
                 };
+                saveAccounts(accounts);
             }
-            saveAccounts(accounts);
         }
 
         function initTheme() {
             const savedTheme = localStorage.getItem('shopdatzit_theme') || 'dark';
-            if (savedTheme === 'light') { document.documentElement.classList.remove('dark'); document.documentElement.classList.add('light'); }
-            else { document.documentElement.classList.add('dark'); document.documentElement.classList.remove('light'); }
+            document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+            document.documentElement.classList.toggle('light', savedTheme === 'light');
             updateThemeIcon();
         }
 
         function toggleTheme() {
             const isDark = document.documentElement.classList.contains('dark');
-            if (isDark) { document.documentElement.classList.remove('dark'); document.documentElement.classList.add('light'); localStorage.setItem('shopdatzit_theme', 'light'); }
-            else { document.documentElement.classList.remove('light'); document.documentElement.classList.add('dark'); localStorage.setItem('shopdatzit_theme', 'dark'); }
+            document.documentElement.classList.toggle('dark', !isDark);
+            document.documentElement.classList.toggle('light', isDark);
+            localStorage.setItem('shopdatzit_theme', isDark ? 'light' : 'dark');
             updateThemeIcon();
         }
 
@@ -1511,13 +1151,12 @@
             if (!container) return;
             container.innerHTML = '';
             for (const [key, game] of Object.entries(gamesData)) {
-                let noteHtml = game.note ? `<div class="text-[11px] text-yellow-400 font-bold mt-0.5">${game.note}</div>` : `<div class="flex items-center space-x-1.5 mt-1"><span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span><span class="text-[11px] text-accentBlue font-medium">Giao ngay</span><span class="text-[10px] text-gray-400 ml-auto">Đã bán: ${getGameSold(key)}</span></div>`;
                 container.innerHTML += `
                     <div data-game="${key}" class="game-card bg-cardBg hover:bg-cardHover p-3.5 rounded-xl border border-gray-800 cursor-pointer transition flex items-center space-x-3 shadow group">
                         <img src="${game.realImg}" alt="${game.name}" class="w-14 h-14 rounded-lg object-cover border border-gray-700 group-hover:border-accentBlue transition" onerror="this.src='https://lh3.googleusercontent.com/d/1S1r9aE9MtmiRDEzw5IkDJ6pRDGyP42kV'">
                         <div class="flex-grow">
                             <h4 class="font-bold text-sm text-white line-clamp-1">${game.name}</h4>
-                            ${noteHtml}
+                            <div class="flex items-center space-x-1.5 mt-1"><span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span><span class="text-[11px] text-accentBlue font-medium">Giao ngay</span><span class="text-[10px] text-gray-400 ml-auto">Đã bán: ${getGameSold(key)}</span></div>
                         </div>
                     </div>
                 `;
@@ -1537,25 +1176,19 @@
             const profileUid = document.getElementById('profile-uid');
             const profileRole = document.getElementById('profile-role');
             const navAdminItem = document.getElementById('nav-admin-item');
-            
             const avatars = [document.getElementById('header-user-avatar'), document.getElementById('dropdown-user-avatar'), document.getElementById('profile-user-avatar')];
             const accounts = getAccounts();
 
             if (currentUsername && accounts[currentUsername]) {
                 const userAcc = accounts[currentUsername];
                 const displayName = userAcc.username || currentUsername;
-                const displayEmail = userAcc.email || currentUsername;
-
                 disp.innerText = displayName;
                 if (dropdownName) dropdownName.innerText = displayName;
-                
-                let userUid = userAcc.uid || '10000';
-                if (dropdownUid) dropdownUid.innerText = userUid;
+                if (dropdownUid) dropdownUid.innerText = userAcc.uid || '10000';
                 if (profileName) profileName.innerText = displayName;
                 if (profileUsernameInput) profileUsernameInput.value = displayName;
-                if (profileEmailText) profileEmailText.innerText = displayEmail;
-                if (profileUid) profileUid.innerText = userUid;
-
+                if (profileEmailText) profileEmailText.innerText = userAcc.email || currentUsername;
+                if (profileUid) profileUid.innerText = userAcc.uid || '10000';
                 let userAvatar = userAcc.avatar || DEFAULT_AVATAR_URL;
                 avatars.forEach(el => { if(el) el.src = userAvatar; });
 
@@ -1585,13 +1218,13 @@
         function saveNewUsername() {
             if (!currentUsername) { openAuthModal(); return; }
             const newName = document.getElementById('profile-username-input').value.trim();
-            if (!newName) { alert('Tên đăng nhập không được để trống!'); return; }
+            if (!newName) { alert('Tên không được để trống!'); return; }
             let accounts = getAccounts();
             if (accounts[currentUsername]) {
                 accounts[currentUsername].username = newName;
                 saveAccounts(accounts);
                 updateAuthUI();
-                alert('Cập nhật tên đăng nhập thành công!');
+                alert('Cập nhật tên thành công!');
             }
         }
 
@@ -1613,23 +1246,15 @@
             let accounts = getAccounts();
             const currentAcc = accounts[currentUsername];
             const actualEmail = (currentAcc && currentAcc.email) ? currentAcc.email.toLowerCase() : currentUsername.toLowerCase();
-
             if (oldEmailInput !== actualEmail) { alert('Email cũ không khớp!'); return; }
 
             changeEmailOTP = Math.floor(100000 + Math.random() * 900000).toString();
-            const btn = document.getElementById('btn-send-email-otp');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<span class="loader-spin"></span> Đang gửi OTP...';
-            btn.disabled = true;
-
-            sendAutoEmail(oldEmailInput, "Mã OTP Đổi Email - ShopDatZit", "Mã OTP xác thực đổi Email của bạn là: " + changeEmailOTP, false, function() {
-                btn.innerHTML = originalText; btn.disabled = false;
-                alert('Mã OTP xác thực đã gửi đến Email cũ!');
+            sendAutoEmail(oldEmailInput, "Mã OTP Đổi Email - ShopDatZit", "Mã OTP: " + changeEmailOTP, false, () => {
+                alert('Đã gửi mã OTP!');
                 document.getElementById('email-step-1').classList.add('hidden');
                 document.getElementById('email-step-2').classList.remove('hidden');
-            }, function() {
-                btn.innerHTML = originalText; btn.disabled = false;
-                alert('Gửi OTP gặp sự cố!\n(Mã OTP test: ' + changeEmailOTP + ')');
+            }, () => {
+                alert('Mã OTP test: ' + changeEmailOTP);
                 document.getElementById('email-step-1').classList.add('hidden');
                 document.getElementById('email-step-2').classList.remove('hidden');
             });
@@ -1638,8 +1263,8 @@
         function verifyAndChangeEmail() {
             const otpInput = document.getElementById('change-email-otp').value.trim();
             const newEmailInput = document.getElementById('change-new-email').value.trim().toLowerCase();
-            if (!otpInput || !newEmailInput) { alert('Vui lòng điền đầy đủ!'); return; }
-            if (otpInput !== changeEmailOTP) { alert('Mã OTP không chính xác!'); return; }
+            if (!otpInput || !newEmailInput) { alert('Vui lòng điền đủ!'); return; }
+            if (otpInput !== changeEmailOTP) { alert('Sai OTP!'); return; }
 
             let accounts = getAccounts();
             if (accounts[currentUsername]) {
@@ -1647,7 +1272,7 @@
                 saveAccounts(accounts);
                 updateAuthUI();
                 closeChangeEmailModal();
-                alert('Thay đổi Email thành công!');
+                alert('Đổi Email thành công!');
             }
         }
 
@@ -1685,19 +1310,14 @@
         }
         function saveNewAvatar() {
             if (!currentUsername || !tempAvatarBase64) return;
-            const btn = document.getElementById('btn-save-avatar');
-            btn.innerHTML = '<span class="loader-spin"></span> Đang cập nhật...';
-            setTimeout(() => {
-                let accounts = getAccounts();
-                if (accounts[currentUsername]) {
-                    accounts[currentUsername].avatar = tempAvatarBase64;
-                    saveAccounts(accounts);
-                    updateAuthUI();
-                    closeAvatarModal();
-                    alert('Đổi ảnh đại diện thành công!');
-                }
-                btn.innerHTML = 'Cập nhật';
-            }, 300);
+            let accounts = getAccounts();
+            if (accounts[currentUsername]) {
+                accounts[currentUsername].avatar = tempAvatarBase64;
+                saveAccounts(accounts);
+                updateAuthUI();
+                closeAvatarModal();
+                alert('Đổi ảnh thành công!');
+            }
         }
 
         function togglePasswordVisibility(fieldId) {
@@ -1707,48 +1327,35 @@
         
         function openAuthModal() { closeForgotModal(); closeRegisterModal(); document.getElementById('auth-modal').classList.remove('hidden'); }
         function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
-
         function openRegisterModal() { closeAuthModal(); closeForgotModal(); document.getElementById('register-modal').classList.remove('hidden'); }
         function closeRegisterModal() { document.getElementById('register-modal').classList.add('hidden'); }
-
         function openForgotModal() {
             closeAuthModal(); closeRegisterModal();
             document.getElementById('forgot-step-1').classList.remove('hidden');
             document.getElementById('forgot-step-2').classList.add('hidden');
-            document.getElementById('forgot-email').value = '';
-            document.getElementById('forgot-otp').value = '';
-            document.getElementById('forgot-new-pass').value = '';
             document.getElementById('forgot-modal').classList.remove('hidden');
         }
-
         function closeForgotModal() { document.getElementById('forgot-modal').classList.add('hidden'); }
 
         function handleSendOTP() {
             const emailInput = document.getElementById('forgot-email').value.trim().toLowerCase();
-            if (!emailInput) { alert('Vui lòng nhập Email / Tên đăng nhập!'); return; }
+            if (!emailInput) { alert('Vui lòng nhập Email!'); return; }
             let accounts = getAccounts();
             let foundKey = null;
             for (let k in accounts) {
                 if (k.toLowerCase() === emailInput || (accounts[k].email && accounts[k].email.toLowerCase() === emailInput)) { foundKey = k; break; }
             }
-            if (!foundKey) { alert('Tài khoản này chưa từng đăng ký!'); return; }
+            if (!foundKey) { alert('Tài khoản không tồn tại!'); return; }
 
             generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
             targetForgotUser = foundKey;
 
-            const btn = document.getElementById('btn-send-otp');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<span class="loader-spin"></span> Đang gửi OTP...';
-            btn.disabled = true;
-
-            sendAutoEmail(emailInput, "Mã OTP Khôi Phục Mật Khẩu - ShopDatZit", "Mã OTP khôi phục mật khẩu là: " + generatedOTP, false, function() {
-                btn.innerHTML = originalText; btn.disabled = false;
-                alert('Mã OTP 6 số đã gửi đến Email: ' + emailInput);
+            sendAutoEmail(emailInput, "OTP Khôi Phục Mật Khẩu", "Mã OTP: " + generatedOTP, false, () => {
+                alert('Đã gửi OTP!');
                 document.getElementById('forgot-step-1').classList.add('hidden');
                 document.getElementById('forgot-step-2').classList.remove('hidden');
-            }, function() {
-                btn.innerHTML = originalText; btn.disabled = false;
-                alert('Gửi OTP gặp sự cố!\n(Mã OTP test: ' + generatedOTP + ')');
+            }, () => {
+                alert('OTP test: ' + generatedOTP);
                 document.getElementById('forgot-step-1').classList.add('hidden');
                 document.getElementById('forgot-step-2').classList.remove('hidden');
             });
@@ -1757,15 +1364,14 @@
         function handleResetPassword() {
             const otpInput = document.getElementById('forgot-otp').value.trim();
             const newPass = document.getElementById('forgot-new-pass').value.trim();
-            if (!otpInput || !newPass) { alert('Vui lòng nhập đầy đủ!'); return; }
-            if (otpInput !== generatedOTP) { alert('Mã OTP không chính xác!'); return; }
+            if (!otpInput || !newPass) { alert('Điền đủ thông tin!'); return; }
+            if (otpInput !== generatedOTP) { alert('Sai mã OTP!'); return; }
 
             let accounts = getAccounts();
             if (accounts[targetForgotUser]) {
                 accounts[targetForgotUser].password = newPass;
                 saveAccounts(accounts);
-                alert('Khôi phục mật khẩu thành công!');
-                generatedOTP = null; targetForgotUser = null;
+                alert('Đổi mật khẩu thành công!');
                 closeForgotModal(); openAuthModal();
             }
         }
@@ -1773,55 +1379,37 @@
         function handleRegister() {
             const u = document.getElementById('reg-user').value.trim();
             const p = document.getElementById('reg-pass').value.trim();
-            if (!u || !p) { alert('Vui lòng điền đầy đủ!'); return; }
+            if (!u || !p) { alert('Điền đủ thông tin!'); return; }
             let accounts = getAccounts();
-            if (accounts[u.toLowerCase()]) { alert('Tài khoản này đã tồn tại!'); return; }
+            if (accounts[u.toLowerCase()]) { alert('Tài khoản đã tồn tại!'); return; }
             
-            const btn = document.getElementById('btn-register');
-            btn.innerHTML = '<span class="loader-spin"></span> Đang xử lý...';
-            setTimeout(() => {
-                const randomUid = Math.floor(10000 + Math.random() * 90000).toString();
-                const key = u.toLowerCase();
-                accounts[key] = { 
-                    username: u, email: u.includes('@') ? u : `${key}@gmail.com`, password: p, uid: randomUid, avatar: ''
-                };
-                saveAccounts(accounts);
-                alert('Đăng ký tài khoản thành công!');
-                btn.innerHTML = 'ĐĂNG KÝ NGAY';
-                closeRegisterModal(); openAuthModal();
-            }, 300);
+            const randomUid = Math.floor(10000 + Math.random() * 90000).toString();
+            accounts[u.toLowerCase()] = { username: u, email: u.includes('@') ? u : `${u}@gmail.com`, password: p, uid: randomUid, avatar: '' };
+            saveAccounts(accounts);
+            alert('Đăng ký thành công!');
+            closeRegisterModal(); openAuthModal();
         }
 
         function handleLogin() {
-            let bannedHours = checkIsIpBanned();
-            if (bannedHours > 0) {
-                alert(`⚠️ Thiết bị của bạn (IP: ${clientUserIP}) đã bị khóa quyền truy cập do nhập sai thông tin Admin quá nhiều lần. Vui lòng thử lại sau ${bannedHours} giờ nữa!`);
-                return;
-            }
-
+            if (checkIsIpBanned() > 0) { alert('IP của bạn đang bị khóa tạm thời!'); return; }
             const u = document.getElementById('login-user').value.trim();
             const p = document.getElementById('login-pass').value.trim();
-            if (!u || !p) { alert('Vui lòng điền đầy đủ!'); return; }
+            if (!u || !p) { alert('Điền đủ thông tin!'); return; }
 
             let accounts = getAccounts();
             const key = u.toLowerCase();
 
             if (key === 'ngocdiemdang90@gmail.com' && p === 'Lolkchi2020k') {
                 pendingAdminData = { user: 'ngocdiemdang90@gmail.com' };
-                closeAuthModal();
-                openAdmin2FAModal();
-                return;
+                closeAuthModal(); openAdmin2FAModal(); return;
             }
 
             let foundKey = null;
             for (let k in accounts) {
-                if (k === key || (accounts[k].email && accounts[k].email.toLowerCase() === key) || (accounts[k].username && accounts[k].username === u)) {
-                    foundKey = k; break;
-                }
+                if (k === key || (accounts[k].email && accounts[k].email.toLowerCase() === key) || (accounts[k].username && accounts[k].username === u)) { foundKey = k; break; }
             }
 
             if (!foundKey || accounts[foundKey].password !== p) { alert('Sai tài khoản hoặc mật khẩu!'); return; }
-            
             currentUsername = foundKey;
             localStorage.setItem(USER_KEY, foundKey);
             updateAuthUI(); closeAuthModal();
@@ -1829,114 +1417,52 @@
         }
 
         function openAdmin2FAModal() {
-            let bannedHours = checkIsIpBanned();
-            if (bannedHours > 0) {
-                alert(`⚠️ IP của bạn (${clientUserIP}) đang bị khóa tạm thời ${bannedHours} tiếng do vượt quá giới hạn nhập sai mã bảo mật!`);
-                return;
-            }
-
+            if (checkIsIpBanned() > 0) { alert('IP bị khóa!'); return; }
             document.getElementById('admin-otp-code-input').value = '';
             document.getElementById('admin-secret-128-input').value = '';
             adminExpectedOtp = null;
-            
-            let remain = getRemainingFailedAttempts();
-            document.getElementById('admin-ban-warning').innerText = `⚠️ Cảnh báo: Còn lại ${remain}/10 lần thử sai trước khi IP bị khóa 24h.`;
+            document.getElementById('admin-ban-warning').innerText = `Còn lại ${getRemainingFailedAttempts()}/10 lần thử.`;
             document.getElementById('admin-2fa-modal').classList.remove('hidden');
         }
 
-        function closeAdmin2FAModal() {
-            document.getElementById('admin-2fa-modal').classList.add('hidden');
-            pendingAdminData = null;
-        }
+        function closeAdmin2FAModal() { document.getElementById('admin-2fa-modal').classList.add('hidden'); pendingAdminData = null; }
 
         function generateRandomBase32Secret128() {
-            const sampleSentences = [
-                "SHOPDATZIT IS THE MOST TRUSTED GAMING TOPUP STORE ONLINE 247",
-                "SECURITY IS THE TOP PRIORITY FOR ADMIN SYSTEM LOGINS TODAY",
-                "ALWAYS DOUBLE CHECK YOUR AUTHENTICATION CODE BEFORE LOGGING IN",
-                "PREVENT ALL BRUTE FORCE ATTACKS WITH DYNAMIC RANDOM BASE32 KEY",
-                "SUPER SECRET PASSCODE GENERATED AUTOMATICALLY FOR ADMIN LOGIN",
-                "REALTIME DATABASE SYNCHRONIZED WITH SUPABASE AND GOOGLE SHEETS",
-                "FAST TOPUP SERVICE WITH AUTOMATIC EMAIL NOTIFICATION SYSTEM NOW"
-            ];
-            
-            const randomSentence = sampleSentences[Math.floor(Math.random() * sampleSentences.length)];
             const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
-            let base32Str = "";
-            for (let i = 0; i < randomSentence.length; i++) {
-                const code = randomSentence.charCodeAt(i);
-                base32Str += chars[code % 32];
-            }
-            while (base32Str.length < 128) {
-                base32Str += chars[Math.floor(Math.random() * 32)];
-            }
-            return base32Str.substring(0, 128);
+            let s = "";
+            for (let i = 0; i < 128; i++) s += chars[Math.floor(Math.random() * chars.length)];
+            return s;
         }
 
         function sendAdminEmail3LayerSecurity() {
-            const btn = document.getElementById('btn-send-admin-3layer');
-            btn.innerHTML = '<span class="loader-spin"></span> ĐANG GỬI MÃ VỀ EMAIL...';
-            btn.disabled = true;
-
             adminExpectedOtp = Math.floor(100000 + Math.random() * 900000).toString();
             ADMIN_SECURE_SECRET_128 = generateRandomBase32Secret128();
-
-            const subject = "MÃ XÁC THỰC BẢO MẬT ADMIN - SHOPDATZIT";
-            const message = `Yêu cầu đăng nhập Admin ShopDatZit từ IP: ${clientUserIP}!\n\n- Mã OTP 6 số: ${adminExpectedOtp}\n- Mã bảo mật ngẫu nhiên lần này (128 ký tự): ${ADMIN_SECURE_SECRET_128}\n\nVui lòng copy chính xác mã 128 ký tự trên dán vào web để xác thực!`;
-
-            sendAutoEmail("ngocdiemdang90@gmail.com", subject, message, false, function() {
-                btn.innerHTML = '<i class="fa-solid fa-circle-check text-green-400"></i> ĐÃ GỬI MÃ VỀ EMAIL!';
-                btn.disabled = false;
-                alert("Mã OTP 6 số và khóa bảo mật 128 ký tự MỚI đã được gửi thành công đến Gmail Admin!");
-            }, function() {
-                btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> GỬI LẠI MÃ';
-                btn.disabled = false;
-                alert(`Gửi mail gặp sự cố!\n\n[MÃ TEST KHẨN CẤP]:\n- OTP 6 số: ${adminExpectedOtp}\n- Secret 128 ký tự: ${ADMIN_SECURE_SECRET_128}`);
+            sendAutoEmail("ngocdiemdang90@gmail.com", "Mã OTP Admin", `OTP: ${adminExpectedOtp}\nSecret: ${ADMIN_SECURE_SECRET_128}`, false, () => {
+                alert('Đã gửi mã đến Email Admin!');
+            }, () => {
+                alert(`OTP: ${adminExpectedOtp}\nSecret: ${ADMIN_SECURE_SECRET_128}`);
             });
         }
 
         function verifyAdmin3LayerSecurity() {
-            let bannedHours = checkIsIpBanned();
-            if (bannedHours > 0) {
-                alert(`⚠️ IP của bạn (${clientUserIP}) đã bị chặn trong 24h vì nhập sai quá nhiều lần!`);
-                closeAdmin2FAModal();
-                return;
-            }
-
+            if (checkIsIpBanned() > 0) { alert('IP bị khóa!'); closeAdmin2FAModal(); return; }
             const otpVal = document.getElementById('admin-otp-code-input').value.trim();
             const secretVal = document.getElementById('admin-secret-128-input').value.trim();
 
-            if (!otpVal) { alert("Vui lòng điền mã OTP 6 số!"); return; }
-            if (!secretVal) { alert("Vui lòng dán mã bảo mật 128 ký tự!"); return; }
-            if (!adminExpectedOtp) { alert("Vui lòng bấm nút 'GỬI MÃ XÁC THỰC VỀ EMAIL' trước!"); return; }
-
             if (otpVal !== adminExpectedOtp || secretVal !== ADMIN_SECURE_SECRET_128) {
-                let currentFails = recordFailedAdminAttempt();
-                let remain = Math.max(0, 10 - currentFails);
-
-                if (currentFails >= 10) {
-                    banCurrentIpFor24Hours();
-                    alert(`🚨 CẢNH BÁO BẢO MẬT: Bạn đã nhập sai quá 10 lần từ IP [${clientUserIP}]. Thiết bị của bạn đã bị BAN truy cập trang Admin trong vòng 24 giờ tới!`);
-                    closeAdmin2FAModal();
-                } else {
-                    alert(`❌ Mã xác thực không chính xác!\n- Bạn còn lại ${remain} lần thử trước khi IP bị khóa 24h.`);
-                    document.getElementById('admin-ban-warning').innerText = `⚠️ Cảnh báo: Còn lại ${remain}/10 lần thử sai trước khi IP bị khóa 24h.`;
-                }
+                let fails = recordFailedAdminAttempt();
+                if (fails >= 10) { banCurrentIpFor24Hours(); alert('IP bị khóa 24h!'); closeAdmin2FAModal(); }
+                else { alert(`Sai mã! Còn ${10 - fails} lần thử.`); }
                 return;
             }
-
             resetFailedAdminAttempt();
-
-            alert("Xác thực 3 lớp hoàn tất! Chào mừng Admin Đạt Zịt.");
             currentUsername = pendingAdminData.user;
             localStorage.setItem(USER_KEY, currentUsername);
-            closeAdmin2FAModal();
-            updateAuthUI();
-            switchView('admin');
+            closeAdmin2FAModal(); updateAuthUI(); switchView('admin');
         }
 
         function handleLogout() {
-            if(confirm("Xác nhận đăng xuất?")) {
+            if (confirm("Đăng xuất?")) {
                 localStorage.removeItem(USER_KEY);
                 currentUsername = null;
                 updateAuthUI();
@@ -1945,32 +1471,18 @@
         }
 
         async function switchView(viewName) {
-            const loadDuration = (viewName === 'home') ? 800 : 450;
-            triggerGlobalLoader(loadDuration);
-
+            triggerGlobalLoader(viewName === 'home' ? 800 : 450);
             document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
             document.getElementById('user-dropdown').classList.add('hidden');
             
-            if (viewName === 'home') { 
-                await fetchAndCalculateSolds(); 
-                renderGameList(); 
-                document.getElementById('home-view').classList.remove('hidden'); 
-            }
+            if (viewName === 'home') { await fetchAndCalculateSolds(); renderGameList(); document.getElementById('home-view').classList.remove('hidden'); }
             else if (viewName === 'profile') { if (!currentUsername) { openAuthModal(); return; } document.getElementById('profile-view').classList.remove('hidden'); }
             else if (viewName === 'history') { if (!currentUsername) { openAuthModal(); return; } document.getElementById('history-view').classList.remove('hidden'); renderHistory(); }
             else if (viewName === 'cskh') { document.getElementById('cskh-view').classList.remove('hidden'); }
-            else if (viewName === 'admin') { 
-                let bannedHours = checkIsIpBanned();
-                if (bannedHours > 0) {
-                    alert(`⚠️ IP của bạn (${clientUserIP}) đang nằm trong danh sách đen bị chặn truy cập quản trị!`);
-                    switchView('home');
-                    return;
-                }
-                if (!isAdmin()) { alert('Không có quyền Admin!'); switchView('home'); return; } 
-                document.getElementById('admin-view').classList.remove('hidden'); 
-                renderAdminOrders(); 
+            else if (viewName === 'admin') {
+                if (checkIsIpBanned() > 0 || !isAdmin()) { alert('Không có quyền!'); switchView('home'); return; }
+                document.getElementById('admin-view').classList.remove('hidden'); renderAdminOrders();
             }
-            
             syncNavActive(viewName); window.scrollTo(0, 0);
         }
 
@@ -1987,39 +1499,91 @@
 
             const pkgGrid = document.getElementById('package-grid');
             pkgGrid.innerHTML = '';
-            
-            if (!currentGame.packages || currentGame.packages.length === 0) {
-                pkgGrid.innerHTML = `<div class="col-span-full text-center text-gray-400 py-6 text-xs">⚠️ Gói nạp đang cập nhật giá cụ thể. Vui lòng quay lại sau!</div>`;
-            } else {
-                currentGame.packages.forEach((pkg, index) => {
-                    const delay = index * 0.05;
-                    pkgGrid.innerHTML += `
-                        <div onclick="selectPkg('${gameKey}', '${index}')" id="pkg-card-${index}" class="pkg-card pkg-animate bg-gray-900 border border-gray-700 p-3 rounded-xl cursor-pointer transition hover:border-accentBlue flex flex-col justify-between group" style="animation-delay: ${delay}s;">
-                            <div><p class="text-xs font-bold text-gray-200 mb-1 group-hover:text-white">${pkg.name}</p></div>
-                            <div class="flex items-center justify-between mt-3">
-                                <span class="text-accentBlue font-bold text-xs sm:text-sm">${pkg.price.toLocaleString('vi-VN')} đ</span>
-                                <span class="text-[9px] bg-blue-900/60 text-blue-300 px-2 py-0.5 rounded border border-blue-700">+ Thêm</span>
-                            </div>
+            currentGame.packages.forEach((pkg, index) => {
+                pkgGrid.innerHTML += `
+                    <div onclick="selectPkg('${gameKey}', '${index}')" class="pkg-card pkg-animate bg-gray-900 border border-gray-700 p-3 rounded-xl cursor-pointer transition hover:border-accentBlue flex flex-col justify-between group" style="animation-delay: ${index * 0.05}s;">
+                        <div><p class="text-xs font-bold text-gray-200 mb-1 group-hover:text-white">${pkg.name}</p></div>
+                        <div class="flex items-center justify-between mt-3">
+                            <span class="text-accentBlue font-bold text-xs sm:text-sm">${pkg.price.toLocaleString('vi-VN')} đ</span>
+                            <span class="text-[9px] bg-blue-900/60 text-blue-300 px-2 py-0.5 rounded border border-blue-700">+ Thêm</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Render order inputs based on Identity V or other games
+            const inputContainer = document.getElementById('order-inputs-container');
+            if (inputContainer) {
+                if (gameKey === 'identityv') {
+                    inputContainer.innerHTML = `
+                        <div>
+                            <label class="text-xs text-gray-400 block mb-1">Game ID (UID)</label>
+                            <input type="text" id="input-username" placeholder="Nhập game id" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-400 block mb-1">Server / Máy chủ</label>
+                            <select id="input-server" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
+                                <option value="">Vui lòng chọn server</option>
+                                <option value="Asia">Asia</option>
+                                <option value="NA and EU">NA and EU</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-400 block mb-1">Số điện thoại / Zalo (Tùy chọn)</label>
+                            <input type="text" id="input-phone" placeholder="Nhập SĐT/Zalo" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-400 block mb-1">Ghi chú từ khách hàng (Tùy chọn)</label>
+                            <input type="text" id="input-user-note" placeholder="Nhập ghi chú nếu có" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
                         </div>
                     `;
-                });
+                } else {
+                    inputContainer.innerHTML = `
+                        <div>
+                            <label class="text-xs text-gray-400 block mb-1">Email / Tài khoản đăng nhập</label>
+                            <input type="text" id="input-username" placeholder="Nhập email/tài khoản game" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-400 block mb-1">Mật khẩu</label>
+                            <div class="relative">
+                                <input type="password" id="input-password" placeholder="Nhập mật khẩu" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100 pr-10">
+                                <i class="fa-solid fa-eye absolute right-3 top-3 text-gray-400 cursor-pointer text-xs" onclick="togglePasswordVisibility('input-password')"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-400 block mb-1">Server / Máy chủ</label>
+                            <select id="input-server" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
+                                <option value="">Chọn máy chủ</option>
+                                <option value="Thẻ Cào / Mặc định">Thẻ Cào / Mặc định</option>
+                                <option value="Asia">Asia</option>
+                                <option value="America">America</option>
+                                <option value="Europe">Europe</option>
+                                <option value="TW/HK/MO">TW/HK/MO</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-400 block mb-1">Số điện thoại / Zalo</label>
+                            <input type="text" id="input-phone" placeholder="Nhập SĐT/Zalo" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="text-xs text-gray-400 block mb-1">Ghi chú từ khách hàng (Tùy chọn)</label>
+                            <textarea id="input-user-note" rows="2" placeholder="Ví dụ: Nhờ admin nạp nhanh..." class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100 resize-none"></textarea>
+                        </div>
+                    `;
+                }
             }
+
             renderCart(); window.scrollTo(0, 0);
         }
 
         function selectPkg(gameKey, index) {
             const game = gamesData[gameKey];
-            if (!game || !game.packages || game.packages.length === 0) return;
+            if (!game || !game.packages[index]) return;
             const pkg = game.packages[index];
-            if (!pkg) return;
-
             const cartId = gameKey + '_' + index;
-            const existingIndex = cart.findIndex(item => item.cartId === cartId);
-
-            if (existingIndex > -1) { cart[existingIndex].qty += 1; }
-            else {
-                cart.push({ cartId: cartId, gameKey: gameKey, gameName: game.name, pkgName: pkg.name, price: pkg.price, qty: 1 });
-            }
+            const existing = cart.find(item => item.cartId === cartId);
+            if (existing) existing.qty += 1;
+            else cart.push({ cartId, gameKey, gameName: game.name, pkgName: pkg.name, price: pkg.price, qty: 1 });
             renderCart();
         }
 
@@ -2031,11 +1595,7 @@
             renderCart();
         }
 
-        function removeCartItem(index) {
-            if (cart[index]) cart.splice(index, 1);
-            renderCart();
-        }
-
+        function removeCartItem(index) { cart.splice(index, 1); renderCart(); }
         function clearCart() { cart = []; renderCart(); }
 
         function renderCart() {
@@ -2051,40 +1611,27 @@
             }
 
             let totalAmount = 0;
-            let html = `
-                <div class="flex justify-between items-center border-b border-gray-800 pb-2 mb-3">
-                    <span class="font-bold text-xs text-white">Giỏ hàng (${cart.length} món)</span>
-                    <button onclick="clearCart()" class="text-[10px] text-red-400 hover:underline cursor-pointer"><i class="fa-solid fa-trash-can mr-1"></i>Xóa tất cả</button>
-                </div>
-                <div class="space-y-2.5 max-h-64 overflow-y-auto pr-1">
-            `;
+            let html = `<div class="flex justify-between items-center border-b border-gray-800 pb-2 mb-3"><span class="font-bold text-xs text-white">Giỏ hàng (${cart.length})</span><button onclick="clearCart()" class="text-[10px] text-red-400 hover:underline cursor-pointer">Xóa tất cả</button></div><div class="space-y-2.5 max-h-64 overflow-y-auto pr-1">`;
 
             cart.forEach((item, idx) => {
-                const itemTotal = item.price * item.qty;
-                totalAmount += itemTotal;
+                totalAmount += item.price * item.qty;
                 html += `
                     <div class="bg-gray-900 p-2.5 rounded-lg border border-gray-800 space-y-2">
                         <div class="flex justify-between items-start">
-                            <div>
-                                <div class="font-bold text-xs text-white">${item.gameName}</div>
-                                <div class="text-[10px] text-accentBlue">${item.pkgName}</div>
-                            </div>
-                            <button onclick="removeCartItem(${idx})" class="text-gray-500 hover:text-red-400 text-xs p-1 cursor-pointer" title="Xóa"><i class="fa-solid fa-xmark"></i></button>
+                            <div><div class="font-bold text-xs text-white">${item.gameName}</div><div class="text-[10px] text-accentBlue">${item.pkgName}</div></div>
+                            <button onclick="removeCartItem(${idx})" class="text-gray-500 hover:text-red-400 text-xs"><i class="fa-solid fa-xmark"></i></button>
                         </div>
                         <div class="flex justify-between items-center pt-1 border-t border-gray-800/60">
                             <div class="flex items-center space-x-1.5 bg-gray-800 rounded-md p-0.5 border border-gray-700">
-                                <button onclick="updateCartQty(${idx}, -1)" class="w-4 h-4 flex items-center justify-center text-xs font-bold text-gray-300 hover:bg-gray-700 rounded cursor-pointer">-</button>
-                                <span class="text-xs font-bold text-white px-1 select-all">${item.qty}</span>
-                                <button onclick="updateCartQty(${idx}, 1)" class="w-4 h-4 flex items-center justify-center text-xs font-bold text-gray-300 hover:bg-gray-700 rounded cursor-pointer">+</button>
+                                <button onclick="updateCartQty(${idx}, -1)" class="w-4 h-4 text-xs font-bold text-gray-300">-</button>
+                                <span class="text-xs font-bold text-white px-1">${item.qty}</span>
+                                <button onclick="updateCartQty(${idx}, 1)" class="w-4 h-4 text-xs font-bold text-gray-300">+</button>
                             </div>
-                            <div class="text-right">
-                                <span class="font-bold text-xs text-green-400 select-all">${itemTotal.toLocaleString('vi-VN')} đ</span>
-                            </div>
+                            <span class="font-bold text-xs text-green-400">${(item.price * item.qty).toLocaleString('vi-VN')} đ</span>
                         </div>
                     </div>
                 `;
             });
-
             html += `</div>`;
             summaryContainer.innerHTML = html;
             if (cartTotalEl) cartTotalEl.innerText = totalAmount.toLocaleString('vi-VN') + ' đ';
@@ -2093,12 +1640,11 @@
 
         function openPaymentModal() {
             if (!currentUsername) { openAuthModal(); return; }
-            if (!cart || cart.length === 0) { alert("Giỏ hàng của bạn đang trống!"); return; }
+            if (!cart || cart.length === 0) { alert("Giỏ hàng trống!"); return; }
 
             const amount = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
             document.getElementById('modal-amount').innerText = amount.toLocaleString('vi-VN') + ' đ';
-            const qrUrl = `https://img.vietqr.io/image/VCB-1065342786-compact.png?amount=${amount}&addInfo=datzit312&accountName=DANG%20VAN%20TIEN%20DAT`;
-            document.getElementById('viet-qr-img').src = qrUrl;
+            document.getElementById('viet-qr-img').src = `https://img.vietqr.io/image/VCB-1065342786-compact.png?amount=${amount}&addInfo=datzit312&accountName=DANG%20VAN%20TIEN%20DAT`;
             document.getElementById('payment-modal').classList.remove('hidden');
 
             let countdown = 30;
@@ -2107,104 +1653,12 @@
             paymentTimer = setInterval(() => {
                 countdown--;
                 document.getElementById('payment-countdown').innerText = countdown;
-                if (countdown <= 0) {
-                    clearInterval(paymentTimer); closePaymentModal();
-                    createOrderAndFinish('Chờ duyệt thanh toán');
-                }
+                if (countdown <= 0) { clearInterval(paymentTimer); closePaymentModal(); createOrderAndFinish('Chờ duyệt thanh toán'); }
             }, 1000);
         }
 
-        function closePaymentModal() {
-            if (paymentTimer) clearInterval(paymentTimer);
-            document.getElementById('payment-modal').classList.add('hidden');
-        }
-
+        function closePaymentModal() { if (paymentTimer) clearInterval(paymentTimer); document.getElementById('payment-modal').classList.add('hidden'); }
         function confirmOrderClient() { closePaymentModal(); createOrderAndFinish('Chờ duyệt thanh toán'); }
-
-        function sendAdminNewOrderEmail(order) {
-            const subject = `DON HANG MOI ${order.code} - SHOPDATZIT.SITE`;
-            const message = `Đơn hàng mới ${order.code} vừa được tạo!\n- Khách: ${order.customer_name}\n- Tổng tiền: ${order.price.toLocaleString('vi-VN')} đ.\nVui lòng vào trang Admin để kiểm tra và duyệt đơn.`;
-            sendAutoEmail("ngocdiemdang90@gmail.com", subject, message, false);
-        }
-
-        function sendCompletedOrderEmailForCustomer(order, customerEmail) {
-            const subject = `Don hang ${order.code} - Hoan thanh`;
-
-            let itemsHtml = '';
-            if (order.items && order.items.length > 0) {
-                order.items.forEach(item => {
-                    itemsHtml += `
-                        <tr>
-                            <td style="padding: 10px 0; border-bottom: 1px solid #2a2a2a; color: #ffffff; font-size: 13px;">${item.gameName} - ${item.pkgName}</td>
-                            <td style="padding: 10px 0; border-bottom: 1px solid #2a2a2a; color: #ffffff; text-align: center; font-size: 13px;">${item.qty}</td>
-                            <td style="padding: 10px 0; border-bottom: 1px solid #2a2a2a; color: #22c55e; text-align: right; font-size: 13px; font-weight: bold;">${(item.price * item.qty).toLocaleString('vi-VN')} VND</td>
-                        </tr>
-                    `;
-                });
-            } else {
-                itemsHtml = `
-                    <tr>
-                        <td style="padding: 10px 0; border-bottom: 1px solid #2a2a2a; color: #ffffff; font-size: 13px;">${order.game} (${order.package})</td>
-                        <td style="padding: 10px 0; border-bottom: 1px solid #2a2a2a; color: #ffffff; text-align: center; font-size: 13px;">${order.total_qty || 1}</td>
-                        <td style="padding: 10px 0; border-bottom: 1px solid #2a2a2a; color: #22c55e; text-align: right; font-size: 13px; font-weight: bold;">${order.price.toLocaleString('vi-VN')} VND</td>
-                    </tr>
-                `;
-            }
-
-            const htmlMessage = `
-                <div style="background-color: #121212; padding: 20px; font-family: 'Poppins', Arial, sans-serif; color: #ffffff;">
-                    <div style="max-width: 480px; margin: 0 auto; background-color: #1e1e1e; border-radius: 16px; border: 1px solid #2a2a2a; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
-                        <div style="height: 4px; background: linear-gradient(90deg, #3b82f6, #22c55e);"></div>
-                        <div style="padding: 24px;">
-                            <h2 style="font-size: 20px; font-weight: bold; color: #ffffff; margin-top: 0; margin-bottom: 16px; border-bottom: 1px solid #2a2a2a; padding-bottom: 12px;">
-                                Don hang ${order.code}
-                            </h2>
-                            <p style="font-size: 14px; color: #d1d5db; margin-bottom: 16px;">
-                                Xin chao <b>${order.customer_name}</b>,
-                            </p>
-                            <p style="font-size: 14px; color: #d1d5db; margin-bottom: 20px;">
-                                Don hang cua ban da hoan thanh thanh cong.
-                            </p>
-                            <div style="background-color: #15221b; border: 1px solid #14532d; border-radius: 12px; padding: 14px; margin-bottom: 20px;">
-                                <table style="width: 100%; border-collapse: collapse;">
-                                    <tr>
-                                        <td style="color: #86efac; font-size: 13px; padding-bottom: 8px;">Trang thai</td>
-                                        <td style="color: #86efac; font-size: 13px; text-align: right; font-weight: bold; padding-bottom: 8px;">Hoan thanh</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="color: #86efac; font-size: 13px; padding-bottom: 8px;">Ngay</td>
-                                        <td style="color: #86efac; font-size: 13px; text-align: right; padding-bottom: 8px;">${order.time.split(' ')[0]}</td>
-                                    </tr>
-                                    <tr>
-                                        <td style="color: #86efac; font-size: 13px;">Tong cong</td>
-                                        <td style="color: #86efac; font-size: 14px; text-align: right; font-weight: bold;">${order.price.toLocaleString('vi-VN')} VND</td>
-                                    </tr>
-                                </table>
-                            </div>
-                            <div style="background-color: #121212; border: 1px solid #2a2a2a; border-radius: 12px; padding: 14px; margin-bottom: 20px;">
-                                <table style="width: 100%; border-collapse: collapse;">
-                                    <thead>
-                                        <tr>
-                                            <th style="color: #9ca3af; font-size: 11px; text-align: left; padding-bottom: 8px; border-bottom: 1px solid #2a2a2a;">San pham</th>
-                                            <th style="color: #9ca3af; font-size: 11px; text-align: center; padding-bottom: 8px; border-bottom: 1px solid #2a2a2a;">SL</th>
-                                            <th style="color: #9ca3af; font-size: 11px; text-align: right; padding-bottom: 8px; border-bottom: 1px solid #2a2a2a;">Gia</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        ${itemsHtml}
-                                    </tbody>
-                                </table>
-                            </div>
-                            <p style="font-size: 11px; color: #6b7280; text-align: center; margin-top: 24px; border-top: 1px solid #2a2a2a; padding-top: 16px;">
-                                ShopDatZit | Email nay duoc gui tu dong, vui long khong tra loi.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            sendAutoEmail(customerEmail, subject, htmlMessage, true);
-        }
 
         async function createOrderAndFinish(status) {
             const randomCode = Math.floor(100000 + Math.random() * 900000);
@@ -2214,18 +1668,14 @@
                 const totalAmount = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
                 const totalQty = cart.reduce((sum, i) => sum + i.qty, 0);
 
-                let gameSummary = cart.length === 1 ? cart[0].gameName : `Nhiều dịch vụ (${cart.length} loại)`;
-                let packageSummary = cart.map(i => `${i.pkgName} (x${i.qty})`).join(', ');
-
-                const userNote = document.getElementById('input-user-note').value.trim();
-
+                const passEl = document.getElementById('input-password');
                 const newOrder = {
                     id: 'ORD_' + now, 
                     code: '#' + randomCode, 
                     customer_name: currentUsername,
                     uid: accounts[currentUsername].uid || '10000', 
-                    game: gameSummary, 
-                    package: packageSummary,
+                    game: cart.length === 1 ? cart[0].gameName : `Nhiều dịch vụ (${cart.length})`, 
+                    package: cart.map(i => `${i.pkgName} (x${i.qty})`).join(', '),
                     total_qty: totalQty, 
                     items: cart, 
                     price: totalAmount,
@@ -2233,24 +1683,17 @@
                     timestamp: now, 
                     status: status,
                     input_user: document.getElementById('input-username').value || 'Không có',
-                    input_pass: document.getElementById('input-password').value || 'Không có',
+                    input_pass: passEl ? passEl.value : 'Không yêu cầu',
                     input_server: document.getElementById('input-server').value || 'Mặc định',
-                    input_note: userNote || 'Không có'
+                    input_note: (document.getElementById('input-user-note') ? document.getElementById('input-user-note').value : '') || 'Không có'
                 };
 
                 const { error } = await supabaseClient.from('orders').insert([newOrder]);
+                if (error) { alert('Lỗi tạo đơn: ' + error.message); return; }
 
-                if (error) {
-                    alert('Lỗi tạo đơn hàng: ' + error.message);
-                    return;
-                }
-
-                sendAdminNewOrderEmail(newOrder);
                 clearCart(); 
-                document.getElementById('input-user-note').value = '';
                 await fetchAndCalculateSolds();
                 renderGameList();
-
                 document.getElementById('success-token-modal').classList.remove('hidden');
             }
         }
@@ -2261,86 +1704,64 @@
         }
 
         async function openOrderDetail(orderId) {
-            const { data: orders, error } = await supabaseClient
-                .from('orders')
-                .select('*')
-                .eq('id', orderId);
-
-            if (error || !orders || orders.length === 0) return;
+            const { data: orders } = await supabaseClient.from('orders').select('*').eq('id', orderId);
+            if (!orders || orders.length === 0) return;
             const order = orders[0];
-
             const body = document.getElementById('order-detail-body');
             const is24hPassed = (Date.now() - (order.timestamp || 0)) >= EXPIRE_TIME_MS;
-
-            let displayStatus = order.status;
-            if (order.status.includes('Chờ duyệt') && is24hPassed) displayStatus = 'Admin Đã Hoàn Thành Đơn';
+            let displayStatus = (order.status.includes('Chờ duyệt') && is24hPassed) ? 'Admin Đã Hoàn Thành Đơn' : order.status;
 
             let itemsListHtml = '';
             if (order.items && order.items.length > 0) {
-                itemsListHtml = `<div class="bg-gray-950 p-2.5 rounded-lg border border-gray-800 space-y-1.5"><div class="font-bold text-accentBlue text-xs mb-1 border-b border-gray-800 pb-1">🛒 Các món đã đặt mua (${order.total_qty || order.items.length} cái):</div>`;
+                itemsListHtml = `<div class="bg-gray-950 p-2.5 rounded-lg border border-gray-800 space-y-1.5"><div class="font-bold text-accentBlue text-xs mb-1">🛒 Gói đã đặt:</div>`;
                 order.items.forEach(item => {
-                    itemsListHtml += `<div class="flex justify-between items-center text-[10px] sm:text-[11px] border-b border-gray-800/40 pb-1"><div><span class="text-white font-bold select-all">${item.gameName}</span> - <span class="text-gray-300 select-all">${item.pkgName}</span><span class="text-yellow-400 font-bold ml-1">x${item.qty}</span></div><span class="text-green-400 font-bold select-all">${(item.price * item.qty).toLocaleString('vi-VN')} đ</span></div>`;
+                    itemsListHtml += `<div class="flex justify-between items-center text-[11px] border-b border-gray-800/40 pb-1"><div><span class="text-white font-bold">${item.gameName}</span> - ${item.pkgName} x${item.qty}</div><span class="text-green-400 font-bold">${(item.price * item.qty).toLocaleString('vi-VN')} đ</span></div>`;
                 });
                 itemsListHtml += `</div>`;
-            } else {
-                itemsListHtml = `<div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Dịch vụ/Game:</span><span class="font-bold text-white select-all">${order.game}</span></div><div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Gói nạp / Mệnh giá:</span><span class="font-bold text-accentBlue select-all">${order.package}</span></div>`;
             }
-
-            let statusRenderHtml = (displayStatus === 'Admin Đã Hoàn Thành Đơn' || (order.status.includes('Chờ duyệt') && is24hPassed)) ? `<span class="px-2 py-0.5 rounded-lg border text-[11px] font-bold text-green-400 bg-green-950/50 border-green-800 flex items-center space-x-1 w-max"><i class="fa-solid fa-circle-check"></i> <span>Admin Đã Hoàn Thành Đơn</span></span>` : `<span class="font-bold ${displayStatus.includes('Thành Công') ? 'text-green-400' : (displayStatus.includes('Hủy') ? 'text-red-400' : 'text-yellow-400')}">${displayStatus}</span>`;
-
-            let cancelReasonHtml = (order.cancel_reason && order.status.includes('Hủy')) ? `<div class="bg-red-950/40 p-2.5 rounded-lg border border-red-800/80 text-red-300 font-bold text-[11px] mt-1"><i class="fa-solid fa-circle-exclamation mr-1"></i> Lý do hủy đơn từ Admin: <span class="text-white font-normal select-all">${order.cancel_reason}</span></div>` : '';
-
-            let userNoteHtml = (order.input_note && order.input_note !== 'Không có') ? `<div class="flex justify-between items-start border-t border-gray-800/60 pt-1.5 mt-1"><span class="text-gray-400">Ghi chú của khách:</span><span class="font-bold text-yellow-300 text-right max-w-[180px] select-all">${order.input_note}</span></div>` : '';
 
             body.innerHTML = `
                 <div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Mã đơn:</span><span class="font-bold text-white select-all">${order.code}</span></div>
                 <div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Thời gian:</span><span class="text-gray-200 select-all">${order.time}</span></div>
-                <div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Khách hàng:</span><span class="font-bold text-accentBlue select-all">${order.customer_name} (UID: ${order.uid})</span></div>
                 ${itemsListHtml}
-                <div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Tổng thanh toán:</span><span class="font-bold text-green-400 text-xs sm:text-sm select-all">${order.price.toLocaleString('vi-VN')} đ</span></div>
-                <div class="flex justify-between border-b border-gray-800 pb-1.5 items-center"><span class="text-gray-400">Trạng thái:</span>${statusRenderHtml}</div>
-                ${cancelReasonHtml}
+                <div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Tổng thanh toán:</span><span class="font-bold text-green-400 select-all">${order.price.toLocaleString('vi-VN')} đ</span></div>
+                <div class="flex justify-between border-b border-gray-800 pb-1.5 items-center"><span class="text-gray-400">Trạng thái:</span><span class="font-bold text-green-400">${displayStatus}</span></div>
                 <div class="bg-gray-950 p-2.5 rounded-lg border border-gray-800 space-y-1.5 mt-2">
-                    <div class="flex justify-between items-center"><span class="text-gray-400">Tài khoản / SĐT:</span><span class="font-bold text-white select-all">${order.input_user}</span></div>
-                    <div class="flex justify-between items-center"><span class="text-gray-400">Mật khẩu game:</span><div class="flex items-center space-x-2"><input type="password" id="modal-pass-${order.id}" value="${order.input_pass}" readonly class="bg-transparent text-right font-bold text-white w-24 focus:outline-none select-all"><i class="fa-solid fa-eye text-gray-400 cursor-pointer text-xs" onclick="toggleModalPass('${order.id}')"></i></div></div>
-                    <div class="flex justify-between items-center"><span class="text-gray-400">Server / Ghi chú:</span><span class="font-bold text-white select-all">${order.input_server}</span></div>
-                    ${userNoteHtml}
+                    <div class="flex justify-between items-center"><span class="text-gray-400">Tài khoản / UID:</span><span class="font-bold text-white select-all">${order.input_user}</span></div>
+                    <div class="flex justify-between items-center"><span class="text-gray-400">Mật khẩu:</span><span class="font-bold text-white select-all">${order.input_pass}</span></div>
+                    <div class="flex justify-between items-center"><span class="text-gray-400">Server:</span><span class="font-bold text-white select-all">${order.input_server}</span></div>
                 </div>
             `;
             document.getElementById('order-detail-modal').classList.remove('hidden');
         }
 
-        function toggleModalPass(id) { const input = document.getElementById(`modal-pass-${id}`); if (input) input.type = input.type === 'password' ? 'text' : 'password'; }
         function closeOrderDetailModal() { document.getElementById('order-detail-modal').classList.add('hidden'); }
 
         async function renderHistory() {
             const container = document.getElementById('history-container');
             if (!container || !currentUsername) return;
 
-            const { data: orders, error } = await supabaseClient
-                .from('orders')
-                .select('*')
-                .eq('customer_name', currentUsername)
-                .order('timestamp', { ascending: false });
-
-            if (error || !orders || orders.length === 0) {
+            const { data: orders } = await supabaseClient.from('orders').select('*').eq('customer_name', currentUsername).order('timestamp', { ascending: false });
+            if (!orders || orders.length === 0) {
                 container.innerHTML = `<div class="bg-cardBg p-6 rounded-xl border border-gray-800 text-center text-gray-400 text-xs">Bạn chưa có đơn nạp nào.</div>`;
                 return;
             }
 
             container.innerHTML = '';
             orders.forEach((ord) => {
-                let is24hPassed = (Date.now() - (ord.timestamp || 0)) >= EXPIRE_TIME_MS;
-                let displayStatus = ord.status;
-                let statusBadgeHtml = (displayStatus === 'Admin Đã Hoàn Thành Đơn' || (ord.status.includes('Chờ duyệt') && is24hPassed)) ? `<span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-green-400 border-green-800 bg-green-950/50 flex items-center space-x-1"><i class="fa-solid fa-circle-check"></i> <span>Admin Đã Hoàn Thành Đơn</span></span>` : (displayStatus.includes('Thành Công') ? `<span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-green-400 border-green-800 bg-green-950/50">${displayStatus}</span>` : (displayStatus.includes('Hủy') ? `<span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-red-400 border-red-800 bg-green-950/50">${displayStatus}</span>` : `<span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-yellow-400 border-yellow-800 bg-yellow-950/50">${displayStatus}</span>`));
-
-                let cancelReasonShort = (ord.cancel_reason && ord.status.includes('Hủy')) ? `<div class="text-[11px] text-red-400 mt-1 flex items-center select-all"><i class="fa-solid fa-circle-info mr-1"></i> Lý do hủy: ${ord.cancel_reason}</div>` : '';
-
                 container.innerHTML += `
-                    <div class="bg-cardBg p-3.5 rounded-xl border border-gray-800 space-y-2.5 shadow-sm hover:border-accentBlue transition">
-                        <div class="flex justify-between items-center border-b border-gray-800 pb-2"><span class="font-bold text-white text-xs select-all">${ord.code}</span><span class="text-[10px] text-gray-400 select-all">${ord.time}</span></div>
-                        <div class="flex justify-between items-center text-xs"><div><div class="font-bold text-accentBlue text-xs sm:text-sm select-all">${ord.game}</div><div class="text-gray-300 text-[11px] mt-0.5 select-all">${ord.package}</div>${cancelReasonShort}</div><div class="text-right flex flex-col items-end space-y-1.5"><div class="font-bold text-green-400 text-xs sm:text-sm select-all">${ord.price.toLocaleString('vi-VN')} đ</div>${statusBadgeHtml}</div></div>
-                        <div class="pt-2 border-t border-gray-800/60 flex justify-between items-center"><span class="text-[10px] text-gray-400">Trạng thái đơn</span><button onclick="openOrderDetail('${ord.id}')" class="bg-gray-800 hover:bg-gray-700 text-accentBlue px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer border border-gray-700 flex items-center"><i class="fa-solid fa-eye mr-1"></i> Chi tiết đơn hàng</button></div>
+                    <div class="bg-cardBg p-3.5 rounded-xl border border-gray-800 space-y-2.5 shadow-sm">
+                        <div class="flex justify-between items-center border-b border-gray-800 pb-2"><span class="font-bold text-white text-xs">${ord.code}</span><span class="text-[10px] text-gray-400">${ord.time}</span></div>
+                        <div class="flex justify-between items-center text-xs">
+                            <div><div class="font-bold text-accentBlue text-xs">${ord.game}</div><div class="text-gray-300 text-[11px] mt-0.5">${ord.package}</div></div>
+                            <div class="text-right flex flex-col items-end space-y-1.5">
+                                <div class="font-bold text-green-400 text-xs">${ord.price.toLocaleString('vi-VN')} đ</div>
+                                <span class="px-2 py-0.5 rounded-lg border text-[10px] font-bold text-yellow-400 border-yellow-800 bg-yellow-950/50">${ord.status}</span>
+                            </div>
+                        </div>
+                        <div class="pt-2 border-t border-gray-800/60 flex justify-end">
+                            <button onclick="openOrderDetail('${ord.id}')" class="bg-gray-800 hover:bg-gray-700 text-accentBlue px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer border border-gray-700">Chi tiết</button>
+                        </div>
                     </div>
                 `;
             });
@@ -2350,65 +1771,36 @@
             const container = document.getElementById('admin-orders-container');
             if (!container || !isAdmin()) return;
 
-            const { data: orders, error } = await supabaseClient
-                .from('orders')
-                .select('*')
-                .order('timestamp', { ascending: false });
-
-            if (error || !orders || orders.length === 0) {
-                container.innerHTML = `<div class="bg-cardBg p-6 rounded-xl border border-gray-800 text-center text-gray-400 text-xs">Chưa có đơn nào trên hệ thống.</div>`;
+            const { data: orders } = await supabaseClient.from('orders').select('*').order('timestamp', { ascending: false });
+            if (!orders || orders.length === 0) {
+                container.innerHTML = `<div class="bg-cardBg p-6 rounded-xl border border-gray-800 text-center text-gray-400 text-xs">Chưa có đơn hàng nào.</div>`;
                 return;
             }
 
             container.innerHTML = '';
             orders.forEach((ord) => {
                 let isPending = ord.status.includes('Chờ duyệt');
-                let userNoteHtml = (ord.input_note && ord.input_note !== 'Không có') ? `<div class="text-[11px] text-yellow-300 mt-1 select-all"><b>Khách nhắn:</b> ${ord.input_note}</div>` : '';
-                
                 container.innerHTML += `
-                    <div class="bg-cardBg p-3.5 rounded-xl border border-gray-800 space-y-2.5 shadow-sm hover:border-gray-600 transition">
-                        <div class="flex justify-between items-center border-b border-gray-800 pb-2"><span class="font-bold text-gray-300 text-[11px] select-all">${ord.code} - Khách: <span class="text-white">${ord.customer_name}</span> <span class="text-accentBlue">(UID: ${ord.uid})</span></span><span class="text-[10px] text-gray-500 select-all">${ord.time}</span></div>
-                        <div class="flex justify-between items-center text-xs"><div><div class="font-bold text-white text-xs sm:text-sm select-all">${ord.game}</div><div class="text-accentBlue text-[11px] mb-0.5 select-all">${ord.package}</div><div class="text-green-400 font-bold text-xs select-all">${ord.price.toLocaleString('vi-VN')} đ</div>${userNoteHtml}</div><div class="flex flex-col items-end space-y-1.5">${isPending ? `<button onclick="adminConfirmOrder('${ord.id}')" class="bg-green-600 hover:bg-green-700 w-full text-white px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition shadow">Nạp Thành Công</button><button onclick="openCancelReasonModal('${ord.id}')" class="bg-gray-700 hover:bg-red-700 w-full text-white px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer transition shadow">Hủy Đơn</button>` : `<span class="px-2 py-0.5 rounded border text-[11px] font-bold ${ord.status.includes('Thành Công') || ord.status.includes('Hoàn Thành') ? 'bg-green-950/50 text-green-400 border-green-800' : 'bg-red-950/50 text-red-400 border-red-800'}">${ord.status}</span>`}</div></div>
-                        <div class="pt-1.5 border-t border-gray-800/60 flex justify-end"><button onclick="openOrderDetail('${ord.id}')" class="bg-gray-800 hover:bg-gray-700 text-accentBlue px-2.5 py-1 rounded-lg text-[11px] font-bold transition cursor-pointer border border-gray-700 flex items-center"><i class="fa-solid fa-eye mr-1"></i> Xem Chi Tiết</button></div>
+                    <div class="bg-cardBg p-3.5 rounded-xl border border-gray-800 space-y-2.5">
+                        <div class="flex justify-between items-center border-b border-gray-800 pb-2"><span class="font-bold text-gray-300 text-[11px]">${ord.code} - Khách: ${ord.customer_name}</span><span class="text-[10px] text-gray-500">${ord.time}</span></div>
+                        <div class="flex justify-between items-center text-xs">
+                            <div><div class="font-bold text-white">${ord.game}</div><div class="text-accentBlue text-[11px]">${ord.package}</div><div class="text-green-400 font-bold">${ord.price.toLocaleString('vi-VN')} đ</div></div>
+                            <div class="flex flex-col items-end space-y-1.5">
+                                ${isPending ? `<button onclick="adminConfirmOrder('${ord.id}')" class="bg-green-600 hover:bg-green-700 text-white px-2.5 py-1 rounded text-[11px] font-bold cursor-pointer">Duyệt</button><button onclick="openCancelReasonModal('${ord.id}')" class="bg-red-600 hover:bg-red-700 text-white px-2.5 py-1 rounded text-[11px] font-bold cursor-pointer">Hủy</button>` : `<span class="text-green-400 font-bold text-xs">${ord.status}</span>`}
+                            </div>
+                        </div>
                     </div>
                 `;
             });
         }
 
         async function adminConfirmOrder(orderId) {
-            const { data: fetchedOrders, error: fetchErr } = await supabaseClient
-                .from('orders')
-                .select('*')
-                .eq('id', orderId);
-
-            if (fetchErr || !fetchedOrders || fetchedOrders.length === 0) {
-                alert('Không tìm thấy thông tin đơn hàng!');
-                return;
-            }
-            const order = fetchedOrders[0];
-
-            const { error } = await supabaseClient
-                .from('orders')
-                .update({ status: 'Đã Nạp Thành Công' })
-                .eq('id', orderId);
-
-            if (error) {
-                alert('Lỗi cập nhật: ' + error.message);
-            } else { 
-                let targetCustomerEmail = "ngocdiemdang90@gmail.com";
-                let accounts = getAccounts();
-                if (order.customer_name && accounts[order.customer_name] && accounts[order.customer_name].email) {
-                    targetCustomerEmail = accounts[order.customer_name].email;
-                } else if (order.input_user && order.input_user.includes('@')) {
-                    targetCustomerEmail = order.input_user;
-                }
-
-                sendCompletedOrderEmailForCustomer(order, targetCustomerEmail);
-
+            const { error } = await supabaseClient.from('orders').update({ status: 'Đã Nạp Thành Công' }).eq('id', orderId);
+            if (!error) {
                 await fetchAndCalculateSolds();
                 renderGameList();
-                renderAdminOrders(); 
-                alert('Đã duyệt đơn, gửi email hoàn thành xịn sò cho khách và cộng lượt Đã Bán thành công!'); 
+                renderAdminOrders();
+                alert('Đã duyệt đơn thành công!');
             }
         }
 
@@ -2418,61 +1810,25 @@
             document.getElementById('cancel-reason-modal').classList.remove('hidden');
         }
 
-        function closeCancelReasonModal() {
-            document.getElementById('cancel-reason-modal').classList.add('hidden');
-            cancelTargetOrderId = null;
-        }
+        function closeCancelReasonModal() { document.getElementById('cancel-reason-modal').classList.add('hidden'); cancelTargetOrderId = null; }
 
         async function submitCancelOrderWithReason() {
             if (!cancelTargetOrderId) return;
-            const reason = document.getElementById('cancel-reason-input').value.trim() || 'Admin Hủy Đơn';
-
-            const { error } = await supabaseClient
-                .from('orders')
-                .update({ status: 'Đã Hủy', cancel_reason: reason })
-                .eq('id', cancelTargetOrderId);
-
-            if (error) alert('Lỗi cập nhật: ' + error.message);
-            else { 
-                closeCancelReasonModal();
-                renderAdminOrders(); 
-                alert('Đã hủy đơn thành công!'); 
-            }
+            const reason = document.getElementById('cancel-reason-input').value.trim() || 'Admin Hủy';
+            const { error } = await supabaseClient.from('orders').update({ status: 'Đã Hủy', cancel_reason: reason }).eq('id', cancelTargetOrderId);
+            if (!error) { closeCancelReasonModal(); renderAdminOrders(); alert('Đã hủy đơn!'); }
         }
 
         async function adminClearAllOrders() {
             if (!isAdmin()) return;
-            if (confirm("⚠️ XÁC NHẬN DỌN TRỐNG ĐƠN HÀNG?\nThao tác này sẽ xóa toàn bộ đơn hàng hiện có trên Supabase. Lịch sử của khách lẫn admin sẽ về 0 và không thể khôi phục!")) {
-                const { data: allOrders, error: fetchErr } = await supabaseClient.from('orders').select('id');
-                if (fetchErr) {
-                    alert('Lỗi tải danh sách đơn hàng: ' + fetchErr.message);
-                    return;
+            if (confirm("⚠️ XÁC NHẬN DỌN TRỐNG TẤT CẢ ĐƠN HÀNG?")) {
+                const { data: allOrders } = await supabaseClient.from('orders').select('id');
+                if (allOrders) {
+                    for (let ord of allOrders) await supabaseClient.from('orders').delete().eq('id', ord.id);
                 }
-
-                if (!allOrders || allOrders.length === 0) {
-                    alert('Hệ thống hiện tại không có đơn hàng nào để xóa!');
-                    return;
-                }
-
-                let hasError = false;
-                for (let ord of allOrders) {
-                    const { error: delErr } = await supabaseClient.from('orders').delete().eq('id', ord.id);
-                    if (delErr) {
-                        hasError = true;
-                        console.error("Lỗi xóa đơn ID:", ord.id, delErr);
-                    }
-                }
-
-                if (hasError) {
-                    alert('Một số đơn hàng xóa không thành công do quy tắc bảo mật Supabase!');
-                } else {
-                    alert('Đã dọn sạch toàn bộ đơn hàng thành công!');
-                }
-
                 await fetchAndCalculateSolds();
-                renderGameList();
-                renderAdminOrders();
-                renderHistory();
+                renderGameList(); renderAdminOrders(); renderHistory();
+                alert('Đã dọn sạch đơn hàng!');
             }
         }
     </script>
