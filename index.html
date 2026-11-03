@@ -233,6 +233,16 @@
         .u026.is-bad .u026-msg{color:var(--ux-danger)}
         .u026-live{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
         .u026-real:focus-visible{outline:none}
+
+        /* Highlight style cho các từ khóa tìm kiếm trùng khớp */
+        .highlight-match {
+            background-color: rgba(34, 197, 94, 0.25);
+            color: #4ade80;
+            font-weight: 700;
+            padding: 1px 3px;
+            border-radius: 4px;
+            border: 1px solid rgba(34, 197, 94, 0.4);
+        }
     </style>
 </head>
 <body class="bg-darkBg text-gray-100 font-sans min-h-screen flex flex-col pb-28 md:pb-12 transition-colors duration-300">
@@ -390,7 +400,7 @@
             </div>
         </div>
 
-        <!-- LỊCH SỬ ĐƠN HÀNG -->
+        <!-- LỊCH SỬ ĐƠN HÀNG KHÁCH -->
         <div id="history-view" class="view-section hidden max-w-2xl mx-auto space-y-4">
             <h1 class="text-lg font-bold flex items-center"><i class="fa-solid fa-clock-rotate-left mr-2 text-accentBlue"></i> Lịch Sử Đơn Hàng (Realtime)</h1>
             <div id="history-container" class="space-y-3"></div>
@@ -417,26 +427,37 @@
             </div>
         </div>
 
-        <!-- ADMIN -->
+        <!-- ADMIN (QUẢN LÝ SHOP) -->
         <div id="admin-view" class="view-section hidden max-w-4xl mx-auto space-y-5">
             <div class="bg-cardBg p-4 sm:p-5 rounded-xl border border-gray-800 space-y-4 shadow-md">
                 <div>
                     <h1 class="text-lg font-bold flex items-center text-yellow-400"><i class="fa-solid fa-shield-halved mr-2"></i> Quản Lý Shop Realtime (Admin)</h1>
                 </div>
-                <!-- 2 TAB CHỌN CHO ADMIN -->
-                <div class="flex space-x-2 border-b border-gray-800 pb-3 pt-2">
-                    <button onclick="switchAdminTab('orders')" id="admin-tab-orders" class="bg-accentBlue text-white font-bold px-4 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2">
+                
+                <!-- 3 TAB CHỌN CHO ADMIN -->
+                <div class="flex flex-wrap gap-2 border-b border-gray-800 pb-3 pt-2">
+                    <button onclick="switchAdminTab('orders')" id="admin-tab-orders" class="bg-accentBlue text-white font-bold px-3.5 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2">
                         <i class="fa-solid fa-box"></i> <span>Quản Lý Đơn Hàng (<span id="admin-orders-count">0</span>)</span>
                     </button>
-                    <button onclick="switchAdminTab('payments')" id="admin-tab-payments" class="bg-gray-800 text-gray-300 hover:bg-gray-700 font-bold px-4 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2">
+                    <button onclick="switchAdminTab('payments')" id="admin-tab-payments" class="bg-gray-800 text-gray-300 hover:bg-gray-700 font-bold px-3.5 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2">
                         <i class="fa-solid fa-money-bill-transfer"></i> <span>Duyệt Chuyển Tiền (<span id="pending-pay-count">0</span>)</span>
+                    </button>
+                    <button onclick="switchAdminTab('all_history')" id="admin-tab-all-history" class="bg-gray-800 text-gray-300 hover:bg-gray-700 font-bold px-3.5 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2">
+                        <i class="fa-solid fa-database"></i> <span>Lịch Sử Tất Cả Đơn (Bằng Chứng)</span>
                     </button>
                 </div>
             </div>
 
-            <!-- PHẦN 1: QUẢN LÝ ĐƠN HÀNG -->
+            <!-- PHẦN 1: QUẢN LÝ ĐƠN HÀNG (Đang chờ nạp) -->
             <div id="admin-section-orders" class="space-y-3 pt-1">
                 <h3 class="font-bold text-sm text-white flex items-center"><i class="fa-solid fa-receipt text-accentBlue mr-2"></i> Danh Sách Đơn Hàng Đang Chờ Nạp (Chờ Duyệt Đơn)</h3>
+                
+                <!-- O TÌM KIẾM CHO ĐƠN ĐANG CHỜ NẠP -->
+                <div class="relative">
+                    <input type="text" id="admin-search-orders" oninput="renderAdminOrders()" placeholder="🔍 Tìm đơn theo Email / SĐT / Tên game / Mẫu đơn / Giá tiền..." class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 pl-10 text-xs text-white outline-none focus:border-accentBlue shadow-inner">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-gray-400 text-xs"></i>
+                </div>
+
                 <div id="admin-orders-container" class="space-y-3"></div>
             </div>
 
@@ -444,6 +465,19 @@
             <div id="admin-section-payments" class="space-y-3 pt-1 hidden">
                 <h3 class="font-bold text-sm text-yellow-400 flex items-center"><i class="fa-solid fa-money-bill-transfer mr-2"></i> Đơn Chờ Duyệt Tiền (Khách Đã Chuyển Khoản)</h3>
                 <div id="admin-payments-container" class="space-y-3"></div>
+            </div>
+
+            <!-- PHẦN 3: LỊCH SỬ TẤT CẢ ĐƠN (BẰNG CHỨNG LƯU TRỮ) -->
+            <div id="admin-section-all-history" class="space-y-3 pt-1 hidden">
+                <h3 class="font-bold text-sm text-green-400 flex items-center"><i class="fa-solid fa-folder-closed mr-2"></i> Lịch Sử Tất Cả Đơn Hàng (Đã Duyệt / Đã Hủy - Lưu Trữ Bằng Chứng)</h3>
+                
+                <!-- Ô TÌM KIẾM BẰNG CHỨNG ĐƠN HÀNG LƯU TRỮ -->
+                <div class="relative">
+                    <input type="text" id="admin-search-all-history" oninput="renderAdminAllHistory()" placeholder="🔍 Tìm kiếm bằng chứng theo Email / SĐT / UID / Tên game / Số tiền / Mã đơn..." class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 pl-10 text-xs text-white outline-none focus:border-green-500 shadow-inner">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-gray-400 text-xs"></i>
+                </div>
+
+                <div id="admin-all-history-container" class="space-y-3"></div>
             </div>
         </div>
     </main>
@@ -505,7 +539,7 @@
         </div>
     </div>
 
-    <!-- MODAL POPUP THÔNG BÁO ĐÃ DUYỆT CHUYỂN TIỀN KÈM NÚT QUAY LẠI LỊCH SỬ ĐƠN HÀNG -->
+    <!-- MODAL POPUP THÔNG BÁO ĐÃ DUYỆT CHUYỂN TIỀN -->
     <div id="payment-approved-success-modal" class="fixed inset-0 bg-black/85 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-md w-full p-6 rounded-2xl border border-green-500/60 relative space-y-4 shadow-2xl text-center">
             <div class="w-14 h-14 bg-green-950 text-green-400 rounded-full flex items-center justify-center mx-auto text-2xl border border-green-700 animate-bounce">
@@ -641,10 +675,11 @@
         </div>
     </div>
 
+    <!-- MODAL CHI TIẾT ĐƠN HÀNG -->
     <div id="order-detail-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-md w-full p-5 rounded-2xl border border-gray-800 relative space-y-4 shadow-2xl">
             <button onclick="closeOrderDetailModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
-            <h3 class="text-base font-bold text-white flex items-center"><i class="fa-solid fa-circle-info mr-2 text-accentBlue"></i> Chi Tiết Đơn Hàng</h3>
+            <h3 class="text-base font-bold text-white flex items-center"><i class="fa-solid fa-circle-info mr-2 text-accentBlue"></i> Chi Tiết Đơn Hàng & Bằng Chứng</h3>
             <div id="order-detail-body" class="space-y-2.5 text-xs bg-gray-900 p-3.5 rounded-xl border border-gray-800 max-h-[60vh] overflow-y-auto"></div>
             <button onclick="closeOrderDetailModal()" class="w-full bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 rounded-xl text-xs border border-gray-700 cursor-pointer">Đóng</button>
         </div>
@@ -852,6 +887,15 @@
             return p > 500000 ? p + 15000 : p + 3000;
         }
 
+        // HÀM BÔI XANH TỪ KHÓA TRÙNG KHỚP (HIGHLIGHT)
+        function highlightText(text, keyword) {
+            if (!text) return '';
+            text = String(text);
+            if (!keyword || !keyword.trim()) return text;
+            const regex = new RegExp(`(${keyword.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+            return text.replace(regex, '<span class="highlight-match">$1</span>');
+        }
+
         const gamesData = {
             'identityv': {
                 name: 'Identity V',
@@ -1040,6 +1084,7 @@
                 renderHistory();
                 renderAdminOrders();
                 renderAdminPayments();
+                renderAdminAllHistory();
             }).subscribe();
         }
 
@@ -1270,6 +1315,7 @@
             renderHistory();
             renderAdminOrders();
             renderAdminPayments();
+            renderAdminAllHistory();
         }
 
         function saveNewUsername() {
@@ -1541,6 +1587,7 @@
                 document.getElementById('admin-view').classList.remove('hidden'); 
                 renderAdminOrders();
                 renderAdminPayments();
+                renderAdminAllHistory();
             }
             syncNavActive(viewName); window.scrollTo(0, 0);
         }
@@ -1549,19 +1596,31 @@
             currentAdminTab = tabName;
             const tabOrdersBtn = document.getElementById('admin-tab-orders');
             const tabPaymentsBtn = document.getElementById('admin-tab-payments');
+            const tabAllHistoryBtn = document.getElementById('admin-tab-all-history');
+
             const secOrders = document.getElementById('admin-section-orders');
             const secPayments = document.getElementById('admin-section-payments');
+            const secAllHistory = document.getElementById('admin-section-all-history');
+
+            // Reset class của tất cả nút tab
+            tabOrdersBtn.className = "bg-gray-800 text-gray-300 hover:bg-gray-700 font-bold px-3.5 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2";
+            tabPaymentsBtn.className = "bg-gray-800 text-gray-300 hover:bg-gray-700 font-bold px-3.5 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2";
+            tabAllHistoryBtn.className = "bg-gray-800 text-gray-300 hover:bg-gray-700 font-bold px-3.5 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2";
+
+            secOrders.classList.add('hidden');
+            secPayments.classList.add('hidden');
+            secAllHistory.classList.add('hidden');
 
             if (tabName === 'orders') {
-                tabOrdersBtn.className = "bg-accentBlue text-white font-bold px-4 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2";
-                tabPaymentsBtn.className = "bg-gray-800 text-gray-300 hover:bg-gray-700 font-bold px-4 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2";
+                tabOrdersBtn.className = "bg-accentBlue text-white font-bold px-3.5 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2";
                 secOrders.classList.remove('hidden');
-                secPayments.classList.add('hidden');
-            } else {
-                tabPaymentsBtn.className = "bg-yellow-600 text-white font-bold px-4 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2";
-                tabOrdersBtn.className = "bg-gray-800 text-gray-300 hover:bg-gray-700 font-bold px-4 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2";
+            } else if (tabName === 'payments') {
+                tabPaymentsBtn.className = "bg-yellow-600 text-white font-bold px-3.5 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2";
                 secPayments.classList.remove('hidden');
-                secOrders.classList.add('hidden');
+            } else if (tabName === 'all_history') {
+                tabAllHistoryBtn.className = "bg-green-600 text-white font-bold px-3.5 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2";
+                secAllHistory.classList.remove('hidden');
+                renderAdminAllHistory();
             }
         }
 
@@ -1765,6 +1824,7 @@
                 currentActiveOrderId = 'ORD_' + now;
 
                 const passEl = document.getElementById('input-password');
+                const phoneEl = document.getElementById('input-phone');
                 const newOrder = {
                     id: currentActiveOrderId, 
                     code: '#' + randomCode, 
@@ -1781,9 +1841,11 @@
                     input_user: document.getElementById('input-username').value || 'Không có',
                     input_pass: passEl ? passEl.value : 'Không yêu cầu',
                     input_server: document.getElementById('input-server').value || 'Mặc định',
+                    input_phone: phoneEl ? phoneEl.value : 'Không có',
                     input_note: (document.getElementById('input-user-note') ? document.getElementById('input-user-note').value : '') || 'Không có',
                     admin_note: '',
-                    cancel_reason: ''
+                    cancel_reason: '',
+                    user_ip: clientUserIP
                 };
 
                 const { error } = await supabaseClient.from('orders').insert([newOrder]);
@@ -1864,7 +1926,6 @@
                 adminNoteHtml = `<div class="bg-blue-950/50 p-2.5 rounded-lg border border-blue-800 space-y-1 mt-2 text-blue-200"><div class="font-bold text-accentBlue text-[11px] flex items-center"><i class="fa-solid fa-comment-dots mr-1.5"></i> Ghi chú từ Admin:</div><p class="italic text-[11px]">${order.admin_note}</p></div>`;
             }
 
-            // HIỂN THỊ LÝ DO HỦY ĐƠN TRONG POPUP CHI TIẾT
             let cancelReasonHtml = '';
             if (order.cancel_reason) {
                 cancelReasonHtml = `<div class="bg-red-950/50 p-2.5 rounded-lg border border-red-800 space-y-1 mt-2 text-red-200"><div class="font-bold text-red-400 text-[11px] flex items-center"><i class="fa-solid fa-triangle-exclamation mr-1.5"></i> Lý do hủy đơn:</div><p class="italic text-[11px]">${order.cancel_reason}</p></div>`;
@@ -1872,7 +1933,9 @@
 
             body.innerHTML = `
                 <div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Mã đơn:</span><span class="font-bold text-white select-all">${order.code}</span></div>
+                <div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Tài khoản đặt:</span><span class="font-bold text-yellow-400 select-all">${order.customer_name}</span></div>
                 <div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Thời gian:</span><span class="text-gray-200 select-all">${order.time}</span></div>
+                <div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Địa chỉ IP người đặt:</span><span class="text-accentBlue font-mono font-bold select-all">${order.user_ip || 'Không rõ'}</span></div>
                 ${itemsListHtml}
                 <div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Tổng thanh toán:</span><span class="font-bold text-green-400 select-all">${order.price.toLocaleString('vi-VN')} đ</span></div>
                 <div class="flex justify-between border-b border-gray-800 pb-1.5 items-center"><span class="text-gray-400">Trạng thái:</span><span class="font-bold ${order.status.includes('Hủy') ? 'text-red-400' : 'text-green-400'}">${displayStatus}</span></div>
@@ -1880,6 +1943,8 @@
                     <div class="flex justify-between items-center"><span class="text-gray-400">Tài khoản / UID:</span><span class="font-bold text-white select-all">${order.input_user}</span></div>
                     <div class="flex justify-between items-center"><span class="text-gray-400">Mật khẩu:</span><span class="font-bold text-white select-all">${order.input_pass}</span></div>
                     <div class="flex justify-between items-center"><span class="text-gray-400">Server:</span><span class="font-bold text-white select-all">${order.input_server}</span></div>
+                    <div class="flex justify-between items-center"><span class="text-gray-400">SĐT / Zalo liên hệ:</span><span class="font-bold text-white select-all">${order.input_phone || 'Không có'}</span></div>
+                    <div class="flex justify-between items-center"><span class="text-gray-400">Ghi chú của khách:</span><span class="font-bold text-gray-300 select-all">${order.input_note || 'Không có'}</span></div>
                 </div>
                 ${adminNoteHtml}
                 ${cancelReasonHtml}
@@ -1902,8 +1967,6 @@
             container.innerHTML = '';
             orders.forEach((ord) => {
                 let noteSnippet = ord.admin_note ? `<div class="text-[11px] text-accentBlue italic mt-1 bg-blue-950/30 p-1.5 rounded border border-blue-900/50">💬 Admin: ${ord.admin_note}</div>` : '';
-                
-                // HIỂN THỊ LÝ DO HỦY NGAY BÊN NGOÀI DANH SÁCH LỊCH SỬ CHO KHÁCH DỄ THẤY
                 let cancelSnippet = ord.cancel_reason ? `<div class="text-[11px] text-red-400 italic mt-1 bg-red-950/30 p-1.5 rounded border border-red-900/50">⚠️ Lý do hủy: ${ord.cancel_reason}</div>` : '';
 
                 let statusBadgeClass = "text-yellow-400 border-yellow-800 bg-yellow-950/50";
@@ -1936,6 +1999,9 @@
         async function renderAdminOrders() {
             const container = document.getElementById('admin-orders-container');
             const countEl = document.getElementById('admin-orders-count');
+            const searchInput = document.getElementById('admin-search-orders');
+            const keyword = searchInput ? searchInput.value.trim().toLowerCase() : '';
+
             if (!container || !isAdmin()) return;
 
             const { data: orders } = await supabaseClient.from('orders').select('*').eq('status', 'Chờ duyệt đơn').order('timestamp', { ascending: false });
@@ -1947,21 +2013,39 @@
                 return;
             }
 
+            // LỌC ĐƠN HÀNG THEO TỪ KHÓA TÌM KIẾM
+            let filteredOrders = orders.filter(ord => {
+                if (!keyword) return true;
+                const matchName = String(ord.customer_name || '').toLowerCase().includes(keyword);
+                const matchCode = String(ord.code || '').toLowerCase().includes(keyword);
+                const matchGame = String(ord.game || '').toLowerCase().includes(keyword);
+                const matchPkg = String(ord.package || '').toLowerCase().includes(keyword);
+                const matchUser = String(ord.input_user || '').toLowerCase().includes(keyword);
+                const matchPhone = String(ord.input_phone || '').toLowerCase().includes(keyword);
+                const matchPrice = String(ord.price || '').toLowerCase().includes(keyword) || String(ord.price.toLocaleString('vi-VN')).toLowerCase().includes(keyword);
+                return matchName || matchCode || matchGame || matchPkg || matchUser || matchPhone || matchPrice;
+            });
+
+            if (filteredOrders.length === 0) {
+                container.innerHTML = `<div class="bg-cardBg p-6 rounded-xl border border-gray-800 text-center text-yellow-400 text-xs">Không tìm thấy đơn hàng trùng khớp với từ khóa "${keyword}".</div>`;
+                return;
+            }
+
             container.innerHTML = '';
-            orders.forEach((ord) => {
-                let noteDisplay = ord.admin_note ? `<div class="text-[10px] text-accentBlue italic mt-1">Ghi chú: ${ord.admin_note}</div>` : '';
+            filteredOrders.forEach((ord) => {
+                let noteDisplay = ord.admin_note ? `<div class="text-[10px] text-accentBlue italic mt-1">Ghi chú: ${highlightText(ord.admin_note, keyword)}</div>` : '';
                 container.innerHTML += `
                     <div class="bg-cardBg p-4 rounded-xl border border-accentBlue/40 space-y-2.5 shadow-md">
                         <div class="flex justify-between items-center border-b border-gray-800 pb-2">
-                            <span class="font-bold text-white text-xs">${ord.code} - Khách: ${ord.customer_name}</span>
+                            <span class="font-bold text-white text-xs">${highlightText(ord.code, keyword)} - Khách: ${highlightText(ord.customer_name, keyword)}</span>
                             <span class="text-[10px] text-gray-400">${ord.time}</span>
                         </div>
                         <div class="flex justify-between items-center text-xs">
                             <div>
-                                <div class="font-bold text-white">${ord.game}</div>
-                                <div class="text-accentBlue text-[11px]">${ord.package}</div>
-                                <div class="text-green-400 font-bold mt-1 text-sm">${ord.price.toLocaleString('vi-VN')} đ</div>
-                                <div class="text-[11px] text-gray-300 mt-1">UID/TK: <b class="text-white">${ord.input_user}</b> | Server: <b class="text-white">${ord.input_server}</b></div>
+                                <div class="font-bold text-white">${highlightText(ord.game, keyword)}</div>
+                                <div class="text-accentBlue text-[11px]">${highlightText(ord.package, keyword)}</div>
+                                <div class="text-green-400 font-bold mt-1 text-sm">${highlightText(ord.price.toLocaleString('vi-VN') + ' đ', keyword)}</div>
+                                <div class="text-[11px] text-gray-300 mt-1">UID/TK: <b class="text-white">${highlightText(ord.input_user, keyword)}</b> | SĐT: <b class="text-white">${highlightText(ord.input_phone || 'Không có', keyword)}</b></div>
                                 ${noteDisplay}
                             </div>
                             <div class="flex flex-col items-end space-y-2">
@@ -2020,6 +2104,76 @@
             });
         }
 
+        // RENDER LỊCH SỬ TẤT CẢ ĐƠN DÀNH CHO ADMIN (BẰNG CHỨNG)
+        async function renderAdminAllHistory() {
+            const container = document.getElementById('admin-all-history-container');
+            const searchInput = document.getElementById('admin-search-all-history');
+            const keyword = searchInput ? searchInput.value.trim().toLowerCase() : '';
+
+            if (!container || !isAdmin()) return;
+
+            const { data: orders } = await supabaseClient.from('orders').select('*').order('timestamp', { ascending: false });
+            
+            if (!orders || orders.length === 0) {
+                container.innerHTML = `<div class="bg-cardBg p-6 rounded-xl border border-gray-800 text-center text-gray-400 text-xs">Chưa có dữ liệu lịch sử đơn hàng.</div>`;
+                return;
+            }
+
+            // LỌC THEO TỪ KHÓA
+            let filteredOrders = orders.filter(ord => {
+                if (!keyword) return true;
+                const matchName = String(ord.customer_name || '').toLowerCase().includes(keyword);
+                const matchCode = String(ord.code || '').toLowerCase().includes(keyword);
+                const matchGame = String(ord.game || '').toLowerCase().includes(keyword);
+                const matchPkg = String(ord.package || '').toLowerCase().includes(keyword);
+                const matchUser = String(ord.input_user || '').toLowerCase().includes(keyword);
+                const matchPhone = String(ord.input_phone || '').toLowerCase().includes(keyword);
+                const matchIp = String(ord.user_ip || '').toLowerCase().includes(keyword);
+                const matchPrice = String(ord.price || '').toLowerCase().includes(keyword) || String(ord.price.toLocaleString('vi-VN')).toLowerCase().includes(keyword);
+                return matchName || matchCode || matchGame || matchPkg || matchUser || matchPhone || matchIp || matchPrice;
+            });
+
+            if (filteredOrders.length === 0) {
+                container.innerHTML = `<div class="bg-cardBg p-6 rounded-xl border border-gray-800 text-center text-yellow-400 text-xs">Không tìm thấy đơn hàng lưu trữ nào khớp với từ khóa "${keyword}".</div>`;
+                return;
+            }
+
+            container.innerHTML = '';
+            filteredOrders.forEach((ord) => {
+                let statusBadgeClass = "text-yellow-400 border-yellow-800 bg-yellow-950/50";
+                if (ord.status.includes('Thành Công') || ord.status.includes('Hoàn Thành')) {
+                    statusBadgeClass = "text-green-400 border-green-800 bg-green-950/50";
+                } else if (ord.status.includes('Hủy')) {
+                    statusBadgeClass = "text-red-400 border-red-800 bg-red-950/50";
+                }
+
+                let extraNote = '';
+                if (ord.cancel_reason) extraNote += `<div class="text-[10px] text-red-400 italic mt-1">Lý do hủy: ${highlightText(ord.cancel_reason, keyword)}</div>`;
+                if (ord.admin_note) extraNote += `<div class="text-[10px] text-accentBlue italic mt-1">Ghi chú Admin: ${highlightText(ord.admin_note, keyword)}</div>`;
+
+                container.innerHTML += `
+                    <div class="bg-cardBg p-4 rounded-xl border border-gray-800 space-y-2.5 shadow-md">
+                        <div class="flex justify-between items-center border-b border-gray-800 pb-2">
+                            <span class="font-bold text-white text-xs">${highlightText(ord.code, keyword)} - Khách: ${highlightText(ord.customer_name, keyword)}</span>
+                            <span class="text-[10px] text-gray-400">${ord.time}</span>
+                        </div>
+                        <div class="flex justify-between items-center text-xs">
+                            <div>
+                                <div class="font-bold text-white">${highlightText(ord.game, keyword)} - <span class="text-accentBlue">${highlightText(ord.package, keyword)}</span></div>
+                                <div class="text-green-400 font-bold mt-1 text-sm">${highlightText(ord.price.toLocaleString('vi-VN') + ' đ', keyword)}</div>
+                                <div class="text-[11px] text-gray-300 mt-1">TK/UID: <b class="text-white">${highlightText(ord.input_user, keyword)}</b> | IP: <b class="text-accentBlue font-mono">${highlightText(ord.user_ip || 'Không rõ', keyword)}</b></div>
+                                ${extraNote}
+                            </div>
+                            <div class="flex flex-col items-end space-y-2">
+                                <span class="px-2.5 py-1 rounded-lg border text-[10px] font-bold ${statusBadgeClass}">${ord.status}</span>
+                                <button onclick="openOrderDetail('${ord.id}')" class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-2.5 py-1 rounded text-[11px] border border-gray-700 cursor-pointer">Xem Bằng Chứng</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
         function openApproveNoteModal(orderId) {
             approveTargetOrderId = orderId;
             document.getElementById('approve-note-input').value = 'Đã nạp thành công vào tài khoản của bạn, vui lòng kiểm tra game nhé!';
@@ -2056,6 +2210,7 @@
                 renderGameList();
                 renderAdminOrders();
                 renderAdminPayments();
+                renderAdminAllHistory();
                 alert('Đã hoàn tất đơn hàng!');
             }
         }
@@ -2094,6 +2249,7 @@
                 closeCancelReasonModal(); 
                 renderAdminOrders(); 
                 renderAdminPayments();
+                renderAdminAllHistory();
                 alert('Đã hủy đơn!');
             }
         }
