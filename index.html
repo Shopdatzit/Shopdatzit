@@ -7,8 +7,9 @@
     
     <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1S1r9aE9MtmiRDEzw5IkDJ6pRDGyP42kV">
 
+    <meta name="description" content="Shopdatzit.site - Hệ thống nạp game và thẻ cào tự động 24/7 uy tín hàng đầu. Cam kết bảo mật tuyệt đối, giao dịch nhanh chóng, hỗ trợ tận tâm qua Vietcombank, Momo, ZaloPay.">
     <meta property="og:title" content="Shopdatzit - Shop Nạp Game Uy Tín">
-    <meta property="og:description" content="Hệ thống nạp game, nhanh chóng, uy tín 24/7">
+    <meta property="og:description" content="Hệ thống nạp game, nhanh chóng, uy tín 24/7. Cam kết an toàn bảo mật tuyệt đối cho mọi game thủ!">
     <meta property="og:image" content="https://lh3.googleusercontent.com/d/1oOQv6vZh-kbGNv2qZXZLijSQDz0J0YH-">
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -1833,7 +1834,7 @@
             switchView('history');
         }
 
-        // HÀM DUYỆT THANH TOÁN CHO ADMIN (CHUYỂN ĐƠN SANG CHỜ DUYỆT ĐƠN NẠP GAME)
+        // HÀM DUYỆT THANH TOÁN CHO ADMIN (ĐÃ SỬA: KHÔNG HIỆN GHI CHÚ KHI DUYỆT TIỀN)
         async function approvePaymentByAdmin(orderId) {
             const { data: orders } = await supabaseClient.from('orders').select('*').eq('id', orderId);
             const ord = orders ? orders[0] : null;
@@ -1842,7 +1843,7 @@
 
             const { error } = await supabaseClient.from('orders').update({ 
                 status: 'Chờ duyệt đơn', 
-                admin_note: 'Đã duyệt tiền chuyển khoản thành công.' 
+                admin_note: '' 
             }).eq('id', orderId);
 
             if (!error) {
@@ -1917,8 +1918,9 @@
 
             container.innerHTML = '';
             orders.forEach((ord) => {
-                let noteSnippet = ord.admin_note ? `<div class="text-[11px] text-accentBlue italic mt-1 bg-blue-950/30 p-1.5 rounded border border-blue-900/50">💬 Admin: ${ord.admin_note}</div>` : '';
-                let cancelSnippet = ord.cancel_reason ? `<div class="text-[11px] text-red-400 italic mt-1 bg-red-950/30 p-1.5 rounded border border-red-900/50">⚠️ Lý do hủy: ${ord.cancel_reason}</div>` : '';
+                // CHỈ HIỆN GHI CHÚ KHI CÓ ADMIN NOTE (HOÀN THÀNH) HOẶC CANCEL REASON (HỦY ĐƠN)
+                let noteSnippet = (ord.admin_note && ord.admin_note.trim() !== '') ? `<div class="text-[11px] text-accentBlue italic mt-1 bg-blue-950/30 p-1.5 rounded border border-blue-900/50">💬 Admin: ${ord.admin_note}</div>` : '';
+                let cancelSnippet = (ord.cancel_reason && ord.cancel_reason.trim() !== '') ? `<div class="text-[11px] text-red-400 italic mt-1 bg-red-950/30 p-1.5 rounded border border-red-900/50">⚠️ Lý do hủy: ${ord.cancel_reason}</div>` : '';
 
                 let statusBadgeClass = "text-yellow-400 border-yellow-800 bg-yellow-950/50";
                 if (ord.status.includes('Thành Công') || ord.status.includes('Hoàn Thành')) {
@@ -1988,7 +1990,7 @@
 
             container.innerHTML = '';
             filteredOrders.forEach((ord) => {
-                let noteDisplay = ord.admin_note ? `<div class="text-[10px] text-accentBlue italic mt-1">Ghi chú: ${highlightText(ord.admin_note, keyword)}</div>` : '';
+                let noteDisplay = (ord.admin_note && ord.admin_note.trim() !== '') ? `<div class="text-[10px] text-accentBlue italic mt-1">Ghi chú: ${highlightText(ord.admin_note, keyword)}</div>` : '';
                 container.innerHTML += `
                     <div class="bg-cardBg p-4 rounded-xl border border-accentBlue/40 space-y-2.5 shadow-md">
                         <div class="flex justify-between items-center border-b border-gray-800 pb-2">
@@ -2106,8 +2108,8 @@
                 }
 
                 let extraNote = '';
-                if (ord.cancel_reason) extraNote += `<div class="text-[10px] text-red-400 italic mt-1">Lý do hủy: ${highlightText(ord.cancel_reason, keyword)}</div>`;
-                if (ord.admin_note) extraNote += `<div class="text-[10px] text-accentBlue italic mt-1">Ghi chú Admin: ${highlightText(ord.admin_note, keyword)}</div>`;
+                if (ord.cancel_reason && ord.cancel_reason.trim() !== '') extraNote += `<div class="text-[10px] text-red-400 italic mt-1">Lý do hủy: ${highlightText(ord.cancel_reason, keyword)}</div>`;
+                if (ord.admin_note && ord.admin_note.trim() !== '') extraNote += `<div class="text-[10px] text-accentBlue italic mt-1">Ghi chú Admin: ${highlightText(ord.admin_note, keyword)}</div>`;
 
                 container.innerHTML += `
                     <div class="bg-cardBg p-4 rounded-xl border border-gray-800 space-y-2.5 shadow-md">
