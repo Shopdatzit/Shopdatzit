@@ -185,31 +185,32 @@
         .pkg-animate { animation: fadeInUpItem 0.4s ease-out forwards; opacity: 0; }
         @keyframes fadeInUpItem { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* THANH ĐIỀU HƯỚNG NỔI (DÙNG CHUNG CHO CẢ MOBILE VÀ PC) */
         .mobile-nav-container {
             position: fixed;
-            bottom: 12px;
+            bottom: 16px;
             left: 50%;
             transform: translateX(-50%);
-            width: 92%;
-            max-width: 420px;
-            height: 65px;
+            width: 90%;
+            max-width: 380px;
+            height: 56px;
             background: var(--nav-bg);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 50;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 28px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.12);
         }
 
-        .navigation-ul { position: relative; display: flex; width: 100%; height: 100%; justify-space-around; align-items: center; padding: 0; margin: 0; }
-        .navigation-ul li { position: relative; list-style: none; flex: 1; height: 65px; z-index: 1; text-align: center; }
+        .navigation-ul { position: relative; display: flex; width: 100%; height: 100%; justify-content: space-around; align-items: center; padding: 0 10px; margin: 0; }
+        .navigation-ul li { position: relative; list-style: none; flex: 1; height: 56px; z-index: 1; text-align: center; }
         .navigation-ul li a { position: relative; display: flex; justify-content: center; align-items: center; flex-direction: column; width: 100%; height: 100%; text-decoration: none; }
-        .navigation-ul li a .icon { position: relative; display: block; line-height: 65px; font-size: 1.25em; text-align: center; transition: 0.5s; color: #9ca3af; }
-        .navigation-ul li.active a .icon { transform: translateY(-26px); color: var(--icon-active); }
-        .navigation-ul li a .text { position: absolute; color: var(--text-color); font-weight: 600; font-size: 0.62em; transition: 0.5s; opacity: 0; transform: translateY(18px); white-space: nowrap; }
-        .navigation-ul li.active a .text { opacity: 1; transform: translateY(8px); }
+        .navigation-ul li a .icon { position: relative; display: block; line-height: 56px; font-size: 1.1em; text-align: center; transition: 0.3s; color: #9ca3af; }
+        .navigation-ul li.active a .icon { transform: translateY(-20px); color: var(--icon-active); }
+        .navigation-ul li a .text { position: absolute; color: var(--text-color); font-weight: 600; font-size: 0.58em; transition: 0.3s; opacity: 0; transform: translateY(14px); white-space: nowrap; }
+        .navigation-ul li.active a .text { opacity: 1; transform: translateY(6px); }
 
         #user-dropdown { transform-origin: top right; animation: dropdownScale 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
         @keyframes dropdownScale { 0% { opacity: 0; transform: scale(0.8) translateY(-10px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
@@ -244,7 +245,7 @@
         }
     </style>
 </head>
-<body class="bg-darkBg text-gray-100 font-sans min-h-screen flex flex-col pb-28 md:pb-12 transition-colors duration-300">
+<body class="bg-darkBg text-gray-100 font-sans min-h-screen flex flex-col pb-28 transition-colors duration-300">
 
     <div id="global-page-loader">
         <div class="loader-bounce-container">
@@ -274,9 +275,12 @@
                 </button>
 
                 <div class="relative">
-                    <div id="auth-btn-container" onclick="toggleUserDropdown()" class="bg-gray-800 hover:bg-gray-700 cursor-pointer px-2.5 py-1.5 rounded-full text-xs flex items-center space-x-1.5 transition border border-gray-700 max-w-[140px]">
-                        <img id="header-user-avatar" src="" class="w-5 h-5 rounded-full object-cover border border-accentBlue flex-shrink-0" alt="Avatar">
-                        <span id="user-display-name" class="truncate font-medium text-[11px]">Đăng Nhập</span>
+                    <div id="auth-btn-container" onclick="toggleUserDropdown()" class="bg-gray-800 hover:bg-gray-700 cursor-pointer px-3 py-1.5 rounded-full text-xs flex items-center space-x-2 transition border border-gray-700 max-w-[170px]">
+                        <img id="header-user-avatar" src="" class="w-6 h-6 rounded-full object-cover border border-accentBlue flex-shrink-0" alt="Avatar">
+                        <div class="flex flex-col truncate leading-tight">
+                            <span id="user-display-name" class="truncate font-semibold text-[11px]">Đăng Nhập</span>
+                            <span id="header-user-balance" class="text-[9px] text-green-400 font-bold truncate">0đ</span>
+                        </div>
                     </div>
 
                     <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-64 bg-cardBg border border-gray-800 rounded-xl shadow-2xl py-2 z-50 text-xs">
@@ -285,6 +289,7 @@
                             <div>
                                 <div id="dropdown-username" class="font-bold text-sm text-white">Khách</div>
                                 <div class="text-[10px] text-gray-400">UID: <span id="dropdown-uid">60742</span></div>
+                                <div class="text-[11px] text-green-400 font-bold mt-0.5" title="Số dư tài khoản">Số dư: <span id="dropdown-balance">0 đ</span></div>
                             </div>
                         </div>
                         <a href="#" onclick="switchView('profile')" class="block px-4 py-2.5 hover:bg-gray-800 text-gray-300 transition"><i class="fa-solid fa-user mr-2 text-accentBlue"></i> Thông tin chung</a>
@@ -370,7 +375,8 @@
                     <img id="profile-user-avatar" src="" class="w-14 h-14 rounded-full object-cover border-2 border-accentBlue" alt="Avatar">
                     <div>
                         <div id="profile-name" class="font-bold text-base text-white">Khách</div>
-                        <button onclick="openAvatarModal()" class="text-[11px] text-accentBlue hover:underline mt-0.5 block cursor-pointer">Đổi ảnh đại diện</button>
+                        <div class="text-xs text-green-400 font-bold mt-0.5">Số dư: <span id="profile-balance-text">0 đ</span></div>
+                        <button onclick="openAvatarModal()" class="text-[11px] text-accentBlue hover:underline mt-1 block cursor-pointer">Đổi ảnh đại diện</button>
                     </div>
                 </div>
                 <div class="space-y-3 text-xs">
@@ -762,8 +768,8 @@
         </div>
     </div>
 
-    <!-- MOBILE NAVIGATION -->
-    <div class="mobile-nav-container md:hidden">
+    <!-- THANH ĐIỀU HƯỚNG NỔI (HIỂN THỊ CẢ TRÊN MOBILE VÀ PC) -->
+    <div class="mobile-nav-container">
         <ul class="navigation-ul" id="mobile-nav-list">
             <li class="list active" onclick="navClick(this, 'home')">
                 <a href="javascript:void(0)"><span class="icon"><i class="fa-solid fa-house"></i></span><span class="text">Trang chủ</span></a>
@@ -809,7 +815,6 @@
         let currentGameKey = null;
         let currentUsername = localStorage.getItem(USER_KEY) || null;
         let tempAvatarBase64 = null;
-        let paymentTimer = null;
         let pendingAdminData = null;
         let cancelTargetOrderId = null;
         let approveTargetOrderId = null;
@@ -1077,6 +1082,7 @@
                 renderAdminOrders();
                 renderAdminPayments();
                 renderAdminAllHistory();
+                updateAuthUI();
             }).subscribe();
         }
 
@@ -1208,7 +1214,6 @@
 
         function getGameSold(gameKey) { return globalGameSoldCounts[gameKey] || 0; }
 
-        // CẬP NHẬT HÀM NÀY ĐỂ MÁY MỚI LUÔN LƯU TÊN "Đạt Zịt" VÀ AVATAR CHUẨN SẴN
         function initAdminAccount() {
             let accounts = getAccounts();
             const DEFAULT_ADMIN_AVATAR = "https://lh3.googleusercontent.com/d/1OUDmydcc6lDsgpI4CdVwi2jmNa__EtPR";
@@ -1219,7 +1224,8 @@
                     email: 'ngocdiemdang90@gmail.com', 
                     password: 'Lolkchi2020k', 
                     uid: '10000', 
-                    avatar: DEFAULT_ADMIN_AVATAR
+                    avatar: DEFAULT_ADMIN_AVATAR,
+                    balance: 0
                 };
                 saveAccounts(accounts);
             } else {
@@ -1228,6 +1234,9 @@
                 }
                 if (!accounts['ngocdiemdang90@gmail.com'].avatar) {
                     accounts['ngocdiemdang90@gmail.com'].avatar = DEFAULT_ADMIN_AVATAR;
+                }
+                if (accounts['ngocdiemdang90@gmail.com'].balance === undefined) {
+                    accounts['ngocdiemdang90@gmail.com'].balance = 0;
                 }
                 saveAccounts(accounts);
             }
@@ -1276,12 +1285,15 @@
 
         function updateAuthUI() {
             const disp = document.getElementById('user-display-name');
+            const headerBalance = document.getElementById('header-user-balance');
             const dropdownName = document.getElementById('dropdown-username');
             const dropdownUid = document.getElementById('dropdown-uid');
+            const dropdownBalance = document.getElementById('dropdown-balance');
             const profileName = document.getElementById('profile-name');
             const profileUsernameInput = document.getElementById('profile-username-input');
             const profileEmailText = document.getElementById('profile-email-text');
             const profileUid = document.getElementById('profile-uid');
+            const profileBalanceText = document.getElementById('profile-balance-text');
             const profileRole = document.getElementById('profile-role');
             const navAdminItem = document.getElementById('nav-admin-item');
             const avatars = [document.getElementById('header-user-avatar'), document.getElementById('dropdown-user-avatar'), document.getElementById('profile-user-avatar')];
@@ -1290,13 +1302,20 @@
             if (currentUsername && accounts[currentUsername]) {
                 const userAcc = accounts[currentUsername];
                 const displayName = userAcc.username || currentUsername;
+                const userBalance = (userAcc.balance || 0).toLocaleString('vi-VN') + 'đ';
+                const userBalanceFull = (userAcc.balance || 0).toLocaleString('vi-VN') + ' đ';
+
                 disp.innerText = displayName;
+                if (headerBalance) headerBalance.innerText = userBalance;
                 if (dropdownName) dropdownName.innerText = displayName;
                 if (dropdownUid) dropdownUid.innerText = userAcc.uid || '10000';
+                if (dropdownBalance) dropdownBalance.innerText = userBalanceFull;
                 if (profileName) profileName.innerText = displayName;
                 if (profileUsernameInput) profileUsernameInput.value = displayName;
                 if (profileEmailText) profileEmailText.innerText = userAcc.email || currentUsername;
                 if (profileUid) profileUid.innerText = userAcc.uid || '10000';
+                if (profileBalanceText) profileBalanceText.innerText = userBalanceFull;
+
                 let userAvatar = userAcc.avatar || DEFAULT_AVATAR_URL;
                 avatars.forEach(el => { if(el) el.src = userAvatar; });
 
@@ -1309,12 +1328,15 @@
                 }
             } else {
                 disp.innerText = 'Đăng Nhập';
+                if (headerBalance) headerBalance.innerText = '0đ';
                 if (dropdownName) dropdownName.innerText = 'Khách';
                 if (dropdownUid) dropdownUid.innerText = '---';
+                if (dropdownBalance) dropdownBalance.innerText = '0 đ';
                 if (profileName) profileName.innerText = 'Khách';
                 if (profileUsernameInput) profileUsernameInput.value = '';
                 if (profileEmailText) profileEmailText.innerText = 'Chưa đăng nhập';
                 if (profileUid) profileUid.innerText = '---';
+                if (profileBalanceText) profileBalanceText.innerText = '0 đ';
                 if (profileRole) profileRole.innerHTML = 'Khách';
                 if (navAdminItem) navAdminItem.classList.add('hidden');
                 avatars.forEach(el => { if(el) el.src = DEFAULT_AVATAR_URL; });
@@ -1426,7 +1448,7 @@
                 saveAccounts(accounts);
                 updateAuthUI();
                 closeAvatarModal();
-                alert('Đổi ảnh thành công!');
+                alert('Đổi ảnh đại diện thành công!');
             }
         }
 
@@ -1494,7 +1516,7 @@
             if (accounts[u.toLowerCase()]) { alert('Tài khoản đã tồn tại!'); return; }
             
             const randomUid = Math.floor(10000 + Math.random() * 90000).toString();
-            accounts[u.toLowerCase()] = { username: u, email: u.includes('@') ? u : `${u}@gmail.com`, password: p, uid: randomUid, avatar: '' };
+            accounts[u.toLowerCase()] = { username: u, email: u.includes('@') ? u : `${u}@gmail.com`, password: p, uid: randomUid, avatar: '', balance: 0 };
             saveAccounts(accounts);
             alert('Đăng ký thành công!');
             closeRegisterModal(); openAuthModal();
@@ -1941,7 +1963,6 @@
                 <div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Mã đơn:</span><span class="font-bold text-white select-all">${order.code}</span></div>
                 <div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Tài khoản đặt:</span><span class="font-bold text-yellow-400 select-all">${order.customer_name}</span></div>
                 <div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Thời gian:</span><span class="text-gray-200 select-all">${order.time}</span></div>
-                <div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Địa chỉ IP người đặt:</span><span class="text-accentBlue font-mono font-bold select-all">${order.user_ip || 'Không rõ'}</span></div>
                 ${itemsListHtml}
                 <div class="flex justify-between border-b border-gray-800 pb-1.5"><span class="text-gray-400">Tổng thanh toán:</span><span class="font-bold text-green-400 select-all">${order.price.toLocaleString('vi-VN')} đ</span></div>
                 <div class="flex justify-between border-b border-gray-800 pb-1.5 items-center"><span class="text-gray-400">Trạng thái:</span><span class="font-bold ${order.status.includes('Hủy') ? 'text-red-400' : 'text-green-400'}">${displayStatus}</span></div>
@@ -2131,9 +2152,8 @@
                 const matchPkg = String(ord.package || '').toLowerCase().includes(keyword);
                 const matchUser = String(ord.input_user || '').toLowerCase().includes(keyword);
                 const matchPhone = String(ord.input_phone || '').toLowerCase().includes(keyword);
-                const matchIp = String(ord.user_ip || '').toLowerCase().includes(keyword);
                 const matchPrice = String(ord.price || '').toLowerCase().includes(keyword) || String(ord.price.toLocaleString('vi-VN')).toLowerCase().includes(keyword);
-                return matchName || matchCode || matchGame || matchPkg || matchUser || matchPhone || matchIp || matchPrice;
+                return matchName || matchCode || matchGame || matchPkg || matchUser || matchPhone || matchPrice;
             });
 
             if (filteredOrders.length === 0) {
@@ -2164,7 +2184,7 @@
                             <div>
                                 <div class="font-bold text-white">${highlightText(ord.game, keyword)} - <span class="text-accentBlue">${highlightText(ord.package, keyword)}</span></div>
                                 <div class="text-green-400 font-bold mt-1 text-sm">${highlightText(ord.price.toLocaleString('vi-VN') + ' đ', keyword)}</div>
-                                <div class="text-[11px] text-gray-300 mt-1">TK/UID: <b class="text-white">${highlightText(ord.input_user, keyword)}</b> | IP: <b class="text-accentBlue font-mono">${highlightText(ord.user_ip || 'Không rõ', keyword)}</b></div>
+                                <div class="text-[11px] text-gray-300 mt-1">TK/UID: <b class="text-white">${highlightText(ord.input_user, keyword)}</b></div>
                                 ${extraNote}
                             </div>
                             <div class="flex flex-col items-end space-y-2">
@@ -2192,17 +2212,36 @@
             const { data: orders } = await supabaseClient.from('orders').select('*').eq('id', approveTargetOrderId);
             const ord = orders && orders.length > 0 ? orders[0] : null;
 
+            if (ord) {
+                let accounts = getAccounts();
+                let custKey = ord.customer_name.toLowerCase();
+                
+                // Tự động cộng tiền vào số dư khách hàng khi admin duyệt đơn
+                if (accounts[custKey]) {
+                    accounts[custKey].balance = (accounts[custKey].balance || 0) + ord.price;
+                    saveAccounts(accounts);
+                } else {
+                    for (let k in accounts) {
+                        if (accounts[k].username === ord.customer_name || accounts[k].email === ord.customer_name) {
+                            accounts[k].balance = (accounts[k].balance || 0) + ord.price;
+                            saveAccounts(accounts);
+                            break;
+                        }
+                    }
+                }
+            }
+
             const { error } = await supabaseClient.from('orders').update({ status: 'Đã Nạp Thành Công', admin_note: adminNote }).eq('id', approveTargetOrderId);
             if (!error) {
                 if (ord) {
                     let accounts = getAccounts();
-                    let custAcc = accounts[ord.customer_name];
+                    let custAcc = accounts[ord.customer_name.toLowerCase()] || accounts[ord.customer_name];
                     let custEmail = custAcc ? custAcc.email : ord.customer_name;
                     if (custEmail && custEmail.includes('@')) {
                         sendAutoEmail(
                             custEmail,
                             `Đơn hàng ${ord.code} đã hoàn thành`,
-                            `Xin chào <b>${ord.customer_name}</b>,<br>Đơn hàng <b>${ord.code}</b> của bạn đã được hoàn thành!<br>Tổng cộng: <b>${ord.price.toLocaleString('vi-VN')} đ</b>.<br><br><b>💬 Ghi chú từ Admin:</b><br><i>"${adminNote}"</i><br><br>Cảm ơn bạn đã ủng hộ ShopDatZit!`,
+                            `Xin chào <b>${ord.customer_name}</b>,<br>Đơn hàng <b>${ord.code}</b> của bạn đã được hoàn thành!<br>Tổng cộng: <b>${ord.price.toLocaleString('vi-VN')} đ</b> đã được cộng trực tiếp vào số dư tài khoản của bạn.<br><br><b>💬 Ghi chú từ Admin:</b><br><i>"${adminNote}"</i><br><br>Cảm ơn bạn đã ủng hộ ShopDatZit!`,
                             true
                         );
                     }
@@ -2214,7 +2253,8 @@
                 renderAdminOrders();
                 renderAdminPayments();
                 renderAdminAllHistory();
-                alert('Đã hoàn tất đơn hàng!');
+                updateAuthUI();
+                alert('Đã duyệt đơn thành công và tự động cộng tiền vào số dư khách hàng!');
             }
         }
 
@@ -2237,7 +2277,7 @@
             if (!error) {
                 if (ord) {
                     let accounts = getAccounts();
-                    let custAcc = accounts[ord.customer_name];
+                    let custAcc = accounts[ord.customer_name.toLowerCase()] || accounts[ord.customer_name];
                     let custEmail = custAcc ? custAcc.email : ord.customer_name;
                     if (custEmail && custEmail.includes('@')) {
                         sendAutoEmail(
