@@ -185,7 +185,6 @@
         .pkg-animate { animation: fadeInUpItem 0.4s ease-out forwards; opacity: 0; }
         @keyframes fadeInUpItem { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* THANH ĐIỀU HƯỚNG NỔI (DÙNG CHUNG CHO CẢ MOBILE VÀ PC) */
         .mobile-nav-container {
             position: fixed;
             bottom: 16px;
@@ -304,7 +303,6 @@
     </header>
 
     <main class="flex-grow max-w-7xl mx-auto px-4 py-5 w-full space-y-4">
-        <!-- TRANG CHỦ -->
         <div id="home-view" class="view-section space-y-4">
             <div class="bg-cardBg border border-gray-800 p-3.5 rounded-xl text-center shadow-md">
                 <h2 class="text-base sm:text-lg font-bold rgb-text">🔥 NẠP GAME & THẺ CÀO NHANH CHÓNG - UY TÍN 24/7 🔥</h2>
@@ -315,7 +313,6 @@
             <div id="game-list-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3"></div>
         </div>
 
-        <!-- CHI TIẾT NẠP GAME -->
         <div id="detail-view" class="view-section hidden space-y-5">
             <button onclick="switchView('home')" class="text-xs bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded-lg transition flex items-center w-max border border-gray-700 cursor-pointer">
                 <i class="fa-solid fa-arrow-left mr-2"></i> Quay lại trang chủ
@@ -368,7 +365,6 @@
             </div>
         </div>
 
-        <!-- HỒ SƠ CÁ NHÂN -->
         <div id="profile-view" class="view-section hidden max-w-xl mx-auto space-y-5">
             <h1 class="text-lg font-bold flex items-center"><i class="fa-solid fa-user-gear mr-2 text-accentBlue"></i> Thông Tin Tài Khoản</h1>
             <div class="bg-cardBg p-5 rounded-2xl border border-gray-800 shadow-xl space-y-5">
@@ -407,13 +403,11 @@
             </div>
         </div>
 
-        <!-- LỊCH SỬ ĐƠN HÀNG KHÁCH -->
         <div id="history-view" class="view-section hidden max-w-2xl mx-auto space-y-4">
             <h1 class="text-lg font-bold flex items-center"><i class="fa-solid fa-clock-rotate-left mr-2 text-accentBlue"></i> Lịch Sử Đơn Hàng (Realtime)</h1>
             <div id="history-container" class="space-y-3"></div>
         </div>
 
-        <!-- CSKH -->
         <div id="cskh-view" class="view-section hidden max-w-md mx-auto space-y-4">
             <div class="bg-cardBg p-5 sm:p-6 rounded-2xl border border-gray-800 shadow-xl space-y-4 text-center">
                 <div class="w-12 h-12 bg-blue-950 text-accentBlue rounded-full flex items-center justify-center mx-auto text-xl border border-blue-800">
@@ -434,7 +428,6 @@
             </div>
         </div>
 
-        <!-- ADMIN (QUẢN LÝ SHOP) -->
         <div id="admin-view" class="view-section hidden max-w-4xl mx-auto space-y-5">
             <div class="bg-cardBg p-4 sm:p-5 rounded-xl border border-gray-800 space-y-4 shadow-md">
                 <div>
@@ -454,7 +447,6 @@
                 </div>
             </div>
 
-            <!-- PHẦN 1: QUẢN LÝ ĐƠN HÀNG -->
             <div id="admin-section-orders" class="space-y-3 pt-1">
                 <h3 class="font-bold text-sm text-white flex items-center"><i class="fa-solid fa-receipt text-accentBlue mr-2"></i> Danh Sách Đơn Hàng Đang Chờ Nạp (Chờ Duyệt Đơn)</h3>
                 
@@ -466,13 +458,11 @@
                 <div id="admin-orders-container" class="space-y-3"></div>
             </div>
 
-            <!-- PHẦN 2: DUYỆT CHUYỂN TIỀN -->
             <div id="admin-section-payments" class="space-y-3 pt-1 hidden">
                 <h3 class="font-bold text-sm text-yellow-400 flex items-center"><i class="fa-solid fa-money-bill-transfer mr-2"></i> Đơn Chờ Duyệt Tiền (Khách Đã Bấm Xuất QR)</h3>
                 <div id="admin-payments-container" class="space-y-3"></div>
             </div>
 
-            <!-- PHẦN 3: LỊCH SỬ TẤT CẢ ĐƠN -->
             <div id="admin-section-all-history" class="space-y-3 pt-1 hidden">
                 <h3 class="font-bold text-sm text-green-400 flex items-center"><i class="fa-solid fa-folder-closed mr-2"></i> Lịch Sử Tất Cả Đơn Hàng (Đã Duyệt / Đã Hủy)</h3>
                 
@@ -486,7 +476,6 @@
         </div>
     </main>
 
-    <!-- FOOTER -->
     <footer class="mt-auto border-t border-gray-800 bg-cardBg py-8 px-4 text-gray-300 text-xs shadow-2xl">
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
             <div class="space-y-2 text-left pr-0 md:pr-4">
@@ -525,7 +514,6 @@
     </footer>
 
     <!-- MODALS -->
-    <!-- MODAL NẠP SỐ DƯ QUA BANK -->
     <div id="topup-balance-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-sm w-full p-5 rounded-2xl border border-accentBlue/60 relative space-y-4 shadow-2xl">
             <button onclick="closeTopUpBalanceModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -553,7 +541,6 @@
         </div>
     </div>
 
-    <!-- MODAL LỰA CHỌN THANH TOÁN ĐƠN HÀNG -->
     <div id="payment-options-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-sm w-full p-5 rounded-2xl border border-gray-800 relative space-y-4 shadow-2xl text-center">
             <button onclick="closePaymentOptionsModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -697,7 +684,6 @@
         </div>
     </div>
 
-    <!-- MODAL QUÉT QR CHUYỂN KHOẢN -->
     <div id="payment-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-md w-full p-5 rounded-2xl border border-gray-800 relative text-center space-y-4 shadow-2xl">
             <button onclick="closePaymentModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -718,7 +704,6 @@
         </div>
     </div>
 
-    <!-- MODAL CHI TIẾT ĐƠN HÀNG -->
     <div id="order-detail-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-md w-full p-5 rounded-2xl border border-gray-800 relative space-y-4 shadow-2xl">
             <button onclick="closeOrderDetailModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
@@ -812,7 +797,6 @@
         </div>
     </div>
 
-    <!-- THANH ĐIỀU HƯỚNG NỔI (HIỂN THỊ CẢ TRÊN MOBILE VÀ PC) -->
     <div class="mobile-nav-container">
         <ul class="navigation-ul" id="mobile-nav-list">
             <li class="list active" onclick="navClick(this, 'home')">
@@ -1076,6 +1060,7 @@
             initOtpWidget('change-email-otp-widget', changeEmailVerifyCallback);
         };
 
+        // ĐÃ TÍCH HỢP ĐẦY ĐỦ RENDER ADMIN PAYMENTS VÀO REALTIME LISTENER
         function initRealtimeListener() {
             supabaseClient.channel('public:orders').on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, async (payload) => {
                 const updatedOrder = payload.new;
@@ -1092,7 +1077,7 @@
                 renderGameList();
                 renderHistory();
                 renderAdminOrders();
-                renderAdminPayments();
+                renderAdminPayments(); // Cập nhật tự động phần duyệt chuyển tiền realtime
                 renderAdminAllHistory();
                 updateAuthUI();
             }).subscribe();
@@ -1824,7 +1809,6 @@
             if (checkoutSection) checkoutSection.classList.remove('hidden');
         }
 
-        // MỞ MODAL NẠP SỐ DƯ
         function openTopUpBalanceModal() {
             if (!currentUsername) { openAuthModal(); return; }
             document.getElementById('topup-amount-input').value = '';
@@ -1845,7 +1829,6 @@
             document.getElementById('topup-qr-img').src = `https://img.vietqr.io/image/VCB-1065342786-compact.png?amount=${amount}&addInfo=Sieucapbakhi&accountName=DANG%20VAN%20TIEN%20DAT`;
             document.getElementById('topup-qr-container').classList.remove('hidden');
 
-            // Khi khách bấm "Xuất Mã Qr Thanh Toán", tạo đơn ở trạng thái "Chờ duyệt thanh toán" để Admin nhận ngay trong mục "Duyệt Chuyển Tiền"
             await createTopupOrderRecord(amount);
         }
 
