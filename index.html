@@ -272,11 +272,11 @@
                 </button>
 
                 <div class="relative">
-                    <div class="bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded-full text-xs flex items-center space-x-2 transition border border-gray-700 max-w-[210px]">
-                        <img id="header-user-avatar" onclick="toggleUserDropdown()" src="" class="w-6 h-6 rounded-full object-cover border border-accentBlue flex-shrink-0 cursor-pointer" alt="Avatar">
-                        <div class="flex flex-col truncate leading-tight cursor-pointer" onclick="toggleUserDropdown()">
+                    <!-- Bấm bất kỳ chỗ nào trong ô này cũng mở/đóng menu -->
+                    <div onclick="toggleUserDropdown()" class="bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded-full text-xs flex items-center space-x-2 transition border border-gray-700 max-w-[210px] cursor-pointer">
+                        <img id="header-user-avatar" src="" class="w-6 h-6 rounded-full object-cover border border-accentBlue flex-shrink-0 pointer-events-none" alt="Avatar">
+                        <div class="flex flex-col truncate leading-tight pointer-events-none">
                             <span id="user-display-name" class="truncate font-semibold text-[11px]">Đăng Nhập</span>
-                            <span class="text-[9px] text-blue-400 font-bold truncate">Shop Nạp Game</span>
                         </div>
                     </div>
 
@@ -392,7 +392,7 @@
                     </div>
                     <div class="flex justify-between items-center pb-1">
                         <span class="text-gray-400">Nhóm tài khoản</span>
-                        <span id="profile-role" class="bg-yellow-950 text-yellow-400 px-2 py-0.5 rounded text-[11px] border border-yellow-700 font-bold">Chủ Shop (Admin)</span>
+                        <span id="profile-role" class="bg-gray-800 text-gray-400 px-2 py-0.5 rounded text-[11px] border border-gray-700 font-bold">Thành viên</span>
                     </div>
                 </div>
             </div>
@@ -408,7 +408,7 @@
                 <div class="w-12 h-12 bg-blue-950 text-accentBlue rounded-full flex items-center justify-center mx-auto text-xl border border-blue-800">
                     <i class="fa-solid fa-headset"></i>
                 </div>
-                <h3 class="text-base font-bold text-white">Hỗ Trợ Khách Hàng 24/7</h3>
+                <h3 class="text-base font-bold text-white">Chăm Sóc Khách Hàng</h3>
                 <div class="space-y-2.5 pt-1">
                     <a href="https://www.facebook.com/share/1eUqgvpGFf/" target="_blank" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl flex items-center justify-center space-x-2 shadow-md cursor-pointer transition text-xs">
                         <i class="fa-brands fa-facebook text-sm"></i><span>Nhắn tin qua Facebook</span>
@@ -475,12 +475,12 @@
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
             <div class="space-y-2 text-left pr-0 md:pr-4">
                 <p class="text-gray-400 text-xs leading-relaxed">
-                    Shopdatzit.site cung cấp các gói nạp bảo đảm an toàn tuyệt đối. Hệ thống tích hợp Supabase Database Realtime tự động hóa toàn bộ quy trình đặt hàng. Hoạt động từ tháng 9/2026. Shopdatzit luôn sẵn sàng phục vụ mọi người!
+                    Shopdatzit.site sẽ cung cấp các gói nạp đảm bảo an toàn tuyệt đối. Hệ thống tích hợp phê duyệt tự động hoá toàn bộ quy trình đặt hàng. Hoạt động tháng 9/2026. Shopdatzit cảm ơn mọi người đã tin tưởng và sử dụng dịch vụ. Shopdatzit.site sẵn sàng phục vụ mọi người!
                 </p>
             </div>
             <div class="bg-gray-900/60 p-4 rounded-2xl border border-gray-800 space-y-3 text-left">
                 <h3 class="font-bold text-sm text-white uppercase tracking-wider flex items-center border-b border-gray-800 pb-2">
-                    <i class="fa-solid fa-headset mr-2 text-accentBlue"></i> HỖ TRỢ
+                    <i class="fa-solid fa-headset mr-2 text-accentBlue"></i> CHĂM SÓC KHÁCH HÀNG
                 </h3>
                 <div class="space-y-2 text-xs text-gray-300">
                     <div class="flex items-center space-x-2.5">
@@ -1247,10 +1247,16 @@
                 avatars.forEach(el => { if(el) el.src = userAvatar; });
 
                 if (isAdmin()) {
-                    if (profileRole) profileRole.innerHTML = 'Chủ Shop (Admin)';
+                    if (profileRole) {
+                        profileRole.className = 'bg-yellow-950 text-yellow-400 px-2 py-0.5 rounded text-[11px] border border-yellow-700 font-bold';
+                        profileRole.innerHTML = 'Chủ Shop (Admin)';
+                    }
                     if (navAdminItem) navAdminItem.classList.remove('hidden');
                 } else {
-                    if (profileRole) profileRole.innerHTML = 'Thành viên';
+                    if (profileRole) {
+                        profileRole.className = 'bg-gray-800 text-gray-400 px-2 py-0.5 rounded text-[11px] border border-gray-700 font-bold';
+                        profileRole.innerHTML = 'Thành viên';
+                    }
                     if (navAdminItem) navAdminItem.classList.add('hidden');
                 }
             } else {
@@ -1261,7 +1267,10 @@
                 if (profileUsernameInput) profileUsernameInput.value = '';
                 if (profileEmailText) profileEmailText.innerText = 'Chưa đăng nhập';
                 if (profileUid) profileUid.innerText = '---';
-                if (profileRole) profileRole.innerHTML = 'Khách';
+                if (profileRole) {
+                    profileRole.className = 'bg-gray-800 text-gray-400 px-2 py-0.5 rounded text-[11px] border border-gray-700 font-bold';
+                    profileRole.innerHTML = 'Khách';
+                }
                 if (navAdminItem) navAdminItem.classList.add('hidden');
                 avatars.forEach(el => { if(el) el.src = DEFAULT_AVATAR_URL; });
             }
@@ -1339,7 +1348,7 @@
 
         window.addEventListener('click', function(e) {
             const dropdown = document.getElementById('user-dropdown');
-            if (dropdown && !dropdown.contains(e.target) && !e.target.closest('#header-user-avatar') && !e.target.closest('#user-display-name')) {
+            if (dropdown && !dropdown.contains(e.target) && !e.target.closest('header .relative')) {
                 dropdown.classList.add('hidden');
             }
         });
@@ -1834,7 +1843,6 @@
             switchView('history');
         }
 
-        // HÀM DUYỆT THANH TOÁN CHO ADMIN (ĐÃ SỬA: KHÔNG HIỆN GHI CHÚ KHI DUYỆT TIỀN)
         async function approvePaymentByAdmin(orderId) {
             const { data: orders } = await supabaseClient.from('orders').select('*').eq('id', orderId);
             const ord = orders ? orders[0] : null;
@@ -1918,7 +1926,6 @@
 
             container.innerHTML = '';
             orders.forEach((ord) => {
-                // CHỈ HIỆN GHI CHÚ KHI CÓ ADMIN NOTE (HOÀN THÀNH) HOẶC CANCEL REASON (HỦY ĐƠN)
                 let noteSnippet = (ord.admin_note && ord.admin_note.trim() !== '') ? `<div class="text-[11px] text-accentBlue italic mt-1 bg-blue-950/30 p-1.5 rounded border border-blue-900/50">💬 Admin: ${ord.admin_note}</div>` : '';
                 let cancelSnippet = (ord.cancel_reason && ord.cancel_reason.trim() !== '') ? `<div class="text-[11px] text-red-400 italic mt-1 bg-red-950/30 p-1.5 rounded border border-red-900/50">⚠️ Lý do hủy: ${ord.cancel_reason}</div>` : '';
 
@@ -2159,7 +2166,7 @@
                         sendAutoEmail(
                             custEmail,
                             `Đơn hàng ${ord.code} đã hoàn thành`,
-                            `Xin chào <b>${ord.customer_name}</b>,<br>Đơn hàng <b>${ord.code}</b> của bạn đã được hoàn thành!<br>Tổng cộng: <b>${ord.price.toLocaleString('vi-VN')} đ</b>.<br><br><b>💬 Ghi chú từ Admin:</b><br><i>"${adminNote}"</i><br><br>Cảm ơn bạn đã ủng hộ ShopDatZit!`,
+                            `Xin chào <b>${ord.customer_name}</b>,<br>Đơn hàng <b>${ord.code}</b> của bạn đã được hoàn thành!<br>Tổng cộng: <b>${ord.price.toLocaleString('vi-VN')} đ</b>.<br><br><b>💬 Ghi chú từ Admin:</b><br><i>"${adminNote}"</i><br><br>Cảm ơn mọi người đã tin tưởng và sử dụng dịch vụ!<br><br>Cảm ơn bạn đã ủng hộ ShopDatZit!`,
                             true
                         );
                     }
