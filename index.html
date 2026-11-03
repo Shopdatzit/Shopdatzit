@@ -234,7 +234,6 @@
         .u026-live{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
         .u026-real:focus-visible{outline:none}
 
-        /* Highlight style cho các từ khóa tìm kiếm trùng khớp */
         .highlight-match {
             background-color: rgba(34, 197, 94, 0.25);
             color: #4ade80;
@@ -295,7 +294,8 @@
                     </div>
                 </div>
             </div>
-        </header>
+        </div>
+    </header>
 
     <main class="flex-grow max-w-7xl mx-auto px-4 py-5 w-full space-y-4">
         <!-- TRANG CHỦ -->
@@ -434,7 +434,6 @@
                     <h1 class="text-lg font-bold flex items-center text-yellow-400"><i class="fa-solid fa-shield-halved mr-2"></i> Quản Lý Shop Realtime (Admin)</h1>
                 </div>
                 
-                <!-- 3 TAB CHỌN CHO ADMIN -->
                 <div class="flex flex-wrap gap-2 border-b border-gray-800 pb-3 pt-2">
                     <button onclick="switchAdminTab('orders')" id="admin-tab-orders" class="bg-accentBlue text-white font-bold px-3.5 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2">
                         <i class="fa-solid fa-box"></i> <span>Quản Lý Đơn Hàng (<span id="admin-orders-count">0</span>)</span>
@@ -443,16 +442,15 @@
                         <i class="fa-solid fa-money-bill-transfer"></i> <span>Duyệt Chuyển Tiền (<span id="pending-pay-count">0</span>)</span>
                     </button>
                     <button onclick="switchAdminTab('all_history')" id="admin-tab-all-history" class="bg-gray-800 text-gray-300 hover:bg-gray-700 font-bold px-3.5 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2">
-                        <i class="fa-solid fa-database"></i> <span>Lịch Sử Tất Cả Đơn (Bằng Chứng)</span>
+                        <i class="fa-solid fa-database"></i> <span>Lịch Sử Tất Cả Đơn</span>
                     </button>
                 </div>
             </div>
 
-            <!-- PHẦN 1: QUẢN LÝ ĐƠN HÀNG (Đang chờ nạp) -->
+            <!-- PHẦN 1: QUẢN LÝ ĐƠN HÀNG -->
             <div id="admin-section-orders" class="space-y-3 pt-1">
                 <h3 class="font-bold text-sm text-white flex items-center"><i class="fa-solid fa-receipt text-accentBlue mr-2"></i> Danh Sách Đơn Hàng Đang Chờ Nạp (Chờ Duyệt Đơn)</h3>
                 
-                <!-- O TÌM KIẾM CHO ĐƠN ĐANG CHỜ NẠP -->
                 <div class="relative">
                     <input type="text" id="admin-search-orders" oninput="renderAdminOrders()" placeholder="🔍 Tìm đơn theo Email / SĐT / Tên game / Mẫu đơn / Giá tiền..." class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 pl-10 text-xs text-white outline-none focus:border-accentBlue shadow-inner">
                     <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-gray-400 text-xs"></i>
@@ -467,13 +465,12 @@
                 <div id="admin-payments-container" class="space-y-3"></div>
             </div>
 
-            <!-- PHẦN 3: LỊCH SỬ TẤT CẢ ĐƠN (BẰNG CHỨNG LƯU TRỮ) -->
+            <!-- PHẦN 3: LỊCH SỬ TẤT CẢ ĐƠN -->
             <div id="admin-section-all-history" class="space-y-3 pt-1 hidden">
-                <h3 class="font-bold text-sm text-green-400 flex items-center"><i class="fa-solid fa-folder-closed mr-2"></i> Lịch Sử Tất Cả Đơn Hàng (Đã Duyệt / Đã Hủy - Lưu Trữ Bằng Chứng)</h3>
+                <h3 class="font-bold text-sm text-green-400 flex items-center"><i class="fa-solid fa-folder-closed mr-2"></i> Lịch Sử Tất Cả Đơn Hàng (Đã Duyệt / Đã Hủy)</h3>
                 
-                <!-- Ô TÌM KIẾM BẰNG CHỨNG ĐƠN HÀNG LƯU TRỮ -->
                 <div class="relative">
-                    <input type="text" id="admin-search-all-history" oninput="renderAdminAllHistory()" placeholder="🔍 Tìm kiếm bằng chứng theo Email / SĐT / UID / Tên game / Số tiền / Mã đơn..." class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 pl-10 text-xs text-white outline-none focus:border-green-500 shadow-inner">
+                    <input type="text" id="admin-search-all-history" oninput="renderAdminAllHistory()" placeholder="🔍 Tìm kiếm theo Email / SĐT / UID / Tên game / Số tiền / Mã đơn..." class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 pl-10 text-xs text-white outline-none focus:border-green-500 shadow-inner">
                     <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-gray-400 text-xs"></i>
                 </div>
 
@@ -521,7 +518,6 @@
     </footer>
 
     <!-- MODALS -->
-    <!-- MODAL ĐANG CHỜ ADMIN DUYỆT TIỀN (HIỂN THỊ BÊN KHÁCH HÀNG) -->
     <div id="pending-payment-approval-modal" class="fixed inset-0 bg-black/85 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-md w-full p-6 rounded-2xl border border-yellow-500/60 relative space-y-4 shadow-2xl text-center">
             <div class="w-14 h-14 bg-yellow-950 text-yellow-400 rounded-full flex items-center justify-center mx-auto text-2xl border border-yellow-700 animate-spin">
@@ -539,7 +535,6 @@
         </div>
     </div>
 
-    <!-- MODAL POPUP THÔNG BÁO ĐÃ DUYỆT CHUYỂN TIỀN -->
     <div id="payment-approved-success-modal" class="fixed inset-0 bg-black/85 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-md w-full p-6 rounded-2xl border border-green-500/60 relative space-y-4 shadow-2xl text-center">
             <div class="w-14 h-14 bg-green-950 text-green-400 rounded-full flex items-center justify-center mx-auto text-2xl border border-green-700 animate-bounce">
@@ -560,7 +555,6 @@
         </div>
     </div>
 
-    <!-- MODAL NHẬP GHI CHÚ KHI DUYỆT ĐƠN CUỐI CÙNG -->
     <div id="approve-note-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-sm w-full p-5 rounded-2xl border border-green-500/50 relative space-y-4 shadow-2xl">
             <button onclick="closeApproveNoteModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -573,7 +567,6 @@
         </div>
     </div>
 
-    <!-- MODAL NHẬP LÝ DO HỦY ĐƠN -->
     <div id="cancel-reason-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-sm w-full p-5 rounded-2xl border border-red-500/50 relative space-y-4 shadow-2xl">
             <button onclick="closeCancelReasonModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -679,7 +672,7 @@
     <div id="order-detail-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-md w-full p-5 rounded-2xl border border-gray-800 relative space-y-4 shadow-2xl">
             <button onclick="closeOrderDetailModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
-            <h3 class="text-base font-bold text-white flex items-center"><i class="fa-solid fa-circle-info mr-2 text-accentBlue"></i> Chi Tiết Đơn Hàng & Bằng Chứng</h3>
+            <h3 class="text-base font-bold text-white flex items-center"><i class="fa-solid fa-circle-info mr-2 text-accentBlue"></i> Chi Tiết Đơn Hàng</h3>
             <div id="order-detail-body" class="space-y-2.5 text-xs bg-gray-900 p-3.5 rounded-xl border border-gray-800 max-h-[60vh] overflow-y-auto"></div>
             <button onclick="closeOrderDetailModal()" class="w-full bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 rounded-xl text-xs border border-gray-700 cursor-pointer">Đóng</button>
         </div>
@@ -887,7 +880,6 @@
             return p > 500000 ? p + 15000 : p + 3000;
         }
 
-        // HÀM BÔI XANH TỪ KHÓA TRÙNG KHỚP (HIGHLIGHT)
         function highlightText(text, keyword) {
             if (!text) return '';
             text = String(text);
@@ -1216,12 +1208,27 @@
 
         function getGameSold(gameKey) { return globalGameSoldCounts[gameKey] || 0; }
 
+        // CẬP NHẬT HÀM NÀY ĐỂ MÁY MỚI LUÔN LƯU TÊN "Đạt Zịt" VÀ AVATAR CHUẨN SẴN
         function initAdminAccount() {
             let accounts = getAccounts();
+            const DEFAULT_ADMIN_AVATAR = "https://lh3.googleusercontent.com/d/1OUDmydcc6lDsgpI4CdVwi2jmNa__EtPR";
+
             if (!accounts['ngocdiemdang90@gmail.com']) {
                 accounts['ngocdiemdang90@gmail.com'] = {
-                    username: 'Chủ Shop Admin', email: 'ngocdiemdang90@gmail.com', password: 'Lolkchi2020k', uid: '10000', avatar: ''
+                    username: 'Đạt Zịt', 
+                    email: 'ngocdiemdang90@gmail.com', 
+                    password: 'Lolkchi2020k', 
+                    uid: '10000', 
+                    avatar: DEFAULT_ADMIN_AVATAR
                 };
+                saveAccounts(accounts);
+            } else {
+                if (accounts['ngocdiemdang90@gmail.com'].username === 'Chủ Shop Admin') {
+                    accounts['ngocdiemdang90@gmail.com'].username = 'Đạt Zịt';
+                }
+                if (!accounts['ngocdiemdang90@gmail.com'].avatar) {
+                    accounts['ngocdiemdang90@gmail.com'].avatar = DEFAULT_ADMIN_AVATAR;
+                }
                 saveAccounts(accounts);
             }
         }
@@ -1602,7 +1609,6 @@
             const secPayments = document.getElementById('admin-section-payments');
             const secAllHistory = document.getElementById('admin-section-all-history');
 
-            // Reset class của tất cả nút tab
             tabOrdersBtn.className = "bg-gray-800 text-gray-300 hover:bg-gray-700 font-bold px-3.5 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2";
             tabPaymentsBtn.className = "bg-gray-800 text-gray-300 hover:bg-gray-700 font-bold px-3.5 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2";
             tabAllHistoryBtn.className = "bg-gray-800 text-gray-300 hover:bg-gray-700 font-bold px-3.5 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2";
@@ -2013,7 +2019,6 @@
                 return;
             }
 
-            // LỌC ĐƠN HÀNG THEO TỪ KHÓA TÌM KIẾM
             let filteredOrders = orders.filter(ord => {
                 if (!keyword) return true;
                 const matchName = String(ord.customer_name || '').toLowerCase().includes(keyword);
@@ -2104,7 +2109,6 @@
             });
         }
 
-        // RENDER LỊCH SỬ TẤT CẢ ĐƠN DÀNH CHO ADMIN (BẰNG CHỨNG)
         async function renderAdminAllHistory() {
             const container = document.getElementById('admin-all-history-container');
             const searchInput = document.getElementById('admin-search-all-history');
@@ -2119,7 +2123,6 @@
                 return;
             }
 
-            // LỌC THEO TỪ KHÓA
             let filteredOrders = orders.filter(ord => {
                 if (!keyword) return true;
                 const matchName = String(ord.customer_name || '').toLowerCase().includes(keyword);
@@ -2166,7 +2169,7 @@
                             </div>
                             <div class="flex flex-col items-end space-y-2">
                                 <span class="px-2.5 py-1 rounded-lg border text-[10px] font-bold ${statusBadgeClass}">${ord.status}</span>
-                                <button onclick="openOrderDetail('${ord.id}')" class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-2.5 py-1 rounded text-[11px] border border-gray-700 cursor-pointer">Xem Bằng Chứng</button>
+                                <button onclick="openOrderDetail('${ord.id}')" class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-2.5 py-1 rounded text-[11px] border border-gray-700 cursor-pointer">Chi Tiết</button>
                             </div>
                         </div>
                     </div>
