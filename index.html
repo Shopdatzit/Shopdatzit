@@ -275,12 +275,13 @@
                 </button>
 
                 <div class="relative">
-                    <div id="auth-btn-container" onclick="toggleUserDropdown()" class="bg-gray-800 hover:bg-gray-700 cursor-pointer px-3 py-1.5 rounded-full text-xs flex items-center space-x-2 transition border border-gray-700 max-w-[170px]">
-                        <img id="header-user-avatar" src="" class="w-6 h-6 rounded-full object-cover border border-accentBlue flex-shrink-0" alt="Avatar">
-                        <div class="flex flex-col truncate leading-tight">
+                    <div class="bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded-full text-xs flex items-center space-x-2 transition border border-gray-700 max-w-[210px]">
+                        <img id="header-user-avatar" onclick="toggleUserDropdown()" src="" class="w-6 h-6 rounded-full object-cover border border-accentBlue flex-shrink-0 cursor-pointer" alt="Avatar">
+                        <div class="flex flex-col truncate leading-tight cursor-pointer" onclick="toggleUserDropdown()">
                             <span id="user-display-name" class="truncate font-semibold text-[11px]">Đăng Nhập</span>
                             <span id="header-user-balance" class="text-[9px] text-green-400 font-bold truncate">0đ</span>
                         </div>
+                        <button onclick="openTopUpBalanceModal()" class="bg-accentBlue hover:bg-blue-600 text-white px-2 py-1 rounded text-[10px] font-extrabold flex-shrink-0 cursor-pointer shadow transition" title="Nạp thêm số dư">+ Nạp</button>
                     </div>
 
                     <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-64 bg-cardBg border border-gray-800 rounded-xl shadow-2xl py-2 z-50 text-xs">
@@ -289,7 +290,7 @@
                             <div>
                                 <div id="dropdown-username" class="font-bold text-sm text-white">Khách</div>
                                 <div class="text-[10px] text-gray-400">UID: <span id="dropdown-uid">60742</span></div>
-                                <div class="text-[11px] text-green-400 font-bold mt-0.5" title="Số dư tài khoản">Số dư: <span id="dropdown-balance">0 đ</span></div>
+                                <div class="text-[11px] text-green-400 font-bold mt-0.5">Số dư: <span id="dropdown-balance">0 đ</span></div>
                             </div>
                         </div>
                         <a href="#" onclick="switchView('profile')" class="block px-4 py-2.5 hover:bg-gray-800 text-gray-300 transition"><i class="fa-solid fa-user mr-2 text-accentBlue"></i> Thông tin chung</a>
@@ -357,8 +358,8 @@
                                 <span id="cart-total" class="text-green-400 text-base">0 đ</span>
                             </div>
                             <div class="pt-2">
-                                <button onclick="openPaymentModal()" class="w-full bg-accentBlue hover:bg-blue-600 text-white font-bold py-2.5 rounded-xl transition text-xs shadow-md cursor-pointer flex items-center justify-center space-x-2">
-                                    <i class="fa-solid fa-qrcode"></i> <span>Quét QR Chuyển Khoản</span>
+                                <button onclick="openPaymentOptionsModal()" class="w-full bg-accentBlue hover:bg-blue-600 text-white font-bold py-2.5 rounded-xl transition text-xs shadow-md cursor-pointer flex items-center justify-center space-x-2">
+                                    <i class="fa-solid fa-wallet"></i> <span>Thanh Toán</span>
                                 </button>
                             </div>
                         </div>
@@ -524,6 +525,50 @@
     </footer>
 
     <!-- MODALS -->
+    <!-- MODAL NẠP SỐ DƯ QUA BANK -->
+    <div id="topup-balance-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-cardBg max-w-sm w-full p-5 rounded-2xl border border-accentBlue/60 relative space-y-4 shadow-2xl">
+            <button onclick="closeTopUpBalanceModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-base font-bold text-accentBlue text-center">NẠP THÊM SỐ DƯ TÀI KHOẢN</h3>
+            <div class="space-y-3">
+                <div>
+                    <label class="text-xs text-gray-300 block mb-1">Nhập số tiền muốn nạp (VNĐ):</label>
+                    <input type="number" id="topup-amount-input" placeholder="Ví dụ: 100000" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white outline-none focus:border-accentBlue font-bold">
+                </div>
+                <button onclick="generateTopupQR()" class="w-full bg-accentBlue hover:bg-blue-600 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer shadow transition">XUẤT MÃ QR THANH TOÁN</button>
+            </div>
+            <div id="topup-qr-container" class="hidden text-center space-y-3 pt-2 border-t border-gray-800">
+                <div class="bg-white p-2.5 rounded-xl inline-block mx-auto border border-gray-700 shadow-inner">
+                    <img id="topup-qr-img" src="" alt="QR Code" class="w-40 h-40 object-contain mx-auto">
+                </div>
+                <div class="text-left bg-gray-900 p-2.5 rounded-lg text-xs space-y-1 border border-gray-800">
+                    <div class="flex justify-between"><span>Ngân hàng:</span> <span class="font-bold text-gray-200">Vietcombank</span></div>
+                    <div class="flex justify-between"><span>STK:</span> <span class="font-bold text-accentBlue select-all">1065342786</span></div>
+                    <div class="flex justify-between"><span>Chủ TK:</span> <span class="font-bold text-gray-200 select-all">DANG VAN TIEN DAT</span></div>
+                    <div class="flex justify-between border-t border-gray-800 pt-1"><span>Số tiền:</span> <span id="topup-modal-amount" class="font-bold text-green-400 select-all">0 đ</span></div>
+                </div>
+                <p class="text-[10px] text-yellow-400 font-medium">💡 Sau khi chuyển khoản thành công, hệ thống sẽ tự động duyệt và cộng vào số dư của bạn.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL LỰA CHỌN THANH TOÁN ĐƠN HÀNG -->
+    <div id="payment-options-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-cardBg max-w-sm w-full p-5 rounded-2xl border border-gray-800 relative space-y-4 shadow-2xl text-center">
+            <button onclick="closePaymentOptionsModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-base font-bold text-white">LỰA CHỌN PHƯƠNG THỨC THANH TOÁN</h3>
+            <div class="space-y-3 pt-2">
+                <button onclick="payWithBalance()" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3 rounded-xl text-xs cursor-pointer shadow transition flex flex-col items-center justify-center space-y-1">
+                    <span class="text-sm"><i class="fa-solid fa-wallet mr-1.5"></i> Thanh Toán Bằng Số Dư</span>
+                    <span class="text-[10px] text-green-200 font-normal">Số dư hiện tại: <b id="option-balance-display">0 đ</b></span>
+                </button>
+                <button onclick="payWithBankTransfer()" class="w-full bg-accentBlue hover:bg-blue-600 text-white font-bold py-3 rounded-xl text-xs cursor-pointer shadow transition flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-qrcode text-sm"></i> <span>Thanh Toán Chuyển Khoản QR</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div id="pending-payment-approval-modal" class="fixed inset-0 bg-black/85 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-md w-full p-6 rounded-2xl border border-yellow-500/60 relative space-y-4 shadow-2xl text-center">
             <div class="w-14 h-14 bg-yellow-950 text-yellow-400 rounded-full flex items-center justify-center mx-auto text-2xl border border-yellow-700 animate-spin">
@@ -547,15 +592,12 @@
                 <i class="fa-solid fa-circle-check"></i>
             </div>
             <div>
-                <h3 class="text-base font-bold text-white">Đã Duyệt Chuyển Tiền Thành Công! 🎉</h3>
-                <p class="text-xs text-green-400 mt-1.5 font-medium">Admin đã xác nhận nhận được tiền chuyển khoản của bạn. Đơn hàng đã chuyển sang trạng thái <b>CHỜ DUYỆT ĐƠN</b> để tiến hành nạp game.</p>
+                <h3 class="text-base font-bold text-white">Thanh Toán Hoàn Tất! 🎉</h3>
+                <p class="text-xs text-green-400 mt-1.5 font-medium">Đơn hàng của bạn đã được ghi nhận và chuyển vào trạng thái chờ xử lý nạp game.</p>
             </div>
             <div class="pt-2 border-t border-gray-800 space-y-2">
                 <button onclick="closeApprovedSuccessModalToGoHistory()" class="w-full bg-accentBlue hover:bg-blue-600 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer shadow transition flex items-center justify-center space-x-2">
-                    <i class="fa-solid fa-clock-rotate-left"></i> <span>Quay lại Lịch Sử Đơn Hàng</span>
-                </button>
-                <button onclick="closeApprovedSuccessModal()" class="w-full bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold py-2 rounded-xl text-xs cursor-pointer">
-                    Ở lại trang này
+                    <i class="fa-solid fa-clock-rotate-left"></i> <span>Xem Lịch Sử Đơn Hàng</span>
                 </button>
             </div>
         </div>
@@ -826,7 +868,6 @@
         let currentActiveOrderId = null; 
         let currentAdminTab = 'orders'; 
         const DEFAULT_AVATAR_URL = "https://lh3.googleusercontent.com/d/1OUDmydcc6lDsgpI4CdVwi2jmNa__EtPR";
-        let clientUserIP = "IP_CHUA_XAC_DINH";
 
         function triggerGlobalLoader(baseDurationMs = 600) {
             const loader = document.getElementById('global-page-loader');
@@ -835,49 +876,9 @@
             setTimeout(() => loader.classList.add('loader-hidden'), baseDurationMs);
         }
 
-        async function initVisitorIPTracking() {
-            try {
-                const res = await fetch('https://api.ipify.org?format=json');
-                const data = await res.json();
-                clientUserIP = data.ip || "IP_ANONYMOUS";
-            } catch (e) {
-                clientUserIP = "IP_LOCAL_" + Math.random().toString(36).substring(7);
-            }
-        }
-
         function checkIsIpBanned() {
             let banList = JSON.parse(localStorage.getItem('shopdatzit_banned_ips') || '{}');
-            if (banList[clientUserIP]) {
-                let banTime = banList[clientUserIP];
-                if (Date.now() < banTime) return Math.ceil((banTime - Date.now()) / (1000 * 60 * 60));
-                else { delete banList[clientUserIP]; localStorage.setItem('shopdatzit_banned_ips', JSON.stringify(banList)); }
-            }
             return 0;
-        }
-
-        function recordFailedAdminAttempt() {
-            let attemptsData = JSON.parse(localStorage.getItem('shopdatzit_admin_fails') || '{}');
-            let currentFails = (attemptsData[clientUserIP] || 0) + 1;
-            attemptsData[clientUserIP] = currentFails;
-            localStorage.setItem('shopdatzit_admin_fails', JSON.stringify(attemptsData));
-            return currentFails;
-        }
-
-        function resetFailedAdminAttempt() {
-            let attemptsData = JSON.parse(localStorage.getItem('shopdatzit_admin_fails') || '{}');
-            delete attemptsData[clientUserIP];
-            localStorage.setItem('shopdatzit_admin_fails', JSON.stringify(attemptsData));
-        }
-
-        function getRemainingFailedAttempts() {
-            let attemptsData = JSON.parse(localStorage.getItem('shopdatzit_admin_fails') || '{}');
-            return Math.max(0, 10 - (attemptsData[clientUserIP] || 0));
-        }
-
-        function banCurrentIpFor24Hours() {
-            let banList = JSON.parse(localStorage.getItem('shopdatzit_banned_ips') || '{}');
-            banList[clientUserIP] = Date.now() + (24 * 60 * 60 * 1000);
-            localStorage.setItem('shopdatzit_banned_ips', JSON.stringify(banList));
         }
 
         function calcPrice(p) {
@@ -1052,7 +1053,6 @@
 
         window.onload = async function() {
             triggerGlobalLoader(800);
-            await initVisitorIPTracking();
             initAdminAccount();
             initTheme();
             await fetchAndCalculateSolds();
@@ -1302,8 +1302,9 @@
             if (currentUsername && accounts[currentUsername]) {
                 const userAcc = accounts[currentUsername];
                 const displayName = userAcc.username || currentUsername;
-                const userBalance = (userAcc.balance || 0).toLocaleString('vi-VN') + 'đ';
-                const userBalanceFull = (userAcc.balance || 0).toLocaleString('vi-VN') + ' đ';
+                const userBalanceNum = userAcc.balance || 0;
+                const userBalance = userBalanceNum.toLocaleString('vi-VN') + 'đ';
+                const userBalanceFull = userBalanceNum.toLocaleString('vi-VN') + ' đ';
 
                 disp.innerText = displayName;
                 if (headerBalance) headerBalance.innerText = userBalance;
@@ -1416,7 +1417,7 @@
         window.addEventListener('click', function(e) {
             const container = document.getElementById('auth-btn-container');
             const dropdown = document.getElementById('user-dropdown');
-            if (container && dropdown && !container.contains(e.target) && !dropdown.contains(e.target)) dropdown.classList.add('hidden');
+            if (dropdown && !dropdown.contains(e.target) && !e.target.closest('#auth-btn-container')) dropdown.classList.add('hidden');
         });
 
         function openAvatarModal() {
@@ -1454,7 +1455,7 @@
 
         function togglePasswordVisibility(fieldId) {
             const passInput = document.getElementById(fieldId);
-            passInput.type = passInput.type === 'password' ? 'text' : 'password';
+            if (passInput) passInput.type = passInput.type === 'password' ? 'text' : 'password';
         }
         
         function openAuthModal() { closeForgotModal(); closeRegisterModal(); document.getElementById('auth-modal').classList.remove('hidden'); }
@@ -1679,7 +1680,19 @@
 
             const inputContainer = document.getElementById('order-inputs-container');
             if (inputContainer) {
-                if (gameKey === 'identityv') {
+                if (gameKey === 'garena') {
+                    // Mua thẻ Garena: chỉ cần nhập UID*
+                    inputContainer.innerHTML = `
+                        <div class="sm:col-span-2">
+                            <label class="text-xs text-gray-400 block mb-1">UID / Tên tài khoản Garena nhận thẻ <span class="text-red-400">*</span></label>
+                            <input type="text" id="input-username" placeholder="Nhập UID Garena" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="text-xs text-gray-400 block mb-1">Số điện thoại / Zalo (Tùy chọn)</label>
+                            <input type="text" id="input-phone" placeholder="Nhập SĐT/Zalo nhận thông tin" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
+                        </div>
+                    `;
+                } else if (gameKey === 'identityv') {
                     inputContainer.innerHTML = `
                         <div>
                             <label class="text-xs text-gray-400 block mb-1">Game ID (UID) <span class="text-red-400">*</span></label>
@@ -1803,7 +1816,63 @@
             if (checkoutSection) checkoutSection.classList.remove('hidden');
         }
 
-        async function openPaymentModal() {
+        // MỞ MODAL NẠP SỐ DƯ
+        function openTopUpBalanceModal() {
+            if (!currentUsername) { openAuthModal(); return; }
+            document.getElementById('topup-amount-input').value = '';
+            document.getElementById('topup-qr-container').classList.add('hidden');
+            document.getElementById('topup-balance-modal').classList.remove('hidden');
+        }
+
+        function closeTopUpBalanceModal() {
+            document.getElementById('topup-balance-modal').classList.add('hidden');
+        }
+
+        function generateTopupQR() {
+            const amtInput = document.getElementById('topup-amount-input').value.trim();
+            const amount = parseInt(amtInput);
+            if (!amount || amount <= 0) { alert('Vui lòng nhập số tiền hợp lệ!'); return; }
+
+            document.getElementById('topup-modal-amount').innerText = amount.toLocaleString('vi-VN') + ' đ';
+            document.getElementById('topup-qr-img').src = `https://img.vietqr.io/image/VCB-1065342786-compact.png?amount=${amount}&addInfo=napsochu312&accountName=DANG%20VAN%20TIEN%20DAT`;
+            document.getElementById('topup-qr-container').classList.remove('hidden');
+
+            // Tự động ghi nhận tạo đơn nạp số dư chờ admin duyệt
+            createTopupOrderRecord(amount);
+        }
+
+        async function createTopupOrderRecord(amount) {
+            const randomCode = Math.floor(100000 + Math.random() * 900000);
+            let accounts = getAccounts();
+            if (currentUsername && accounts[currentUsername]) {
+                const now = Date.now();
+                const newOrder = {
+                    id: 'TOPUP_' + now,
+                    code: '#' + randomCode,
+                    customer_name: currentUsername,
+                    uid: accounts[currentUsername].uid || '10000',
+                    game: 'Nạp Số Dư Tài Khoản',
+                    package: `Nạp ${amount.toLocaleString('vi-VN')} đ vào ví`,
+                    total_qty: 1,
+                    items: [{ gameName: 'Nạp Số Dư', pkgName: `${amount.toLocaleString('vi-VN')}đ`, price: amount, qty: 1 }],
+                    price: amount,
+                    time: new Date().toLocaleString('vi-VN'),
+                    timestamp: now,
+                    status: 'Chờ duyệt thanh toán',
+                    input_user: currentUsername,
+                    input_pass: '---',
+                    input_server: 'Nạp Ví',
+                    input_phone: '---',
+                    input_note: 'Nạp số dư',
+                    admin_note: '',
+                    cancel_reason: ''
+                };
+                await supabaseClient.from('orders').insert([newOrder]);
+            }
+        }
+
+        // LỰA CHỌN THANH TOÁN (THANH TOÁN BẰNG SỐ DƯ HOẶC CHUYỂN KHOẢN)
+        function openPaymentOptionsModal() {
             if (!currentUsername) { openAuthModal(); return; }
             if (!cart || cart.length === 0) { alert("Giỏ hàng trống!"); return; }
 
@@ -1817,18 +1886,106 @@
                 return;
             }
 
-            if (inputPass && !inputPass.value.trim()) {
-                alert('Vui lòng nhập Mật khẩu tài khoản game!');
-                inputPass.focus();
+            if (currentGameKey !== 'garena') {
+                if (inputPass && !inputPass.value.trim()) {
+                    alert('Vui lòng nhập Mật khẩu tài khoản game!');
+                    inputPass.focus();
+                    return;
+                }
+                if (!inputServer || !inputServer.value || inputServer.value === '' || inputServer.value.includes('Chọn') || inputServer.value.includes('Vui lòng')) {
+                    alert('Vui lòng chọn Máy chủ (Server) hợp lệ!');
+                    if (inputServer) inputServer.focus();
+                    return;
+                }
+            }
+
+            let accounts = getAccounts();
+            let userBal = (accounts[currentUsername] && accounts[currentUsername].balance) ? accounts[currentUsername].balance : 0;
+            document.getElementById('option-balance-display').innerText = userBal.toLocaleString('vi-VN') + ' đ';
+
+            document.getElementById('payment-options-modal').classList.remove('hidden');
+        }
+
+        function closePaymentOptionsModal() {
+            document.getElementById('payment-options-modal').classList.add('hidden');
+        }
+
+        // THANH TOÁN BẰNG SỐ DƯ
+        async function payWithBalance() {
+            let accounts = getAccounts();
+            let userAcc = accounts[currentUsername];
+            if (!userAcc) { openAuthModal(); return; }
+
+            const totalAmount = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+            const userBal = userAcc.balance || 0;
+
+            if (userBal < totalAmount) {
+                alert(`Số dư không đủ! Số dư hiện tại của bạn là ${userBal.toLocaleString('vi-VN')} đ, cần ${totalAmount.toLocaleString('vi-VN')} đ.`);
                 return;
             }
 
-            if (!inputServer || !inputServer.value || inputServer.value === '' || inputServer.value.includes('Chọn') || inputServer.value.includes('Vui lòng')) {
-                alert('Vui lòng chọn Máy chủ (Server) hợp lệ!');
-                if (inputServer) inputServer.focus();
-                return;
-            }
+            // Trừ tiền số dư
+            userAcc.balance = userBal - totalAmount;
+            saveAccounts(accounts);
+            updateAuthUI();
 
+            closePaymentOptionsModal();
+
+            // Tạo đơn hàng trạng thái "Chờ duyệt đơn" ngay lập tức vì đã thanh toán bằng số dư thành công
+            await confirmOrderClientWithBalance(totalAmount);
+            document.getElementById('payment-approved-success-modal').classList.remove('hidden');
+        }
+
+        async function confirmOrderClientWithBalance(totalAmount) {
+            const randomCode = Math.floor(100000 + Math.random() * 900000);
+            let accounts = getAccounts();
+            if (currentUsername && accounts[currentUsername]) {
+                const now = Date.now();
+                const totalQty = cart.reduce((sum, i) => sum + i.qty, 0);
+                currentActiveOrderId = 'ORD_' + now;
+
+                const passEl = document.getElementById('input-password');
+                const phoneEl = document.getElementById('input-phone');
+                const newOrder = {
+                    id: currentActiveOrderId, 
+                    code: '#' + randomCode, 
+                    customer_name: currentUsername,
+                    uid: accounts[currentUsername].uid || '10000', 
+                    game: cart.length === 1 ? cart[0].gameName : `Nhiều dịch vụ (${cart.length})`, 
+                    package: cart.map(i => `${i.pkgName} (x${i.qty})`).join(', '),
+                    total_qty: totalQty, 
+                    items: cart, 
+                    price: totalAmount,
+                    time: new Date().toLocaleString('vi-VN'), 
+                    timestamp: now, 
+                    status: 'Chờ duyệt đơn', // Đã thanh toán bằng số dư nên vào thẳng chờ duyệt nạp game
+                    input_user: document.getElementById('input-username').value || 'Không có',
+                    input_pass: passEl ? passEl.value : 'Không yêu cầu',
+                    input_server: currentGameKey === 'garena' ? 'Thẻ Cào / Mặc định' : (document.getElementById('input-server').value || 'Mặc định'),
+                    input_phone: phoneEl ? phoneEl.value : 'Không có',
+                    input_note: (document.getElementById('input-user-note') ? document.getElementById('input-user-note').value : '') || 'Thanh toán bằng số dư',
+                    admin_note: '',
+                    cancel_reason: ''
+                };
+
+                await supabaseClient.from('orders').insert([newOrder]);
+
+                sendAutoEmail(
+                    "ngocdiemdang90@gmail.com",
+                    `Đơn hàng mới #${randomCode} thanh toán bằng số dư từ ${currentUsername}`,
+                    `Khách hàng <b>${currentUsername}</b> vừa đặt đơn <b>#${randomCode}</b> bằng số dư.<br>Tổng tiền: <b>${totalAmount.toLocaleString('vi-VN')} đ</b>.<br>Vui lòng tiến hành xử lý!`,
+                    true
+                );
+
+                clearCart(); 
+                await fetchAndCalculateSolds();
+                renderGameList();
+            }
+        }
+
+        // THANH TOÁN CHUYỂN KHOẢN QR
+        async function payWithBankTransfer() {
+            closePaymentOptionsModal();
             const amount = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
             document.getElementById('modal-amount').innerText = amount.toLocaleString('vi-VN') + ' đ';
             document.getElementById('viet-qr-img').src = `https://img.vietqr.io/image/VCB-1065342786-compact.png?amount=${amount}&addInfo=datzit312&accountName=DANG%20VAN%20TIEN%20DAT`;
@@ -1868,12 +2025,11 @@
                     status: 'Chờ duyệt thanh toán',
                     input_user: document.getElementById('input-username').value || 'Không có',
                     input_pass: passEl ? passEl.value : 'Không yêu cầu',
-                    input_server: document.getElementById('input-server').value || 'Mặc định',
+                    input_server: currentGameKey === 'garena' ? 'Thẻ Cào / Mặc định' : (document.getElementById('input-server').value || 'Mặc định'),
                     input_phone: phoneEl ? phoneEl.value : 'Không có',
                     input_note: (document.getElementById('input-user-note') ? document.getElementById('input-user-note').value : '') || 'Không có',
                     admin_note: '',
-                    cancel_reason: '',
-                    user_ip: clientUserIP
+                    cancel_reason: ''
                 };
 
                 const { error } = await supabaseClient.from('orders').insert([newOrder]);
@@ -1899,6 +2055,7 @@
 
         function closeApprovedSuccessModal() {
             document.getElementById('payment-approved-success-modal').classList.add('hidden');
+            switchView('history');
         }
 
         function closeApprovedSuccessModalToGoHistory() {
@@ -1912,22 +2069,30 @@
 
             const { error } = await supabaseClient.from('orders').update({ status: 'Chờ duyệt đơn' }).eq('id', orderId);
             if (!error) {
-                if (ord) {
+                if (ord && ord.game === 'Nạp Số Dư Tài Khoản') {
+                    // Nếu là đơn nạp số dư, duyệt chuyển tiền xong thì tự động cộng số dư cho khách luôn
                     let accounts = getAccounts();
-                    let custAcc = accounts[ord.customer_name];
-                    let custEmail = custAcc ? custAcc.email : ord.customer_name;
-                    if (custEmail && custEmail.includes('@')) {
-                        sendAutoEmail(
-                            custEmail,
-                            `Xác nhận thanh toán đơn hàng ${ord.code}`,
-                            `Xin chào <b>${ord.customer_name}</b>,<br>Thanh toán cho đơn hàng <b>${ord.code}</b> của bạn đã được Admin xác nhận thành công!<br>Hiện tại đơn đang chuyển sang trạng thái <b>ĐANG CHỜ DUYỆT ĐƠN</b> để tiến hành nạp game.<br>Cảm ơn bạn!`,
-                            true
-                        );
+                    let custKey = ord.customer_name.toLowerCase();
+                    if (accounts[custKey]) {
+                        accounts[custKey].balance = (accounts[custKey].balance || 0) + ord.price;
+                        saveAccounts(accounts);
+                    } else {
+                        for (let k in accounts) {
+                            if (accounts[k].username === ord.customer_name || accounts[k].email === ord.customer_name) {
+                                accounts[k].balance = (accounts[k].balance || 0) + ord.price;
+                                saveAccounts(accounts);
+                                break;
+                            }
+                        }
                     }
+                    // Đánh dấu đơn nạp ví thành hoàn thành luôn
+                    await supabaseClient.from('orders').update({ status: 'Đã Nạp Thành Công', admin_note: 'Đã tự động cộng số dư vào ví tài khoản.' }).eq('id', orderId);
                 }
-                alert('Đã duyệt tiền thành công! Đơn hàng chuyển sang tab Quản Lý Đơn Hàng.');
+
+                alert('Đã duyệt chuyển tiền thành công!');
                 renderAdminOrders();
                 renderAdminPayments();
+                updateAuthUI();
             } else {
                 alert('Lỗi cập nhật: ' + error.message);
             }
@@ -2212,11 +2377,11 @@
             const { data: orders } = await supabaseClient.from('orders').select('*').eq('id', approveTargetOrderId);
             const ord = orders && orders.length > 0 ? orders[0] : null;
 
-            if (ord) {
+            if (ord && ord.game !== 'Nạp Số Dư Tài Khoản') {
                 let accounts = getAccounts();
                 let custKey = ord.customer_name.toLowerCase();
                 
-                // Tự động cộng tiền vào số dư khách hàng khi admin duyệt đơn
+                // Tự động cộng tiền vào số dư khách hàng khi admin duyệt đơn mua game
                 if (accounts[custKey]) {
                     accounts[custKey].balance = (accounts[custKey].balance || 0) + ord.price;
                     saveAccounts(accounts);
@@ -2241,7 +2406,7 @@
                         sendAutoEmail(
                             custEmail,
                             `Đơn hàng ${ord.code} đã hoàn thành`,
-                            `Xin chào <b>${ord.customer_name}</b>,<br>Đơn hàng <b>${ord.code}</b> của bạn đã được hoàn thành!<br>Tổng cộng: <b>${ord.price.toLocaleString('vi-VN')} đ</b> đã được cộng trực tiếp vào số dư tài khoản của bạn.<br><br><b>💬 Ghi chú từ Admin:</b><br><i>"${adminNote}"</i><br><br>Cảm ơn bạn đã ủng hộ ShopDatZit!`,
+                            `Xin chào <b>${ord.customer_name}</b>,<br>Đơn hàng <b>${ord.code}</b> của bạn đã được hoàn thành!<br>Tổng cộng: <b>${ord.price.toLocaleString('vi-VN')} đ</b>.<br><br><b>💬 Ghi chú từ Admin:</b><br><i>"${adminNote}"</i><br><br>Cảm ơn bạn đã ủng hộ ShopDatZit!`,
                             true
                         );
                     }
@@ -2254,7 +2419,7 @@
                 renderAdminPayments();
                 renderAdminAllHistory();
                 updateAuthUI();
-                alert('Đã duyệt đơn thành công và tự động cộng tiền vào số dư khách hàng!');
+                alert('Đã hoàn tất đơn hàng!');
             }
         }
 
