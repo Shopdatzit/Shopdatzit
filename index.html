@@ -1060,7 +1060,6 @@
             initOtpWidget('change-email-otp-widget', changeEmailVerifyCallback);
         };
 
-        // ĐÃ TÍCH HỢP ĐẦY ĐỦ RENDER ADMIN PAYMENTS VÀO REALTIME LISTENER
         function initRealtimeListener() {
             supabaseClient.channel('public:orders').on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, async (payload) => {
                 const updatedOrder = payload.new;
@@ -1077,7 +1076,7 @@
                 renderGameList();
                 renderHistory();
                 renderAdminOrders();
-                renderAdminPayments(); // Cập nhật tự động phần duyệt chuyển tiền realtime
+                renderAdminPayments();
                 renderAdminAllHistory();
                 updateAuthUI();
             }).subscribe();
@@ -1185,7 +1184,8 @@
 
         async function fetchAndCalculateSolds() {
             globalGameSoldCounts = {};
-            const { data: orders } = await supabaseClient.from('orders').select('*');
+            const { data: orders, error } = await supabaseClient.from('orders').select('*');
+            if (error) { console.error('Lỗi tải dữ liệu đơn hàng:', error); return; }
             if (!orders) return;
 
             orders.forEach(ord => {
@@ -1858,7 +1858,14 @@
                     admin_note: '',
                     cancel_reason: ''
                 };
-                await supabaseClient.from('orders').insert([newOrder]);
+                
+                // ĐÃ SỬA: Bắt lỗi Supabase đầy đủ để đảm bảo không bị thất thoát đơn
+                const { error } = await supabaseClient.from('orders').insert([newOrder]);
+                if (error) {
+                    console.error('Lỗi Supabase khi tạo đơn nạp ví:', error);
+                    alert('Lỗi kết nối CSDL (Supabase): ' + error.message);
+                    return;
+                }
 
                 sendAutoEmail(
                     "ngocdiemdang90@gmail.com",
@@ -1961,7 +1968,8 @@
                     cancel_reason: ''
                 };
 
-                await supabaseClient.from('orders').insert([newOrder]);
+                const { error } = await supabaseClient.from('orders').insert([newOrder]);
+                if (error) { console.error('Lỗi tạo đơn:', error.message); alert('Lỗi tạo đơn: ' + error.message); return; }
 
                 sendAutoEmail(
                     "ngocdiemdang90@gmail.com",
@@ -2025,7 +2033,7 @@
                 };
 
                 const { error } = await supabaseClient.from('orders').insert([newOrder]);
-                if (error) { console.error('Lỗi tạo đơn:', error.message); return; }
+                if (error) { console.error('Lỗi tạo đơn:', error.message); alert('Lỗi tạo đơn: ' + error.message); return; }
 
                 sendAutoEmail(
                     "ngocdiemdang90@gmail.com",
@@ -2135,7 +2143,8 @@
             const container = document.getElementById('history-container');
             if (!container || !currentUsername) return;
 
-            const { data: orders } = await supabaseClient.from('orders').select('*').eq('customer_name', currentUsername).order('timestamp', { ascending: false });
+            const { data: orders, error } = await supabaseClient.from('orders').select('*').eq('customer_name', currentUsername).order('timestamp', { ascending: false });
+            if (error) { console.error('Lỗi tải lịch sử:', error); return; }
             if (!orders || orders.length === 0) {
                 container.innerHTML = `<div class="bg-cardBg p-6 rounded-xl border border-gray-800 text-center text-gray-400 text-xs">Bạn chưa có đơn nạp nào.</div>`;
                 return;
@@ -2181,7 +2190,12 @@
 
             if (!container || !isAdmin()) return;
 
-            const { data: orders } = await supabaseClient.from('orders').select('*').eq('status', 'Chờ duyệt đơn').order('timestamp', { ascending: false });
+            const { data: orders, error } = await supabaseClient.from('orders').select('*').eq('status', 'Chờ duyệt đơn').order('timestamp', { ascending: false });
+            if (error) {
+                console.error('Lỗi tải đơn hàng chờ nạp:', error);
+                container.innerHTML = `<div class="bg-cardBg p-6 rounded-xl border border-gray-800 text-center text-red-400 text-xs">Lỗi CSDL: ${error.message}</div>`;
+                return;
+            }
             
             if (countEl) countEl.innerText = orders ? orders.length : 0;
 
@@ -2244,7 +2258,12 @@
             const countEl = document.getElementById('pending-pay-count');
             if (!container || !isAdmin()) return;
 
-            const { data: orders } = await supabaseClient.from('orders').select('*').eq('status', 'Chờ duyệt thanh toán').order('timestamp', { ascending: false });
+            const { data: orders, error } = await supabaseClient.from('orders').select('*').eq('status', 'Chờ duyệt thanh toán').order('timestamp', { ascending: false });
+            if (error) {
+                console.error('Lỗi tải danh sách chờ duyệt tiền:', error);
+                container.innerHTML = `<div class="bg-cardBg p-6 rounded-xl border border-gray-800 text-center text-red-400 text-xs">Lỗi CSDL: ${error.message}</div>`;
+                return;
+            }
             
             if (countEl) countEl.innerText = orders ? orders.length : 0;
 
@@ -2287,7 +2306,8 @@
 
             if (!container || !isAdmin()) return;
 
-            const { data: orders } = await supabaseClient.from('orders').select('*').order('timestamp', { ascending: false });
+            const { data: orders, error } = await supabaseClient.from('orders').select('*').order('timestamp', { ascending: false });
+            if (error) { console.error('Lỗi tải tất cả lịch sử:', error); return; }
             
             if (!orders || orders.length === 0) {
                 container.innerHTML = `<div class="bg-cardBg p-6 rounded-xl border border-gray-800 text-center text-gray-400 text-xs">Chưa có dữ liệu lịch sử đơn hàng.</div>`;
