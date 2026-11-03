@@ -294,6 +294,7 @@
                         </div>
                         <a href="#" onclick="switchView('profile')" class="block px-4 py-2.5 hover:bg-gray-800 text-gray-300 transition"><i class="fa-solid fa-user mr-2 text-accentBlue"></i> Thông tin chung</a>
                         <a href="#" onclick="switchView('history')" class="block px-4 py-2.5 hover:bg-gray-800 text-gray-300 transition"><i class="fa-solid fa-clock-rotate-left mr-2 text-accentBlue"></i> Lịch sử mua hàng</a>
+                        <a href="#" onclick="switchView('balance_history')" class="block px-4 py-2.5 hover:bg-gray-800 text-gray-300 transition"><i class="fa-solid fa-wallet mr-2 text-accentBlue"></i> Biến động số dư</a>
                         <div class="border-t border-gray-800 my-1"></div>
                         <a href="#" onclick="handleLogout()" class="block px-4 py-2.5 hover:bg-red-950/40 text-red-400 transition font-bold"><i class="fa-solid fa-right-from-bracket mr-2"></i> Đăng xuất</a>
                     </div>
@@ -406,6 +407,13 @@
         <div id="history-view" class="view-section hidden max-w-2xl mx-auto space-y-4">
             <h1 class="text-lg font-bold flex items-center"><i class="fa-solid fa-clock-rotate-left mr-2 text-accentBlue"></i> Lịch Sử Đơn Hàng (Realtime)</h1>
             <div id="history-container" class="space-y-3"></div>
+        </div>
+
+        <!-- MỤC BIẾN ĐỘNG SỐ DƯ MỚI -->
+        <div id="balance-history-view" class="view-section hidden max-w-2xl mx-auto space-y-4">
+            <h1 class="text-lg font-bold flex items-center text-green-400"><i class="fa-solid fa-wallet mr-2"></i> Lịch Sử Biến Động Số Dư (Ví)</h1>
+            <p class="text-xs text-gray-400">Ghi lại tất cả các khoản tiền nạp thành công và giao dịch thanh toán qua số dư ví của bạn.</p>
+            <div id="balance-history-container" class="space-y-3"></div>
         </div>
 
         <div id="cskh-view" class="view-section hidden max-w-md mx-auto space-y-4">
@@ -1075,6 +1083,7 @@
                 await fetchAndCalculateSolds();
                 renderGameList();
                 renderHistory();
+                renderBalanceHistory();
                 renderAdminOrders();
                 renderAdminPayments();
                 renderAdminAllHistory();
@@ -1177,6 +1186,21 @@
 
         function getAccounts() { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
         function saveAccounts(accs) { localStorage.setItem(STORAGE_KEY, JSON.stringify(accs)); }
+        
+        // HÀM LƯU BIẾN ĐỘNG SỐ DƯ CHO KHÁCH
+        function logBalanceHistory(username, amount, type, description) {
+            let history = JSON.parse(localStorage.getItem('shopdatzit_balance_history') || '{}');
+            if (!history[username]) history[username] = [];
+            history[username].unshift({
+                amount: amount,
+                type: type, // 'IN' (Cộng tiền/Nạp) hoặc 'OUT' (Trừ tiền/Mua hàng)
+                description: description,
+                time: new Date().toLocaleString('vi-VN'),
+                timestamp: Date.now()
+            });
+            localStorage.setItem('shopdatzit_balance_history', JSON.stringify(history));
+        }
+
         function isAdmin() { 
             let accounts = getAccounts();
             return currentUsername && accounts[currentUsername] && (accounts[currentUsername].email === 'ngocdiemdang90@gmail.com' || currentUsername === 'ngocdiemdang90@gmail.com'); 
@@ -1340,6 +1364,7 @@
                 avatars.forEach(el => { if(el) el.src = DEFAULT_AVATAR_URL; });
             }
             renderHistory();
+            renderBalanceHistory();
             renderAdminOrders();
             renderAdminPayments();
             renderAdminAllHistory();
@@ -1605,6 +1630,7 @@
             if (viewName === 'home') { await fetchAndCalculateSolds(); renderGameList(); document.getElementById('home-view').classList.remove('hidden'); }
             else if (viewName === 'profile') { if (!currentUsername) { openAuthModal(); return; } document.getElementById('profile-view').classList.remove('hidden'); }
             else if (viewName === 'history') { if (!currentUsername) { openAuthModal(); return; } document.getElementById('history-view').classList.remove('hidden'); renderHistory(); }
+            else if (viewName === 'balance_history') { if (!currentUsername) { openAuthModal(); return; } document.getElementById('balance-history-view').classList.remove('hidden'); renderBalanceHistory(); }
             else if (viewName === 'cskh') { document.getElementById('cskh-view').classList.remove('hidden'); }
             else if (viewName === 'admin') {
                 if (checkIsIpBanned() > 0 || !isAdmin()) { alert('Không có quyền!'); switchView('home'); return; }
@@ -1859,7 +1885,6 @@
                     cancel_reason: ''
                 };
                 
-                // ĐÃ SỬA: Bắt lỗi Supabase đầy đủ để đảm bảo không bị thất thoát đơn
                 const { error } = await supabaseClient.from('orders').insert([newOrder]);
                 if (error) {
                     console.error('Lỗi Supabase khi tạo đơn nạp ví:', error);
@@ -1928,6 +1953,7 @@
             }
 
             userAcc.balance = userBal - totalAmount;
+            logBalanceHistory(currentUsername, totalAmount, 'OUT', 'Thanh toán đơn hàng game');
             saveAccounts(accounts);
             updateAuthUI();
 
@@ -2058,33 +2084,48 @@
             switchView('history');
         }
 
+        // HÀM FIX LỖI DUYỆT TIỀN: CỘNG TIỀN VÀO TÀI KHOẢN KHÁCH VÀ LƯU BIẾN ĐỘNG SỐ DƯ
         async function approvePaymentByAdmin(orderId) {
             const { data: orders } = await supabaseClient.from('orders').select('*').eq('id', orderId);
             const ord = orders ? orders[0] : null;
 
-            const { error } = await supabaseClient.from('orders').update({ status: 'Chờ duyệt đơn' }).eq('id', orderId);
-            if (!error) {
-                if (ord && ord.game === 'Nạp Số Dư Tài Khoản') {
-                    let accounts = getAccounts();
-                    let custKey = ord.customer_name.toLowerCase();
-                    if (accounts[custKey]) {
-                        accounts[custKey].balance = (accounts[custKey].balance || 0) + ord.price;
-                        saveAccounts(accounts);
-                    } else {
-                        for (let k in accounts) {
-                            if (accounts[k].username === ord.customer_name || accounts[k].email === ord.customer_name) {
-                                accounts[k].balance = (accounts[k].balance || 0) + ord.price;
-                                saveAccounts(accounts);
-                                break;
-                            }
-                        }
-                    }
-                    await supabaseClient.from('orders').update({ status: 'Đã Nạp Thành Công', admin_note: 'Đã tự động cộng số dư vào ví tài khoản.' }).eq('id', orderId);
-                }
+            if (!ord) { alert('Không tìm thấy đơn hàng!'); return; }
 
-                alert('Đã duyệt chuyển tiền thành công!');
+            // 1. Cộng tiền vào ví tài khoản của khách
+            let accounts = getAccounts();
+            let custKey = ord.customer_name.toLowerCase();
+            let targetAccountKey = null;
+
+            if (accounts[custKey]) {
+                targetAccountKey = custKey;
+            } else {
+                for (let k in accounts) {
+                    if (accounts[k].username === ord.customer_name || accounts[k].email === ord.customer_name) {
+                        targetAccountKey = k;
+                        break;
+                    }
+                }
+            }
+
+            if (targetAccountKey && accounts[targetAccountKey]) {
+                accounts[targetAccountKey].balance = (accounts[targetAccountKey].balance || 0) + ord.price;
+                saveAccounts(accounts);
+                // Ghi nhận biến động số dư loại IN (Nạp tiền thành công)
+                logBalanceHistory(targetAccountKey, ord.price, 'IN', `Nạp tiền thành công qua chuyển khoản QR (${ord.code})`);
+            }
+
+            // 2. Cập nhật trạng thái đơn hàng trên Supabase
+            const newStatus = ord.game === 'Nạp Số Dư Tài Khoản' ? 'Đã Nạp Thành Công' : 'Chờ duyệt đơn';
+            const { error } = await supabaseClient.from('orders').update({ 
+                status: newStatus, 
+                admin_note: ord.game === 'Nạp Số Dư Tài Khoản' ? 'Đã tự động cộng số dư vào ví tài khoản.' : 'Đã duyệt tiền chuyển khoản thành công.' 
+            }).eq('id', orderId);
+
+            if (!error) {
+                alert('Đã duyệt chuyển tiền thành công và cộng tiền vào tài khoản khách!');
                 renderAdminOrders();
                 renderAdminPayments();
+                renderAdminAllHistory();
                 updateAuthUI();
             } else {
                 alert('Lỗi cập nhật: ' + error.message);
@@ -2176,6 +2217,39 @@
                         ${cancelSnippet}
                         <div class="pt-2 border-t border-gray-800/60 flex justify-end">
                             <button onclick="openOrderDetail('${ord.id}')" class="bg-gray-800 hover:bg-gray-700 text-accentBlue px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer border border-gray-700">Chi tiết</button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // HIỂN THỊ LỊCH SỬ BIẾN ĐỘNG SỐ DƯ CHO KHÁCH
+        function renderBalanceHistory() {
+            const container = document.getElementById('balance-history-container');
+            if (!container || !currentUsername) return;
+
+            let history = JSON.parse(localStorage.getItem('shopdatzit_balance_history') || '{}');
+            let userHistories = history[currentUsername] || [];
+
+            if (userHistories.length === 0) {
+                container.innerHTML = `<div class="bg-cardBg p-6 rounded-xl border border-gray-800 text-center text-gray-400 text-xs">Chưa có giao dịch biến động số dư nào.</div>`;
+                return;
+            }
+
+            container.innerHTML = '';
+            userHistories.forEach(item => {
+                let isIncome = item.type === 'IN';
+                let sign = isIncome ? '+' : '-';
+                let colorClass = isIncome ? 'text-green-400 bg-green-950/40 border-green-800' : 'text-red-400 bg-red-950/40 border-red-800';
+                
+                container.innerHTML += `
+                    <div class="bg-cardBg p-3.5 rounded-xl border border-gray-800 flex justify-between items-center shadow-sm">
+                        <div>
+                            <div class="font-bold text-xs text-white">${item.description}</div>
+                            <div class="text-[10px] text-gray-400 mt-0.5">${item.time}</div>
+                        </div>
+                        <div class="font-bold text-xs px-2.5 py-1 rounded-lg border ${colorClass}">
+                            ${sign}${item.amount.toLocaleString('vi-VN')} đ
                         </div>
                     </div>
                 `;
@@ -2381,24 +2455,6 @@
 
             const { data: orders } = await supabaseClient.from('orders').select('*').eq('id', approveTargetOrderId);
             const ord = orders && orders.length > 0 ? orders[0] : null;
-
-            if (ord && ord.game !== 'Nạp Số Dư Tài Khoản') {
-                let accounts = getAccounts();
-                let custKey = ord.customer_name.toLowerCase();
-                
-                if (accounts[custKey]) {
-                    accounts[custKey].balance = (accounts[custKey].balance || 0) + ord.price;
-                    saveAccounts(accounts);
-                } else {
-                    for (let k in accounts) {
-                        if (accounts[k].username === ord.customer_name || accounts[k].email === ord.customer_name) {
-                            accounts[k].balance = (accounts[k].balance || 0) + ord.price;
-                            saveAccounts(accounts);
-                            break;
-                        }
-                    }
-                }
-            }
 
             const { error } = await supabaseClient.from('orders').update({ status: 'Đã Nạp Thành Công', admin_note: adminNote }).eq('id', approveTargetOrderId);
             if (!error) {
