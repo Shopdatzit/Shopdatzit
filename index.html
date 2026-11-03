@@ -84,9 +84,6 @@
         html.light .text-gray-400 { color: #6b7280 !important; }
         html.light input, html.light select, html.light textarea { background-color: #ffffff !important; color: #111827 !important; border-color: #d1d5db !important; }
         
-        .loader-spin { border: 2px solid #f3f3f3; border-top: 2px solid #3b82f6; border-radius: 50%; width: 14px; height: 14px; animation: spin 1s linear infinite; display: inline-block; vertical-align: middle; margin-right: 5px; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
         #global-page-loader {
             position: fixed;
             inset: 0;
@@ -278,9 +275,8 @@
                         <img id="header-user-avatar" onclick="toggleUserDropdown()" src="" class="w-6 h-6 rounded-full object-cover border border-accentBlue flex-shrink-0 cursor-pointer" alt="Avatar">
                         <div class="flex flex-col truncate leading-tight cursor-pointer" onclick="toggleUserDropdown()">
                             <span id="user-display-name" class="truncate font-semibold text-[11px]">Đăng Nhập</span>
-                            <span id="header-user-balance" class="text-[9px] text-green-400 font-bold truncate">0đ</span>
+                            <span class="text-[9px] text-blue-400 font-bold truncate">Shop Nạp Game</span>
                         </div>
-                        <button onclick="openTopUpBalanceModal()" class="bg-accentBlue hover:bg-blue-600 text-white px-2 py-1 rounded text-[10px] font-extrabold flex-shrink-0 cursor-pointer shadow transition" title="Nạp thêm số dư">+ Nạp</button>
                     </div>
 
                     <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-64 bg-cardBg border border-gray-800 rounded-xl shadow-2xl py-2 z-50 text-xs">
@@ -289,12 +285,10 @@
                             <div>
                                 <div id="dropdown-username" class="font-bold text-sm text-white">Khách</div>
                                 <div class="text-[10px] text-gray-400">UID: <span id="dropdown-uid">60742</span></div>
-                                <div class="text-[11px] text-green-400 font-bold mt-0.5">Số dư: <span id="dropdown-balance">0 đ</span></div>
                             </div>
                         </div>
                         <a href="#" onclick="switchView('profile')" class="block px-4 py-2.5 hover:bg-gray-800 text-gray-300 transition"><i class="fa-solid fa-user mr-2 text-accentBlue"></i> Thông tin chung</a>
                         <a href="#" onclick="switchView('history')" class="block px-4 py-2.5 hover:bg-gray-800 text-gray-300 transition"><i class="fa-solid fa-clock-rotate-left mr-2 text-accentBlue"></i> Lịch sử mua hàng</a>
-                        <a href="#" onclick="switchView('balance_history')" class="block px-4 py-2.5 hover:bg-gray-800 text-gray-300 transition"><i class="fa-solid fa-wallet mr-2 text-accentBlue"></i> Biến động số dư</a>
                         <div class="border-t border-gray-800 my-1"></div>
                         <a href="#" onclick="handleLogout()" class="block px-4 py-2.5 hover:bg-red-950/40 text-red-400 transition font-bold"><i class="fa-solid fa-right-from-bracket mr-2"></i> Đăng xuất</a>
                     </div>
@@ -356,8 +350,8 @@
                                 <span id="cart-total" class="text-green-400 text-base">0 đ</span>
                             </div>
                             <div class="pt-2">
-                                <button onclick="openPaymentOptionsModal()" class="w-full bg-accentBlue hover:bg-blue-600 text-white font-bold py-2.5 rounded-xl transition text-xs shadow-md cursor-pointer flex items-center justify-center space-x-2">
-                                    <i class="fa-solid fa-wallet"></i> <span>Thanh Toán</span>
+                                <button onclick="payWithBankTransfer()" class="w-full bg-accentBlue hover:bg-blue-600 text-white font-bold py-2.5 rounded-xl transition text-xs shadow-md cursor-pointer flex items-center justify-center space-x-2">
+                                    <i class="fa-solid fa-qrcode"></i> <span>Thanh Toán Chuyển Khoản QR</span>
                                 </button>
                             </div>
                         </div>
@@ -373,7 +367,6 @@
                     <img id="profile-user-avatar" src="" class="w-14 h-14 rounded-full object-cover border-2 border-accentBlue" alt="Avatar">
                     <div>
                         <div id="profile-name" class="font-bold text-base text-white">Khách</div>
-                        <div class="text-xs text-green-400 font-bold mt-0.5">Số dư: <span id="profile-balance-text">0 đ</span></div>
                         <button onclick="openAvatarModal()" class="text-[11px] text-accentBlue hover:underline mt-1 block cursor-pointer">Đổi ảnh đại diện</button>
                     </div>
                 </div>
@@ -407,13 +400,6 @@
         <div id="history-view" class="view-section hidden max-w-2xl mx-auto space-y-4">
             <h1 class="text-lg font-bold flex items-center"><i class="fa-solid fa-clock-rotate-left mr-2 text-accentBlue"></i> Lịch Sử Đơn Hàng (Realtime)</h1>
             <div id="history-container" class="space-y-3"></div>
-        </div>
-
-        <!-- MỤC BIẾN ĐỘNG SỐ DƯ MỚI -->
-        <div id="balance-history-view" class="view-section hidden max-w-2xl mx-auto space-y-4">
-            <h1 class="text-lg font-bold flex items-center text-green-400"><i class="fa-solid fa-wallet mr-2"></i> Lịch Sử Biến Động Số Dư (Ví)</h1>
-            <p class="text-xs text-gray-400">Ghi lại tất cả các khoản tiền nạp thành công và giao dịch thanh toán qua số dư ví của bạn.</p>
-            <div id="balance-history-container" class="space-y-3"></div>
         </div>
 
         <div id="cskh-view" class="view-section hidden max-w-md mx-auto space-y-4">
@@ -522,57 +508,14 @@
     </footer>
 
     <!-- MODALS -->
-    <div id="topup-balance-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-cardBg max-w-sm w-full p-5 rounded-2xl border border-accentBlue/60 relative space-y-4 shadow-2xl">
-            <button onclick="closeTopUpBalanceModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
-            <h3 class="text-base font-bold text-accentBlue text-center">NẠP THÊM SỐ DƯ TÀI KHOẢN</h3>
-            <div class="space-y-3">
-                <div>
-                    <label class="text-xs text-gray-300 block mb-1">Nhập số tiền muốn nạp (VNĐ):</label>
-                    <input type="text" id="topup-amount-input" oninput="formatCurrencyInput(this)" placeholder="Ví dụ: 100.000" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white outline-none focus:border-accentBlue font-bold">
-                </div>
-                <button onclick="generateTopupQR()" class="w-full bg-accentBlue hover:bg-blue-600 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer shadow transition">XUẤT MÃ QR THANH TOÁN</button>
-            </div>
-            <div id="topup-qr-container" class="hidden text-center space-y-3 pt-2 border-t border-gray-800">
-                <div class="bg-white p-2.5 rounded-xl inline-block mx-auto border border-gray-700 shadow-inner">
-                    <img id="topup-qr-img" src="" alt="QR Code" class="w-40 h-40 object-contain mx-auto">
-                </div>
-                <div class="text-left bg-gray-900 p-2.5 rounded-lg text-xs space-y-1 border border-gray-800">
-                    <div class="flex justify-between"><span>Ngân hàng:</span> <span class="font-bold text-gray-200">Vietcombank</span></div>
-                    <div class="flex justify-between"><span>STK:</span> <span class="font-bold text-accentBlue select-all">1065342786</span></div>
-                    <div class="flex justify-between"><span>Chủ TK:</span> <span class="font-bold text-gray-200 select-all">DANG VAN TIEN DAT</span></div>
-                    <div class="flex justify-between"><span>Nội dung:</span> <span class="font-bold text-yellow-400 select-all">Sieucapbakhi</span></div>
-                    <div class="flex justify-between border-t border-gray-800 pt-1"><span>Số tiền:</span> <span id="topup-modal-amount" class="font-bold text-green-400 select-all">0 đ</span></div>
-                </div>
-                <p class="text-[10px] text-yellow-400 font-medium">💡 Sau khi bấm xuất mã QR, hệ thống đã gửi yêu cầu sang cho Admin. Vui lòng chuyển khoản đúng nội dung!</p>
-            </div>
-        </div>
-    </div>
-
-    <div id="payment-options-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-cardBg max-w-sm w-full p-5 rounded-2xl border border-gray-800 relative space-y-4 shadow-2xl text-center">
-            <button onclick="closePaymentOptionsModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
-            <h3 class="text-base font-bold text-white">LỰA CHỌN PHƯƠNG THỨC THANH TOÁN</h3>
-            <div class="space-y-3 pt-2">
-                <button onclick="payWithBalance()" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3 rounded-xl text-xs cursor-pointer shadow transition flex flex-col items-center justify-center space-y-1">
-                    <span class="text-sm"><i class="fa-solid fa-wallet mr-1.5"></i> Thanh Toán Bằng Số Dư</span>
-                    <span class="text-[10px] text-green-200 font-normal">Số dư hiện tại: <b id="option-balance-display">0 đ</b></span>
-                </button>
-                <button onclick="payWithBankTransfer()" class="w-full bg-accentBlue hover:bg-blue-600 text-white font-bold py-3 rounded-xl text-xs cursor-pointer shadow transition flex items-center justify-center space-x-2">
-                    <i class="fa-solid fa-qrcode text-sm"></i> <span>Thanh Toán Chuyển Khoản QR</span>
-                </button>
-            </div>
-        </div>
-    </div>
-
     <div id="pending-payment-approval-modal" class="fixed inset-0 bg-black/85 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-md w-full p-6 rounded-2xl border border-yellow-500/60 relative space-y-4 shadow-2xl text-center">
             <div class="w-14 h-14 bg-yellow-950 text-yellow-400 rounded-full flex items-center justify-center mx-auto text-2xl border border-yellow-700 animate-spin">
                 <i class="fa-solid fa-spinner"></i>
             </div>
             <div>
-                <h3 class="text-base font-bold text-white">Đang Chờ Admin Xác Nhận Duyệt Tiền...</h3>
-                <p class="text-xs text-yellow-400 mt-1.5 font-medium">Hệ thống đã chuyển yêu cầu đến mục Duyệt Chuyển Tiền của Admin. Bạn không cần F5!</p>
+                <h3 class="text-base font-bold text-white">Đang Chờ Admin Xác Nhận Thanh Toán...</h3>
+                <p class="text-xs text-yellow-400 mt-1.5 font-medium">Hệ thống đã gửi yêu cầu chuyển khoản đến Admin. Giao diện sẽ tự động chuyển khi được duyệt!</p>
             </div>
             <div class="pt-2 border-t border-gray-800">
                 <button onclick="closePendingModalAndGoHistory()" class="w-full bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold py-2 rounded-xl text-xs cursor-pointer">
@@ -588,8 +531,8 @@
                 <i class="fa-solid fa-circle-check"></i>
             </div>
             <div>
-                <h3 class="text-base font-bold text-white">Thanh Toán Hoàn Tất! 🎉</h3>
-                <p class="text-xs text-green-400 mt-1.5 font-medium">Đơn hàng của bạn đã được ghi nhận và chuyển vào trạng thái chờ xử lý nạp game.</p>
+                <h3 class="text-base font-bold text-white">Thanh Toán Thành Công! 🎉</h3>
+                <p class="text-xs text-green-400 mt-1.5 font-medium">Admin đã duyệt tiền thành công! Đơn hàng của bạn đã được chuyển vào trạng thái chờ xử lý nạp game.</p>
             </div>
             <div class="pt-2 border-t border-gray-800 space-y-2">
                 <button onclick="closeApprovedSuccessModalToGoHistory()" class="w-full bg-accentBlue hover:bg-blue-600 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer shadow transition flex items-center justify-center space-x-2">
@@ -708,7 +651,7 @@
                     <span>Số tiền:</span> <span id="modal-amount" class="font-bold text-green-400 text-sm select-all">0 đ</span>
                 </div>
             </div>
-            <p class="text-[11px] text-yellow-400 font-medium">💡 Vui lòng quét mã chuyển khoản. Đơn hàng đã được đẩy vào mục Duyệt Chuyển Tiền của Admin!</p>
+            <p class="text-[11px] text-yellow-400 font-medium">💡 Vui lòng quét mã chuyển khoản. Khi Admin duyệt tiền, bảng này sẽ tự động đóng và hiển thị thành công!</p>
         </div>
     </div>
 
@@ -842,8 +785,8 @@
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
         let ADMIN_SECURE_SECRET_128 = "JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP";
-        const STORAGE_KEY = 'shopdatzit_v10_local_data';
-        const USER_KEY = 'shopdatzit_v10_user';
+        const STORAGE_KEY = 'shopdatzit_v11_local_data';
+        const USER_KEY = 'shopdatzit_v11_user';
         const EXPIRE_TIME_MS = 24 * 60 * 60 * 1000;
 
         let cart = []; 
@@ -871,7 +814,6 @@
         }
 
         function checkIsIpBanned() {
-            let banList = JSON.parse(localStorage.getItem('shopdatzit_banned_ips') || '{}');
             return 0;
         }
 
@@ -886,16 +828,6 @@
             if (!keyword || !keyword.trim()) return text;
             const regex = new RegExp(`(${keyword.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
             return text.replace(regex, '<span class="highlight-match">$1</span>');
-        }
-
-        function formatCurrencyInput(input) {
-            let val = input.value.replace(/\D/g, '');
-            if (!val) {
-                input.value = '';
-                return;
-            }
-            let formatted = parseInt(val, 10).toLocaleString('vi-VN');
-            input.value = formatted;
         }
 
         const gamesData = {
@@ -1083,7 +1015,6 @@
                 await fetchAndCalculateSolds();
                 renderGameList();
                 renderHistory();
-                renderBalanceHistory();
                 renderAdminOrders();
                 renderAdminPayments();
                 renderAdminAllHistory();
@@ -1186,20 +1117,6 @@
 
         function getAccounts() { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); }
         function saveAccounts(accs) { localStorage.setItem(STORAGE_KEY, JSON.stringify(accs)); }
-        
-        // HÀM LƯU BIẾN ĐỘNG SỐ DƯ CHO KHÁCH
-        function logBalanceHistory(username, amount, type, description) {
-            let history = JSON.parse(localStorage.getItem('shopdatzit_balance_history') || '{}');
-            if (!history[username]) history[username] = [];
-            history[username].unshift({
-                amount: amount,
-                type: type, // 'IN' (Cộng tiền/Nạp) hoặc 'OUT' (Trừ tiền/Mua hàng)
-                description: description,
-                time: new Date().toLocaleString('vi-VN'),
-                timestamp: Date.now()
-            });
-            localStorage.setItem('shopdatzit_balance_history', JSON.stringify(history));
-        }
 
         function isAdmin() { 
             let accounts = getAccounts();
@@ -1245,8 +1162,7 @@
                     email: 'ngocdiemdang90@gmail.com', 
                     password: 'Lolkchi2020k', 
                     uid: '10000', 
-                    avatar: DEFAULT_ADMIN_AVATAR,
-                    balance: 0
+                    avatar: DEFAULT_ADMIN_AVATAR
                 };
                 saveAccounts(accounts);
             } else {
@@ -1255,9 +1171,6 @@
                 }
                 if (!accounts['ngocdiemdang90@gmail.com'].avatar) {
                     accounts['ngocdiemdang90@gmail.com'].avatar = DEFAULT_ADMIN_AVATAR;
-                }
-                if (accounts['ngocdiemdang90@gmail.com'].balance === undefined) {
-                    accounts['ngocdiemdang90@gmail.com'].balance = 0;
                 }
                 saveAccounts(accounts);
             }
@@ -1306,15 +1219,12 @@
 
         function updateAuthUI() {
             const disp = document.getElementById('user-display-name');
-            const headerBalance = document.getElementById('header-user-balance');
             const dropdownName = document.getElementById('dropdown-username');
             const dropdownUid = document.getElementById('dropdown-uid');
-            const dropdownBalance = document.getElementById('dropdown-balance');
             const profileName = document.getElementById('profile-name');
             const profileUsernameInput = document.getElementById('profile-username-input');
             const profileEmailText = document.getElementById('profile-email-text');
             const profileUid = document.getElementById('profile-uid');
-            const profileBalanceText = document.getElementById('profile-balance-text');
             const profileRole = document.getElementById('profile-role');
             const navAdminItem = document.getElementById('nav-admin-item');
             const avatars = [document.getElementById('header-user-avatar'), document.getElementById('dropdown-user-avatar'), document.getElementById('profile-user-avatar')];
@@ -1323,20 +1233,14 @@
             if (currentUsername && accounts[currentUsername]) {
                 const userAcc = accounts[currentUsername];
                 const displayName = userAcc.username || currentUsername;
-                const userBalanceNum = userAcc.balance || 0;
-                const userBalance = userBalanceNum.toLocaleString('vi-VN') + 'đ';
-                const userBalanceFull = userBalanceNum.toLocaleString('vi-VN') + ' đ';
 
                 disp.innerText = displayName;
-                if (headerBalance) headerBalance.innerText = userBalance;
                 if (dropdownName) dropdownName.innerText = displayName;
                 if (dropdownUid) dropdownUid.innerText = userAcc.uid || '10000';
-                if (dropdownBalance) dropdownBalance.innerText = userBalanceFull;
                 if (profileName) profileName.innerText = displayName;
                 if (profileUsernameInput) profileUsernameInput.value = displayName;
                 if (profileEmailText) profileEmailText.innerText = userAcc.email || currentUsername;
                 if (profileUid) profileUid.innerText = userAcc.uid || '10000';
-                if (profileBalanceText) profileBalanceText.innerText = userBalanceFull;
 
                 let userAvatar = userAcc.avatar || DEFAULT_AVATAR_URL;
                 avatars.forEach(el => { if(el) el.src = userAvatar; });
@@ -1350,21 +1254,17 @@
                 }
             } else {
                 disp.innerText = 'Đăng Nhập';
-                if (headerBalance) headerBalance.innerText = '0đ';
                 if (dropdownName) dropdownName.innerText = 'Khách';
                 if (dropdownUid) dropdownUid.innerText = '---';
-                if (dropdownBalance) dropdownBalance.innerText = '0 đ';
                 if (profileName) profileName.innerText = 'Khách';
                 if (profileUsernameInput) profileUsernameInput.value = '';
                 if (profileEmailText) profileEmailText.innerText = 'Chưa đăng nhập';
                 if (profileUid) profileUid.innerText = '---';
-                if (profileBalanceText) profileBalanceText.innerText = '0 đ';
                 if (profileRole) profileRole.innerHTML = 'Khách';
                 if (navAdminItem) navAdminItem.classList.add('hidden');
                 avatars.forEach(el => { if(el) el.src = DEFAULT_AVATAR_URL; });
             }
             renderHistory();
-            renderBalanceHistory();
             renderAdminOrders();
             renderAdminPayments();
             renderAdminAllHistory();
@@ -1438,7 +1338,7 @@
 
         window.addEventListener('click', function(e) {
             const dropdown = document.getElementById('user-dropdown');
-            if (dropdown && !dropdown.contains(e.target) && !e.target.closest('#header-user-avatar') && !e.target.closest('#user-display-name') && !e.target.closest('#header-user-balance')) {
+            if (dropdown && !dropdown.contains(e.target) && !e.target.closest('#header-user-avatar') && !e.target.closest('#user-display-name')) {
                 dropdown.classList.add('hidden');
             }
         });
@@ -1540,7 +1440,7 @@
             if (accounts[u.toLowerCase()]) { alert('Tài khoản đã tồn tại!'); return; }
             
             const randomUid = Math.floor(10000 + Math.random() * 90000).toString();
-            accounts[u.toLowerCase()] = { username: u, email: u.includes('@') ? u : `${u}@gmail.com`, password: p, uid: randomUid, avatar: '', balance: 0 };
+            accounts[u.toLowerCase()] = { username: u, email: u.includes('@') ? u : `${u}@gmail.com`, password: p, uid: randomUid, avatar: '' };
             saveAccounts(accounts);
             alert('Đăng ký thành công!');
             closeRegisterModal(); openAuthModal();
@@ -1630,7 +1530,6 @@
             if (viewName === 'home') { await fetchAndCalculateSolds(); renderGameList(); document.getElementById('home-view').classList.remove('hidden'); }
             else if (viewName === 'profile') { if (!currentUsername) { openAuthModal(); return; } document.getElementById('profile-view').classList.remove('hidden'); }
             else if (viewName === 'history') { if (!currentUsername) { openAuthModal(); return; } document.getElementById('history-view').classList.remove('hidden'); renderHistory(); }
-            else if (viewName === 'balance_history') { if (!currentUsername) { openAuthModal(); return; } document.getElementById('balance-history-view').classList.remove('hidden'); renderBalanceHistory(); }
             else if (viewName === 'cskh') { document.getElementById('cskh-view').classList.remove('hidden'); }
             else if (viewName === 'admin') {
                 if (checkIsIpBanned() > 0 || !isAdmin()) { alert('Không có quyền!'); switchView('home'); return; }
@@ -1835,73 +1734,7 @@
             if (checkoutSection) checkoutSection.classList.remove('hidden');
         }
 
-        function openTopUpBalanceModal() {
-            if (!currentUsername) { openAuthModal(); return; }
-            document.getElementById('topup-amount-input').value = '';
-            document.getElementById('topup-qr-container').classList.add('hidden');
-            document.getElementById('topup-balance-modal').classList.remove('hidden');
-        }
-
-        function closeTopUpBalanceModal() {
-            document.getElementById('topup-balance-modal').classList.add('hidden');
-        }
-
-        async function generateTopupQR() {
-            const rawAmtInput = document.getElementById('topup-amount-input').value.trim().replace(/\./g, '');
-            const amount = parseInt(rawAmtInput);
-            if (!amount || amount <= 0) { alert('Vui lòng nhập số tiền hợp lệ!'); return; }
-
-            document.getElementById('topup-modal-amount').innerText = amount.toLocaleString('vi-VN') + ' đ';
-            document.getElementById('topup-qr-img').src = `https://img.vietqr.io/image/VCB-1065342786-compact.png?amount=${amount}&addInfo=Sieucapbakhi&accountName=DANG%20VAN%20TIEN%20DAT`;
-            document.getElementById('topup-qr-container').classList.remove('hidden');
-
-            await createTopupOrderRecord(amount);
-        }
-
-        async function createTopupOrderRecord(amount) {
-            const randomCode = Math.floor(100000 + Math.random() * 900000);
-            let accounts = getAccounts();
-            if (currentUsername && accounts[currentUsername]) {
-                const now = Date.now();
-                const newOrder = {
-                    id: 'TOPUP_' + now,
-                    code: '#' + randomCode,
-                    customer_name: currentUsername,
-                    uid: accounts[currentUsername].uid || '10000',
-                    game: 'Nạp Số Dư Tài Khoản',
-                    package: `Nạp ${amount.toLocaleString('vi-VN')} đ vào ví`,
-                    total_qty: 1,
-                    items: [{ gameName: 'Nạp Số Dư', pkgName: `${amount.toLocaleString('vi-VN')}đ`, price: amount, qty: 1 }],
-                    price: amount,
-                    time: new Date().toLocaleString('vi-VN'),
-                    timestamp: now,
-                    status: 'Chờ duyệt thanh toán',
-                    input_user: currentUsername,
-                    input_pass: '---',
-                    input_server: 'Nạp Ví',
-                    input_phone: '---',
-                    input_note: 'Nạp số dư',
-                    admin_note: '',
-                    cancel_reason: ''
-                };
-                
-                const { error } = await supabaseClient.from('orders').insert([newOrder]);
-                if (error) {
-                    console.error('Lỗi Supabase khi tạo đơn nạp ví:', error);
-                    alert('Lỗi kết nối CSDL (Supabase): ' + error.message);
-                    return;
-                }
-
-                sendAutoEmail(
-                    "ngocdiemdang90@gmail.com",
-                    `Yêu cầu duyệt tiền nạp ví #${randomCode} từ ${currentUsername}`,
-                    `Khách hàng <b>${currentUsername}</b> vừa tạo yêu cầu nạp <b>${amount.toLocaleString('vi-VN')} đ</b>.<br>Nội dung chuyển khoản: <b>Sieucapbakhi</b>.<br>Vui lòng kiểm tra tài khoản ngân hàng và duyệt tiền cho khách!`,
-                    true
-                );
-            }
-        }
-
-        function openPaymentOptionsModal() {
+        async function payWithBankTransfer() {
             if (!currentUsername) { openAuthModal(); return; }
             if (!cart || cart.length === 0) { alert("Giỏ hàng trống!"); return; }
 
@@ -1928,90 +1761,6 @@
                 }
             }
 
-            let accounts = getAccounts();
-            let userBal = (accounts[currentUsername] && accounts[currentUsername].balance) ? accounts[currentUsername].balance : 0;
-            document.getElementById('option-balance-display').innerText = userBal.toLocaleString('vi-VN') + ' đ';
-
-            document.getElementById('payment-options-modal').classList.remove('hidden');
-        }
-
-        function closePaymentOptionsModal() {
-            document.getElementById('payment-options-modal').classList.add('hidden');
-        }
-
-        async function payWithBalance() {
-            let accounts = getAccounts();
-            let userAcc = accounts[currentUsername];
-            if (!userAcc) { openAuthModal(); return; }
-
-            const totalAmount = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
-            const userBal = userAcc.balance || 0;
-
-            if (userBal < totalAmount) {
-                alert(`Số dư không đủ! Số dư hiện tại của bạn là ${userBal.toLocaleString('vi-VN')} đ, cần ${totalAmount.toLocaleString('vi-VN')} đ.`);
-                return;
-            }
-
-            userAcc.balance = userBal - totalAmount;
-            logBalanceHistory(currentUsername, totalAmount, 'OUT', 'Thanh toán đơn hàng game');
-            saveAccounts(accounts);
-            updateAuthUI();
-
-            closePaymentOptionsModal();
-            await confirmOrderClientWithBalance(totalAmount);
-            document.getElementById('payment-approved-success-modal').classList.remove('hidden');
-        }
-
-        async function confirmOrderClientWithBalance(totalAmount) {
-            const randomCode = Math.floor(100000 + Math.random() * 900000);
-            let accounts = getAccounts();
-            if (currentUsername && accounts[currentUsername]) {
-                const now = Date.now();
-                const totalQty = cart.reduce((sum, i) => sum + i.qty, 0);
-                currentActiveOrderId = 'ORD_' + now;
-
-                const passEl = document.getElementById('input-password');
-                const phoneEl = document.getElementById('input-phone');
-                const newOrder = {
-                    id: currentActiveOrderId, 
-                    code: '#' + randomCode, 
-                    customer_name: currentUsername,
-                    uid: accounts[currentUsername].uid || '10000', 
-                    game: cart.length === 1 ? cart[0].gameName : `Nhiều dịch vụ (${cart.length})`, 
-                    package: cart.map(i => `${i.pkgName} (x${i.qty})`).join(', '),
-                    total_qty: totalQty, 
-                    items: cart, 
-                    price: totalAmount,
-                    time: new Date().toLocaleString('vi-VN'), 
-                    timestamp: now, 
-                    status: 'Chờ duyệt đơn',
-                    input_user: document.getElementById('input-username').value || 'Không có',
-                    input_pass: passEl ? passEl.value : 'Không yêu cầu',
-                    input_server: currentGameKey === 'garena' ? 'Thẻ Cào / Mặc định' : (document.getElementById('input-server').value || 'Mặc định'),
-                    input_phone: phoneEl ? phoneEl.value : 'Không có',
-                    input_note: (document.getElementById('input-user-note') ? document.getElementById('input-user-note').value : '') || 'Thanh toán bằng số dư',
-                    admin_note: '',
-                    cancel_reason: ''
-                };
-
-                const { error } = await supabaseClient.from('orders').insert([newOrder]);
-                if (error) { console.error('Lỗi tạo đơn:', error.message); alert('Lỗi tạo đơn: ' + error.message); return; }
-
-                sendAutoEmail(
-                    "ngocdiemdang90@gmail.com",
-                    `Đơn hàng mới #${randomCode} thanh toán bằng số dư từ ${currentUsername}`,
-                    `Khách hàng <b>${currentUsername}</b> vừa đặt đơn <b>#${randomCode}</b> bằng số dư.<br>Tổng tiền: <b>${totalAmount.toLocaleString('vi-VN')} đ</b>.<br>Vui lòng tiến hành xử lý!`,
-                    true
-                );
-
-                clearCart(); 
-                await fetchAndCalculateSolds();
-                renderGameList();
-            }
-        }
-
-        async function payWithBankTransfer() {
-            closePaymentOptionsModal();
             const amount = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
             document.getElementById('modal-amount').innerText = amount.toLocaleString('vi-VN') + ' đ';
             document.getElementById('viet-qr-img').src = `https://img.vietqr.io/image/VCB-1065342786-compact.png?amount=${amount}&addInfo=Sieucapbakhi&accountName=DANG%20VAN%20TIEN%20DAT`;
@@ -2064,7 +1813,7 @@
                 sendAutoEmail(
                     "ngocdiemdang90@gmail.com",
                     `Yêu cầu duyệt tiền đơn #${randomCode} từ ${currentUsername}`,
-                    `Khách hàng <b>${currentUsername}</b> vừa tạo đơn hàng <b>#${randomCode}</b> và bấm quét QR chuyển khoản.<br>Tổng tiền: <b>${totalAmount.toLocaleString('vi-VN')} đ</b>.<br>Nội dung CK: <b>Sieucapbakhi</b>.<br>Vui lòng vào trang quản trị (Mục Duyệt Chuyển Tiền) để xác nhận!`,
+                    `Khách hàng <b>${currentUsername}</b> vừa tạo đơn hàng <b>#${randomCode}</b> và quét QR chuyển khoản.<br>Tổng tiền: <b>${totalAmount.toLocaleString('vi-VN')} đ</b>.<br>Nội dung CK: <b>Sieucapbakhi</b>.<br>Vui lòng vào trang quản trị (Mục Duyệt Chuyển Tiền) để xác nhận!`,
                     true
                 );
 
@@ -2084,45 +1833,20 @@
             switchView('history');
         }
 
-        // HÀM FIX LỖI DUYỆT TIỀN: CỘNG TIỀN VÀO TÀI KHOẢN KHÁCH VÀ LƯU BIẾN ĐỘNG SỐ DƯ
+        // HÀM DUYỆT THANH TOÁN CHO ADMIN (CHUYỂN ĐƠN SANG CHỜ DUYỆT ĐƠN NẠP GAME)
         async function approvePaymentByAdmin(orderId) {
             const { data: orders } = await supabaseClient.from('orders').select('*').eq('id', orderId);
             const ord = orders ? orders[0] : null;
 
             if (!ord) { alert('Không tìm thấy đơn hàng!'); return; }
 
-            // 1. Cộng tiền vào ví tài khoản của khách
-            let accounts = getAccounts();
-            let custKey = ord.customer_name.toLowerCase();
-            let targetAccountKey = null;
-
-            if (accounts[custKey]) {
-                targetAccountKey = custKey;
-            } else {
-                for (let k in accounts) {
-                    if (accounts[k].username === ord.customer_name || accounts[k].email === ord.customer_name) {
-                        targetAccountKey = k;
-                        break;
-                    }
-                }
-            }
-
-            if (targetAccountKey && accounts[targetAccountKey]) {
-                accounts[targetAccountKey].balance = (accounts[targetAccountKey].balance || 0) + ord.price;
-                saveAccounts(accounts);
-                // Ghi nhận biến động số dư loại IN (Nạp tiền thành công)
-                logBalanceHistory(targetAccountKey, ord.price, 'IN', `Nạp tiền thành công qua chuyển khoản QR (${ord.code})`);
-            }
-
-            // 2. Cập nhật trạng thái đơn hàng trên Supabase
-            const newStatus = ord.game === 'Nạp Số Dư Tài Khoản' ? 'Đã Nạp Thành Công' : 'Chờ duyệt đơn';
             const { error } = await supabaseClient.from('orders').update({ 
-                status: newStatus, 
-                admin_note: ord.game === 'Nạp Số Dư Tài Khoản' ? 'Đã tự động cộng số dư vào ví tài khoản.' : 'Đã duyệt tiền chuyển khoản thành công.' 
+                status: 'Chờ duyệt đơn', 
+                admin_note: 'Đã duyệt tiền chuyển khoản thành công.' 
             }).eq('id', orderId);
 
             if (!error) {
-                alert('Đã duyệt chuyển tiền thành công và cộng tiền vào tài khoản khách!');
+                alert('Đã duyệt tiền thành công! Đơn hàng chuyển sang chờ xử lý nạp game.');
                 renderAdminOrders();
                 renderAdminPayments();
                 renderAdminAllHistory();
@@ -2217,39 +1941,6 @@
                         ${cancelSnippet}
                         <div class="pt-2 border-t border-gray-800/60 flex justify-end">
                             <button onclick="openOrderDetail('${ord.id}')" class="bg-gray-800 hover:bg-gray-700 text-accentBlue px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer border border-gray-700">Chi tiết</button>
-                        </div>
-                    </div>
-                `;
-            });
-        }
-
-        // HIỂN THỊ LỊCH SỬ BIẾN ĐỘNG SỐ DƯ CHO KHÁCH
-        function renderBalanceHistory() {
-            const container = document.getElementById('balance-history-container');
-            if (!container || !currentUsername) return;
-
-            let history = JSON.parse(localStorage.getItem('shopdatzit_balance_history') || '{}');
-            let userHistories = history[currentUsername] || [];
-
-            if (userHistories.length === 0) {
-                container.innerHTML = `<div class="bg-cardBg p-6 rounded-xl border border-gray-800 text-center text-gray-400 text-xs">Chưa có giao dịch biến động số dư nào.</div>`;
-                return;
-            }
-
-            container.innerHTML = '';
-            userHistories.forEach(item => {
-                let isIncome = item.type === 'IN';
-                let sign = isIncome ? '+' : '-';
-                let colorClass = isIncome ? 'text-green-400 bg-green-950/40 border-green-800' : 'text-red-400 bg-red-950/40 border-red-800';
-                
-                container.innerHTML += `
-                    <div class="bg-cardBg p-3.5 rounded-xl border border-gray-800 flex justify-between items-center shadow-sm">
-                        <div>
-                            <div class="font-bold text-xs text-white">${item.description}</div>
-                            <div class="text-[10px] text-gray-400 mt-0.5">${item.time}</div>
-                        </div>
-                        <div class="font-bold text-xs px-2.5 py-1 rounded-lg border ${colorClass}">
-                            ${sign}${item.amount.toLocaleString('vi-VN')} đ
                         </div>
                     </div>
                 `;
