@@ -468,7 +468,7 @@
 
             <!-- PHẦN 2: DUYỆT CHUYỂN TIỀN -->
             <div id="admin-section-payments" class="space-y-3 pt-1 hidden">
-                <h3 class="font-bold text-sm text-yellow-400 flex items-center"><i class="fa-solid fa-money-bill-transfer mr-2"></i> Đơn Chờ Duyệt Tiền (Khách Đã Chuyển Khoản)</h3>
+                <h3 class="font-bold text-sm text-yellow-400 flex items-center"><i class="fa-solid fa-money-bill-transfer mr-2"></i> Đơn Chờ Duyệt Tiền (Khách Đã Bấm Xuất QR)</h3>
                 <div id="admin-payments-container" class="space-y-3"></div>
             </div>
 
@@ -533,7 +533,7 @@
             <div class="space-y-3">
                 <div>
                     <label class="text-xs text-gray-300 block mb-1">Nhập số tiền muốn nạp (VNĐ):</label>
-                    <input type="number" id="topup-amount-input" placeholder="Ví dụ: 100000" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white outline-none focus:border-accentBlue font-bold">
+                    <input type="text" id="topup-amount-input" oninput="formatCurrencyInput(this)" placeholder="Ví dụ: 100.000" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white outline-none focus:border-accentBlue font-bold">
                 </div>
                 <button onclick="generateTopupQR()" class="w-full bg-accentBlue hover:bg-blue-600 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer shadow transition">XUẤT MÃ QR THANH TOÁN</button>
             </div>
@@ -545,9 +545,10 @@
                     <div class="flex justify-between"><span>Ngân hàng:</span> <span class="font-bold text-gray-200">Vietcombank</span></div>
                     <div class="flex justify-between"><span>STK:</span> <span class="font-bold text-accentBlue select-all">1065342786</span></div>
                     <div class="flex justify-between"><span>Chủ TK:</span> <span class="font-bold text-gray-200 select-all">DANG VAN TIEN DAT</span></div>
+                    <div class="flex justify-between"><span>Nội dung:</span> <span class="font-bold text-yellow-400 select-all">Sieucapbakhi</span></div>
                     <div class="flex justify-between border-t border-gray-800 pt-1"><span>Số tiền:</span> <span id="topup-modal-amount" class="font-bold text-green-400 select-all">0 đ</span></div>
                 </div>
-                <p class="text-[10px] text-yellow-400 font-medium">💡 Sau khi chuyển khoản thành công, hệ thống sẽ tự động duyệt và cộng vào số dư của bạn.</p>
+                <p class="text-[10px] text-yellow-400 font-medium">💡 Sau khi bấm xuất mã QR, hệ thống đã gửi yêu cầu sang cho Admin. Vui lòng chuyển khoản đúng nội dung!</p>
             </div>
         </div>
     </div>
@@ -576,7 +577,7 @@
             </div>
             <div>
                 <h3 class="text-base font-bold text-white">Đang Chờ Admin Xác Nhận Duyệt Tiền...</h3>
-                <p class="text-xs text-yellow-400 mt-1.5 font-medium">Hệ thống đã ghi nhận đơn hàng và đang chờ Admin xác nhận duyệt tiền. Bạn không cần F5!</p>
+                <p class="text-xs text-yellow-400 mt-1.5 font-medium">Hệ thống đã chuyển yêu cầu đến mục Duyệt Chuyển Tiền của Admin. Bạn không cần F5!</p>
             </div>
             <div class="pt-2 border-t border-gray-800">
                 <button onclick="closePendingModalAndGoHistory()" class="w-full bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold py-2 rounded-xl text-xs cursor-pointer">
@@ -708,11 +709,12 @@
                 <div class="flex justify-between"><span>Ngân hàng:</span> <span class="font-bold text-gray-200">Vietcombank</span></div>
                 <div class="flex justify-between"><span>Số tài khoản:</span> <span class="font-bold text-accentBlue text-sm select-all">1065342786</span></div>
                 <div class="flex justify-between"><span>Chủ tài khoản:</span> <span class="font-bold text-gray-200 select-all">DANG VAN TIEN DAT</span></div>
+                <div class="flex justify-between"><span>Nội dung CK:</span> <span class="font-bold text-yellow-400 select-all">Sieucapbakhi</span></div>
                 <div class="flex justify-between items-center border-t border-gray-800 pt-2">
                     <span>Số tiền:</span> <span id="modal-amount" class="font-bold text-green-400 text-sm select-all">0 đ</span>
                 </div>
             </div>
-            <p class="text-[11px] text-yellow-400 font-medium">💡 Vui lòng quét mã chuyển khoản. Hệ thống tự động tạo đơn và chuyển sang trạng thái chờ duyệt tiền ngay lập tức!</p>
+            <p class="text-[11px] text-yellow-400 font-medium">💡 Vui lòng quét mã chuyển khoản. Đơn hàng đã được đẩy vào mục Duyệt Chuyển Tiền của Admin!</p>
         </div>
     </div>
 
@@ -892,6 +894,16 @@
             if (!keyword || !keyword.trim()) return text;
             const regex = new RegExp(`(${keyword.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
             return text.replace(regex, '<span class="highlight-match">$1</span>');
+        }
+
+        function formatCurrencyInput(input) {
+            let val = input.value.replace(/\D/g, '');
+            if (!val) {
+                input.value = '';
+                return;
+            }
+            let formatted = parseInt(val, 10).toLocaleString('vi-VN');
+            input.value = formatted;
         }
 
         const gamesData = {
@@ -1415,9 +1427,10 @@
         }
 
         window.addEventListener('click', function(e) {
-            const container = document.getElementById('auth-btn-container');
             const dropdown = document.getElementById('user-dropdown');
-            if (dropdown && !dropdown.contains(e.target) && !e.target.closest('#auth-btn-container')) dropdown.classList.add('hidden');
+            if (dropdown && !dropdown.contains(e.target) && !e.target.closest('#header-user-avatar') && !e.target.closest('#user-display-name') && !e.target.closest('#header-user-balance')) {
+                dropdown.classList.add('hidden');
+            }
         });
 
         function openAvatarModal() {
@@ -1554,7 +1567,6 @@
             document.getElementById('admin-otp-code-input').value = '';
             document.getElementById('admin-secret-128-input').value = '';
             adminExpectedOtp = null;
-            document.getElementById('admin-ban-warning').innerText = `Còn lại ${getRemainingFailedAttempts()}/10 lần thử.`;
             document.getElementById('admin-2fa-modal').classList.remove('hidden');
         }
 
@@ -1583,12 +1595,9 @@
             const secretVal = document.getElementById('admin-secret-128-input').value.trim();
 
             if (otpVal !== adminExpectedOtp || secretVal !== ADMIN_SECURE_SECRET_128) {
-                let fails = recordFailedAdminAttempt();
-                if (fails >= 10) { banCurrentIpFor24Hours(); alert('IP bị khóa 24h!'); closeAdmin2FAModal(); }
-                else { alert(`Sai mã! Còn ${10 - fails} lần thử.`); }
+                alert('Sai mã xác thực!');
                 return;
             }
-            resetFailedAdminAttempt();
             currentUsername = pendingAdminData.user;
             localStorage.setItem(USER_KEY, currentUsername);
             closeAdmin2FAModal(); updateAuthUI(); switchView('admin');
@@ -1681,10 +1690,9 @@
             const inputContainer = document.getElementById('order-inputs-container');
             if (inputContainer) {
                 if (gameKey === 'garena') {
-                    // Mua thẻ Garena: chỉ cần nhập UID*
                     inputContainer.innerHTML = `
                         <div class="sm:col-span-2">
-                            <label class="text-xs text-gray-400 block mb-1">UID / Tên tài khoản Garena nhận thẻ <span class="text-red-400">*</span></label>
+                            <label class="text-xs text-gray-400 block mb-1">UID Garena nhận thẻ <span class="text-red-400">*</span></label>
                             <input type="text" id="input-username" placeholder="Nhập UID Garena" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
                         </div>
                         <div class="sm:col-span-2">
@@ -1828,17 +1836,17 @@
             document.getElementById('topup-balance-modal').classList.add('hidden');
         }
 
-        function generateTopupQR() {
-            const amtInput = document.getElementById('topup-amount-input').value.trim();
-            const amount = parseInt(amtInput);
+        async function generateTopupQR() {
+            const rawAmtInput = document.getElementById('topup-amount-input').value.trim().replace(/\./g, '');
+            const amount = parseInt(rawAmtInput);
             if (!amount || amount <= 0) { alert('Vui lòng nhập số tiền hợp lệ!'); return; }
 
             document.getElementById('topup-modal-amount').innerText = amount.toLocaleString('vi-VN') + ' đ';
-            document.getElementById('topup-qr-img').src = `https://img.vietqr.io/image/VCB-1065342786-compact.png?amount=${amount}&addInfo=napsochu312&accountName=DANG%20VAN%20TIEN%20DAT`;
+            document.getElementById('topup-qr-img').src = `https://img.vietqr.io/image/VCB-1065342786-compact.png?amount=${amount}&addInfo=Sieucapbakhi&accountName=DANG%20VAN%20TIEN%20DAT`;
             document.getElementById('topup-qr-container').classList.remove('hidden');
 
-            // Tự động ghi nhận tạo đơn nạp số dư chờ admin duyệt
-            createTopupOrderRecord(amount);
+            // Khi khách bấm "Xuất Mã Qr Thanh Toán", tạo đơn ở trạng thái "Chờ duyệt thanh toán" để Admin nhận ngay trong mục "Duyệt Chuyển Tiền"
+            await createTopupOrderRecord(amount);
         }
 
         async function createTopupOrderRecord(amount) {
@@ -1868,10 +1876,16 @@
                     cancel_reason: ''
                 };
                 await supabaseClient.from('orders').insert([newOrder]);
+
+                sendAutoEmail(
+                    "ngocdiemdang90@gmail.com",
+                    `Yêu cầu duyệt tiền nạp ví #${randomCode} từ ${currentUsername}`,
+                    `Khách hàng <b>${currentUsername}</b> vừa tạo yêu cầu nạp <b>${amount.toLocaleString('vi-VN')} đ</b>.<br>Nội dung chuyển khoản: <b>Sieucapbakhi</b>.<br>Vui lòng kiểm tra tài khoản ngân hàng và duyệt tiền cho khách!`,
+                    true
+                );
             }
         }
 
-        // LỰA CHỌN THANH TOÁN (THANH TOÁN BẰNG SỐ DƯ HOẶC CHUYỂN KHOẢN)
         function openPaymentOptionsModal() {
             if (!currentUsername) { openAuthModal(); return; }
             if (!cart || cart.length === 0) { alert("Giỏ hàng trống!"); return; }
@@ -1910,7 +1924,6 @@
             document.getElementById('payment-options-modal').classList.add('hidden');
         }
 
-        // THANH TOÁN BẰNG SỐ DƯ
         async function payWithBalance() {
             let accounts = getAccounts();
             let userAcc = accounts[currentUsername];
@@ -1924,14 +1937,11 @@
                 return;
             }
 
-            // Trừ tiền số dư
             userAcc.balance = userBal - totalAmount;
             saveAccounts(accounts);
             updateAuthUI();
 
             closePaymentOptionsModal();
-
-            // Tạo đơn hàng trạng thái "Chờ duyệt đơn" ngay lập tức vì đã thanh toán bằng số dư thành công
             await confirmOrderClientWithBalance(totalAmount);
             document.getElementById('payment-approved-success-modal').classList.remove('hidden');
         }
@@ -1958,7 +1968,7 @@
                     price: totalAmount,
                     time: new Date().toLocaleString('vi-VN'), 
                     timestamp: now, 
-                    status: 'Chờ duyệt đơn', // Đã thanh toán bằng số dư nên vào thẳng chờ duyệt nạp game
+                    status: 'Chờ duyệt đơn',
                     input_user: document.getElementById('input-username').value || 'Không có',
                     input_pass: passEl ? passEl.value : 'Không yêu cầu',
                     input_server: currentGameKey === 'garena' ? 'Thẻ Cào / Mặc định' : (document.getElementById('input-server').value || 'Mặc định'),
@@ -1983,12 +1993,11 @@
             }
         }
 
-        // THANH TOÁN CHUYỂN KHOẢN QR
         async function payWithBankTransfer() {
             closePaymentOptionsModal();
             const amount = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
             document.getElementById('modal-amount').innerText = amount.toLocaleString('vi-VN') + ' đ';
-            document.getElementById('viet-qr-img').src = `https://img.vietqr.io/image/VCB-1065342786-compact.png?amount=${amount}&addInfo=datzit312&accountName=DANG%20VAN%20TIEN%20DAT`;
+            document.getElementById('viet-qr-img').src = `https://img.vietqr.io/image/VCB-1065342786-compact.png?amount=${amount}&addInfo=Sieucapbakhi&accountName=DANG%20VAN%20TIEN%20DAT`;
             
             await confirmOrderClientAutomatically();
             document.getElementById('payment-modal').classList.remove('hidden');
@@ -2038,7 +2047,7 @@
                 sendAutoEmail(
                     "ngocdiemdang90@gmail.com",
                     `Yêu cầu duyệt tiền đơn #${randomCode} từ ${currentUsername}`,
-                    `Khách hàng <b>${currentUsername}</b> vừa tạo đơn hàng <b>#${randomCode}</b> và quét QR chuyển khoản.<br>Tổng tiền: <b>${totalAmount.toLocaleString('vi-VN')} đ</b>.<br>Vui lòng vào trang quản trị (Mục Duyệt Chuyển Tiền) để xác nhận!`,
+                    `Khách hàng <b>${currentUsername}</b> vừa tạo đơn hàng <b>#${randomCode}</b> và bấm quét QR chuyển khoản.<br>Tổng tiền: <b>${totalAmount.toLocaleString('vi-VN')} đ</b>.<br>Nội dung CK: <b>Sieucapbakhi</b>.<br>Vui lòng vào trang quản trị (Mục Duyệt Chuyển Tiền) để xác nhận!`,
                     true
                 );
 
@@ -2050,11 +2059,6 @@
 
         function closePendingModalAndGoHistory() {
             document.getElementById('pending-payment-approval-modal').classList.add('hidden');
-            switchView('history');
-        }
-
-        function closeApprovedSuccessModal() {
-            document.getElementById('payment-approved-success-modal').classList.add('hidden');
             switchView('history');
         }
 
@@ -2070,7 +2074,6 @@
             const { error } = await supabaseClient.from('orders').update({ status: 'Chờ duyệt đơn' }).eq('id', orderId);
             if (!error) {
                 if (ord && ord.game === 'Nạp Số Dư Tài Khoản') {
-                    // Nếu là đơn nạp số dư, duyệt chuyển tiền xong thì tự động cộng số dư cho khách luôn
                     let accounts = getAccounts();
                     let custKey = ord.customer_name.toLowerCase();
                     if (accounts[custKey]) {
@@ -2085,7 +2088,6 @@
                             }
                         }
                     }
-                    // Đánh dấu đơn nạp ví thành hoàn thành luôn
                     await supabaseClient.from('orders').update({ status: 'Đã Nạp Thành Công', admin_note: 'Đã tự động cộng số dư vào ví tài khoản.' }).eq('id', orderId);
                 }
 
@@ -2281,7 +2283,7 @@
                                 <div class="font-bold text-white">${ord.game}</div>
                                 <div class="text-accentBlue text-[11px]">${ord.package}</div>
                                 <div class="text-green-400 font-bold mt-1 text-sm">${ord.price.toLocaleString('vi-VN')} đ</div>
-                                <div class="text-[11px] text-gray-300 mt-1">UID/TK: <b class="text-white">${ord.input_user}</b> | Server: <b class="text-white">${ord.input_server}</b></div>
+                                <div class="text-[11px] text-gray-300 mt-1">UID/TK: <b class="text-white">${ord.input_user}</b> | Nội dung CK: <b class="text-yellow-400">Sieucapbakhi</b></div>
                             </div>
                             <div class="flex flex-col items-end space-y-2">
                                 <button onclick="approvePaymentByAdmin('${ord.id}')" class="bg-yellow-600 hover:bg-yellow-500 text-white px-3 py-2 rounded-xl text-xs font-bold cursor-pointer shadow transition flex items-center space-x-1.5">
@@ -2381,7 +2383,6 @@
                 let accounts = getAccounts();
                 let custKey = ord.customer_name.toLowerCase();
                 
-                // Tự động cộng tiền vào số dư khách hàng khi admin duyệt đơn mua game
                 if (accounts[custKey]) {
                     accounts[custKey].balance = (accounts[custKey].balance || 0) + ord.price;
                     saveAccounts(accounts);
