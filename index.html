@@ -272,7 +272,6 @@
                 </button>
 
                 <div class="relative">
-                    <!-- Bấm bất kỳ chỗ nào trong ô này cũng mở/đóng menu -->
                     <div onclick="toggleUserDropdown()" class="bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded-full text-xs flex items-center space-x-2 transition border border-gray-700 max-w-[210px] cursor-pointer">
                         <img id="header-user-avatar" src="" class="w-6 h-6 rounded-full object-cover border border-accentBlue flex-shrink-0 pointer-events-none" alt="Avatar">
                         <div class="flex flex-col truncate leading-tight pointer-events-none">
@@ -318,45 +317,45 @@
                 <img id="detail-game-img" src="" alt="" class="w-14 h-14 rounded-xl object-cover border border-gray-700">
                 <div>
                     <h2 id="detail-game-name" class="text-base font-bold"></h2>
-                    <span class="text-[9px] bg-blue-900/50 text-accentBlue px-2 py-0.5 rounded border border-blue-800">⚡ ĐỐI TÁC THANH TOÁN CHÍNH THỨC</span>
+                    <p id="detail-game-note" class="text-[11px] text-yellow-400 font-semibold mt-0.5 hidden"></p>
+                    <span class="text-[9px] bg-blue-900/50 text-accentBlue px-2 py-0.5 rounded border border-blue-800 inline-block mt-1">⚡ ĐỐI TÁC THANH TOÁN CHÍNH THỨC</span>
                     <div class="text-xs text-gray-400 mt-1"><span id="detail-game-sold" class="font-bold text-white">0</span> đã bán</div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-                <div class="lg:col-span-2 space-y-5">
-                    <div class="bg-cardBg p-4 sm:p-5 rounded-xl border border-gray-800 shadow-md space-y-4">
-                        <div class="flex items-center justify-between border-b border-gray-800 pb-3">
-                            <h3 class="font-bold text-accentBlue text-xs sm:text-sm flex items-center"><i class="fa-solid fa-box-open mr-2"></i> Chọn Gói / Mệnh Giá</h3>
-                            <span class="text-[10px] text-gray-400">💡 Bấm để thêm giỏ hàng</span>
-                        </div>
-                        <div id="package-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-3"></div>
+            <div class="space-y-5">
+                <!-- 1. Gói / Mệnh giá -->
+                <div class="bg-cardBg p-4 sm:p-5 rounded-xl border border-gray-800 shadow-md space-y-4">
+                    <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+                        <h3 class="font-bold text-accentBlue text-xs sm:text-sm flex items-center"><i class="fa-solid fa-box-open mr-2"></i> Chọn Gói / Mệnh Giá</h3>
+                        <span class="text-[10px] text-gray-400">💡 Bấm để thêm giỏ hàng</span>
                     </div>
+                    <div id="package-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-3"></div>
+                </div>
 
-                    <div class="bg-cardBg p-4 sm:p-5 rounded-xl border border-gray-800 space-y-4 shadow-md">
-                        <h3 class="font-bold text-accentBlue text-xs sm:text-sm flex items-center"><i class="fa-solid fa-id-card mr-2"></i> Thông Tin Đơn Hàng</h3>
-                        <div id="order-inputs-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5"></div>
+                <!-- 2. Giỏ Hàng (Đã đưa lên trên, trước Thông Tin Đơn Hàng) -->
+                <div class="bg-cardBg p-4 sm:p-5 rounded-xl border border-gray-800 shadow-md">
+                    <h3 class="font-bold mb-3 border-b border-gray-800 pb-2 text-xs sm:text-sm flex items-center justify-between">
+                        <span class="flex items-center"><i class="fa-solid fa-cart-shopping mr-2 text-accentBlue"></i> Giỏ Hàng</span>
+                    </h3>
+                    <div id="cart-summary" class="text-xs text-gray-400 mb-4">Chưa chọn gói nạp nào.</div>
+                    <div id="checkout-section" class="hidden space-y-3">
+                        <div class="flex justify-between font-bold text-sm border-t border-gray-800 pt-3">
+                            <span>Tổng cộng:</span>
+                            <span id="cart-total" class="text-green-400 text-base">0 đ</span>
+                        </div>
+                        <div class="pt-2">
+                            <button onclick="payWithBankTransfer()" class="w-full bg-accentBlue hover:bg-blue-600 text-white font-bold py-2.5 rounded-xl transition text-xs shadow-md cursor-pointer flex items-center justify-center space-x-2">
+                                <i class="fa-solid fa-qrcode"></i> <span>Thanh Toán Chuyển Khoản QR</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <div class="space-y-4">
-                    <div class="bg-cardBg p-4 sm:p-5 rounded-xl border border-gray-800 sticky top-20 shadow-md">
-                        <h3 class="font-bold mb-3 border-b border-gray-800 pb-2 text-xs sm:text-sm flex items-center justify-between">
-                            <span class="flex items-center"><i class="fa-solid fa-cart-shopping mr-2 text-accentBlue"></i> Giỏ Hàng</span>
-                        </h3>
-                        <div id="cart-summary" class="text-xs text-gray-400 mb-4">Chưa chọn gói nạp nào.</div>
-                        <div id="checkout-section" class="hidden space-y-3">
-                            <div class="flex justify-between font-bold text-sm border-t border-gray-800 pt-3">
-                                <span>Tổng cộng:</span>
-                                <span id="cart-total" class="text-green-400 text-base">0 đ</span>
-                            </div>
-                            <div class="pt-2">
-                                <button onclick="payWithBankTransfer()" class="w-full bg-accentBlue hover:bg-blue-600 text-white font-bold py-2.5 rounded-xl transition text-xs shadow-md cursor-pointer flex items-center justify-center space-x-2">
-                                    <i class="fa-solid fa-qrcode"></i> <span>Thanh Toán Chuyển Khoản QR</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                <!-- 3. Thông Tin Đơn Hàng (Chuyển xuống dưới giỏ hàng) -->
+                <div class="bg-cardBg p-4 sm:p-5 rounded-xl border border-gray-800 space-y-4 shadow-md">
+                    <h3 class="font-bold text-accentBlue text-xs sm:text-sm flex items-center"><i class="fa-solid fa-id-card mr-2"></i> Thông Tin Đơn Hàng</h3>
+                    <div id="order-inputs-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5"></div>
                 </div>
             </div>
         </div>
@@ -832,6 +831,22 @@
         }
 
         const gamesData = {
+            'robux_qt': {
+                name: 'Robux Quốc Tế',
+                realImg: 'https://lh3.googleusercontent.com/d/1eFiikthGQFgYwpu4rYAfjRpjGitze1yX',
+                note: 'Chỉ Áp Dụng Tài Khoản Roblox Quốc Tế',
+                packages: [
+                    { name: '100 Robux', price: 30000 },
+                    { name: '200 Robux', price: 60000 },
+                    { name: '300 Robux', price: 90000 },
+                    { name: '400 Robux', price: 120000 },
+                    { name: '500 Robux', price: 150000 },
+                    { name: '600 Robux', price: 180000 },
+                    { name: '700 Robux', price: 210000 },
+                    { name: '800 Robux', price: 240000 },
+                    { name: '900 Robux', price: 270000 }
+                ]
+            },
             'identityv': {
                 name: 'Identity V',
                 realImg: 'https://lh3.googleusercontent.com/d/1CXdaTdhhBKCkfHp4XcAVTnsG3b3H8A7u',
@@ -945,7 +960,7 @@
                 packages: [
                     { name: 'Hội Viên Inter-Knot (5$)', price: calcPrice(102500) },
                     { name: 'Kế Hoạch Trưởng Thành (10$)', price: calcPrice(205000) },
-                    { name: '60 Film Trắng Đen', price: calcPrice(22000) },
+                    { name: '60 Film Trắng Đен', price: calcPrice(22000) },
                     { name: '300 + 30 Film Trắng Đen', price: calcPrice(102500) },
                     { name: '980 + 110 Film Trắng Đen', price: calcPrice(307500) },
                     { name: '3280 + 600 Film Trắng Đen', price: calcPrice(1025000) },
@@ -1593,6 +1608,14 @@
             document.getElementById('detail-game-name').innerText = currentGame.name;
             document.getElementById('detail-game-sold').innerText = getGameSold(gameKey);
 
+            const noteEl = document.getElementById('detail-game-note');
+            if (currentGame.note) {
+                noteEl.innerText = currentGame.note;
+                noteEl.classList.remove('hidden');
+            } else {
+                noteEl.classList.add('hidden');
+            }
+
             const pkgGrid = document.getElementById('package-grid');
             pkgGrid.innerHTML = '';
             currentGame.packages.forEach((pkg, index) => {
@@ -1609,11 +1632,23 @@
 
             const inputContainer = document.getElementById('order-inputs-container');
             if (inputContainer) {
-                if (gameKey === 'garena') {
+                if (gameKey === 'robux_qt') {
+                    inputContainer.innerHTML = `
+                        <div>
+                            <label class="text-xs text-gray-400 block mb-1">Username Roblox <span class="text-red-400">*</span></label>
+                            <input type="text" id="input-username" placeholder="Nhập username Roblox" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
+                        </div>
+                        <div>
+                            <label class="text-xs text-gray-400 block mb-1">Số điện thoại / Zalo <span class="text-red-400">*</span></label>
+                            <input type="text" id="input-phone" placeholder="Nhập SĐT/Zalo liên hệ" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
+                        </div>
+                    `;
+                } else if (gameKey === 'garena') {
                     inputContainer.innerHTML = `
                         <div class="sm:col-span-2">
                             <label class="text-xs text-gray-400 block mb-1">UID Garena nhận thẻ <span class="text-red-400">*</span></label>
                             <input type="text" id="input-username" placeholder="Nhập UID Garena" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
+                            <p class="text-[10px] text-gray-400/80 italic mt-1">Nếu dùng acc Facebook thì nhập chữ "Facebook"</p>
                         </div>
                         <div class="sm:col-span-2">
                             <label class="text-xs text-gray-400 block mb-1">Số điện thoại / Zalo (Tùy chọn)</label>
@@ -1753,12 +1788,19 @@
             const inputServer = document.getElementById('input-server');
 
             if (!inputUser || !inputUser.value.trim()) {
-                alert('Vui lòng nhập UID / Tài khoản game!');
+                alert(currentGameKey === 'robux_qt' ? 'Vui lòng nhập Username Roblox!' : 'Vui lòng nhập UID / Tài khoản game!');
                 if (inputUser) inputUser.focus();
                 return;
             }
 
-            if (currentGameKey !== 'garena') {
+            if (currentGameKey === 'robux_qt') {
+                const inputPhone = document.getElementById('input-phone');
+                if (!inputPhone || !inputPhone.value.trim()) {
+                    alert('Vui lòng nhập số điện thoại / Zalo!');
+                    if (inputPhone) inputPhone.focus();
+                    return;
+                }
+            } else if (currentGameKey !== 'garena') {
                 if (inputPass && !inputPass.value.trim()) {
                     alert('Vui lòng nhập Mật khẩu tài khoản game!');
                     inputPass.focus();
@@ -1810,7 +1852,7 @@
                     status: 'Chờ duyệt thanh toán',
                     input_user: document.getElementById('input-username').value || 'Không có',
                     input_pass: passEl ? passEl.value : 'Không yêu cầu',
-                    input_server: currentGameKey === 'garena' ? 'Thẻ Cào / Mặc định' : (document.getElementById('input-server').value || 'Mặc định'),
+                    input_server: currentGameKey === 'garena' ? 'Thẻ Cào / Mặc định' : (currentGameKey === 'robux_qt' ? 'Roblox Quốc Tế' : (document.getElementById('input-server').value || 'Mặc định')),
                     input_phone: phoneEl ? phoneEl.value : 'Không có',
                     input_note: (document.getElementById('input-user-note') ? document.getElementById('input-user-note').value : '') || 'Không có',
                     admin_note: '',
@@ -1855,7 +1897,7 @@
             }).eq('id', orderId);
 
             if (!error) {
-                alert('Đã duyệt tiền thành công! Đơn hàng chuyển sang chờ xử lý nạp game.');
+                alert('Duyệt tiền thành công! Đơn hàng chuyển sang chờ xử lý nạp game.');
                 renderAdminOrders();
                 renderAdminPayments();
                 renderAdminAllHistory();
