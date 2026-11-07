@@ -1196,16 +1196,19 @@
                     if (ord.items && Array.isArray(ord.items)) {
                         ord.items.forEach(item => {
                             if (item.gameKey) {
-                                let baseKey = (item.gameKey === 'robux_qt' || item.gameKey === 'robux_120h') ? 'robux' : item.gameKey;
+                                let baseKey = (item.gameKey === 'robux_qt' || item.gameKey === 'robux_120h' || item.gameKey === 'robux') ? 'robux' : item.gameKey;
                                 globalGameSoldCounts[baseKey] = (globalGameSoldCounts[baseKey] || 0) + (item.qty || 1);
                             }
                         });
                     } else if (ord.game) {
-                        for (let key in gamesData) {
-                            if (gamesData[key].name === ord.game) {
-                                let baseKey = (key === 'robux_qt' || key === 'robux_120h') ? 'robux' : key;
-                                globalGameSoldCounts[baseKey] = (globalGameSoldCounts[baseKey] || 0) + (ord.total_qty || 1);
-                                break;
+                        if (ord.game.toLowerCase().includes('robux')) {
+                            globalGameSoldCounts['robux'] = (globalGameSoldCounts['robux'] || 0) + (ord.total_qty || 1);
+                        } else {
+                            for (let key in gamesData) {
+                                if (gamesData[key].name === ord.game) {
+                                    globalGameSoldCounts[key] = (globalGameSoldCounts[key] || 0) + (ord.total_qty || 1);
+                                    break;
+                                }
                             }
                         }
                     }
@@ -1215,7 +1218,7 @@
 
         function getGameSold(gameKey) {
             if (gameKey === 'robux') {
-                return (globalGameSoldCounts['robux_qt'] || 0) + (globalGameSoldCounts['robux_120h'] || 0);
+                return (globalGameSoldCounts['robux'] || 0) + (globalGameSoldCounts['robux_qt'] || 0) + (globalGameSoldCounts['robux_120h'] || 0);
             }
             return globalGameSoldCounts[gameKey] || 0;
         }
