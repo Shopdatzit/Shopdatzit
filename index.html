@@ -1196,13 +1196,14 @@
                     if (ord.items && Array.isArray(ord.items)) {
                         ord.items.forEach(item => {
                             if (item.gameKey) {
-                                let baseKey = (item.gameKey === 'robux_qt' || item.gameKey === 'robux_120h' || item.gameKey === 'robux') ? 'robux' : item.gameKey;
-                                globalGameSoldCounts[baseKey] = (globalGameSoldCounts[baseKey] || 0) + (item.qty || 1);
+                                globalGameSoldCounts[item.gameKey] = (globalGameSoldCounts[item.gameKey] || 0) + (item.qty || 1);
                             }
                         });
                     } else if (ord.game) {
-                        if (ord.game.toLowerCase().includes('robux')) {
-                            globalGameSoldCounts['robux'] = (globalGameSoldCounts['robux'] || 0) + (ord.total_qty || 1);
+                        if (ord.game.toLowerCase().includes('120h')) {
+                            globalGameSoldCounts['robux_120h'] = (globalGameSoldCounts['robux_120h'] || 0) + (ord.total_qty || 1);
+                        } else if (ord.game.toLowerCase().includes('robux')) {
+                            globalGameSoldCounts['robux_qt'] = (globalGameSoldCounts['robux_qt'] || 0) + (ord.total_qty || 1);
                         } else {
                             for (let key in gamesData) {
                                 if (gamesData[key].name === ord.game) {
@@ -1218,7 +1219,7 @@
 
         function getGameSold(gameKey) {
             if (gameKey === 'robux') {
-                return (globalGameSoldCounts['robux'] || 0) + (globalGameSoldCounts['robux_qt'] || 0) + (globalGameSoldCounts['robux_120h'] || 0);
+                return (globalGameSoldCounts['robux_qt'] || 0) + (globalGameSoldCounts['robux_120h'] || 0) + (globalGameSoldCounts['robux'] || 0);
             }
             return globalGameSoldCounts[gameKey] || 0;
         }
@@ -1273,7 +1274,7 @@
             if (!container) return;
             container.innerHTML = '';
             
-            // 1. Hiển thị card "Robux" chung
+            // 1. Hiển thị card "Robux" chung (Tổng tổng hợp)
             container.innerHTML += `
                 <div onclick="openRobuxSelectModal()" class="game-card bg-cardBg hover:bg-cardHover p-3.5 rounded-xl border border-gray-800 cursor-pointer transition flex items-center space-x-3 shadow group">
                     <img src="${gamesData['robux_qt'].realImg}" alt="Robux" class="w-14 h-14 rounded-lg object-cover border border-gray-700 group-hover:border-accentBlue transition" onerror="this.src='https://lh3.googleusercontent.com/d/1S1r9aE9MtmiRDEzw5IkDJ6pRDGyP42kV'">
