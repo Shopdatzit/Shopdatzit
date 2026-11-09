@@ -556,6 +556,24 @@
         </div>
     </div>
 
+    <!-- MODAL TỪ CHỐI / HỦY DO QUÁ HẠN 30 PHÚT -->
+    <div id="payment-rejected-timeout-modal" class="fixed inset-0 bg-black/85 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-cardBg max-w-md w-full p-6 rounded-2xl border border-red-500/60 relative space-y-4 shadow-2xl text-center">
+            <div class="w-14 h-14 bg-red-950 text-red-500 rounded-full flex items-center justify-center mx-auto text-2xl border border-red-700">
+                <i class="fa-solid fa-ban"></i>
+            </div>
+            <div>
+                <h3 class="text-base font-bold text-red-500">TỪ CHỐI / HỦY ĐƠN (QUÁ 30 PHÚT)! ❌</h3>
+                <p class="text-xs text-gray-300 mt-1.5 font-medium">Đã quá 30 phút mà không nhận được thanh toán chuyển khoản, hệ thống đã tự động hủy đơn và xóa khỏi danh sách chờ duyệt của Admin!</p>
+            </div>
+            <div class="pt-2 border-t border-gray-800">
+                <button onclick="closeTimeoutModal()" class="w-full bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold py-2 rounded-xl text-xs cursor-pointer">
+                    Đã hiểu / Quay lại trang chủ
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div id="payment-approved-success-modal" class="fixed inset-0 bg-black/85 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-md w-full p-6 rounded-2xl border border-green-500/60 relative space-y-4 shadow-2xl text-center">
             <div class="w-14 h-14 bg-green-950 text-green-400 rounded-full flex items-center justify-center mx-auto text-2xl border border-green-700 animate-bounce">
@@ -1050,6 +1068,7 @@
             triggerGlobalLoader(800);
             initAdminAccount();
             initTheme();
+            await checkExpiredPendingPayments();
             await fetchAndCalculateSolds();
             renderGameList();
             updateAuthUI();
@@ -1057,7 +1076,44 @@
             initOtpWidget('admin-otp-widget', adminVerifyCallback);
             initOtpWidget('forgot-otp-widget', forgotVerifyCallback);
             initOtpWidget('change-email-otp-widget', changeEmailVerifyCallback);
+
+            // Kiểm tra tự động hủy đơn quá 30 phút mỗi 10 giây
+            setInterval(async () => {
+                await checkExpiredPendingPayments();
+            }, 10000);
         };
+
+        async function checkExpiredPendingPayments() {
+            const thirtyMinutes = 30 * 60 * 1000;
+            const now = Date.now();
+            const { data: orders, error } = await supabaseClient.from('orders').select('*').eq('status', 'Chờ duyệt thanh toán');
+            if (error || !orders) return;
+
+            for (const ord of orders) {
+                if (now - (ord.timestamp || 0) > thirtyMinutes) {
+                    await supabaseClient.from('orders').update({ 
+                        status: 'Đã Hủy', 
+                        cancel_reason: 'Quá thời hạn thanh toán 30 phút (Không chuyển khoản)' 
+                    }).eq('id', ord.id);
+
+                    if (ord.id === currentActiveOrderId) {
+                        document.getElementById('payment-modal').classList.add('hidden');
+                        document.getElementById('pending-payment-approval-modal').classList.add('hidden');
+                        document.getElementById('payment-rejected-timeout-modal').classList.remove('hidden');
+                    }
+                }
+            }
+            if (isAdmin()) {
+                renderAdminPayments();
+                renderAdminAllHistory();
+            }
+            renderHistory();
+        }
+
+        function closeTimeoutModal() {
+            document.getElementById('payment-rejected-timeout-modal').classList.add('hidden');
+            switchView('home');
+        }
 
         function initRealtimeListener() {
             supabaseClient.channel('public:orders').on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, async (payload) => {
@@ -1068,6 +1124,10 @@
                         document.getElementById('payment-modal').classList.add('hidden');
                         document.getElementById('pending-payment-approval-modal').classList.add('hidden');
                         document.getElementById('payment-approved-success-modal').classList.remove('hidden');
+                    } else if (updatedOrder.status === 'Đã Hủy') {
+                        document.getElementById('payment-modal').classList.add('hidden');
+                        document.getElementById('pending-payment-approval-modal').classList.add('hidden');
+                        document.getElementById('payment-rejected-timeout-modal').classList.remove('hidden');
                     }
                 }
 
