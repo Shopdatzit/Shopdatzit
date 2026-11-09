@@ -1072,6 +1072,32 @@
             }).then(() => { if (callbackSuccess) callbackSuccess(); }).catch(err => { if (callbackError) callbackError(err); });
         }
 
+        // HÀM BẮN THÔNG BÁO VỀ TELEGRAM ADMIN
+        function sendTelegramNotification(orderInfo) {
+            const BOT_TOKEN = "9272614990:AAGsVR1PvtLuI2ycv_Jf5mtbGPGl9TVaEZ8";
+            const CHAT_ID = "8930625500";
+
+            const message = `🔔 *CÓ ĐƠN HÀNG MỚI!* 🔔\n\n` +
+                `📦 Mã đơn: \`${orderInfo.code}\`\n` +
+                `👤 Khách: *${orderInfo.customer_name}*\n` +
+                `🎮 Dịch vụ: *${orderInfo.game}* - ${orderInfo.package}\n` +
+                `💰 Tổng tiền: *${orderInfo.price.toLocaleString('vi-VN')} đ*\n` +
+                `🔤 Nội dung CK: \`${orderInfo.transfer_content}\`\n` +
+                `📱 UID/TK: \`${orderInfo.input_user}\`\n` +
+                `📞 SĐT/Zalo: \`${orderInfo.input_phone || 'Không có'}\`\n` +
+                `🕒 Thời gian: ${orderInfo.time}`;
+
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: CHAT_ID,
+                    text: message,
+                    parse_mode: 'Markdown'
+                })
+            }).catch(err => console.log('Lỗi gửi Telegram:', err));
+        }
+
         window.onload = async function() {
             triggerGlobalLoader(800);
             initAdminAccount();
@@ -2074,7 +2100,10 @@
                 const { error } = await supabaseClient.from('orders').insert([newOrder]);
                 if (error) { console.error('Lỗi tạo đơn:', error.message); alert('Lỗi tạo đơn: ' + error.message); return; }
 
-                // 1. Gửi Email thông báo xác nhận tạo đơn hàng thành công cho khách hàng
+                // 1. Gửi thông báo về Telegram cho Admin ngay khi tạo đơn thành công
+                sendTelegramNotification(newOrder);
+
+                // 2. Gửi Email thông báo xác nhận tạo đơn hàng thành công cho khách hàng
                 if (customerEmail && customerEmail.includes('@')) {
                     sendAutoEmail(
                         customerEmail,
