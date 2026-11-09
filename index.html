@@ -1072,10 +1072,10 @@
             }).then(() => { if (callbackSuccess) callbackSuccess(); }).catch(err => { if (callbackError) callbackError(err); });
         }
 
-        function sendTelegramNotification(orderInfo) {
+        function sendTelegramViaBackend(orderInfo) {
             if (!GAS_WEBAPP_URL) return;
 
-            const message = `🔔 <b>CÓ ĐƠN HÀNG MỚI!</b> 🔔\n\n` +
+            const tgMessage = `🔔 <b>CÓ ĐƠN HÀNG MỚI!</b> 🔔\n\n` +
                 `📦 Mã đơn: <code>${orderInfo.code}</code>\n` +
                 `👤 Khách: <b>${orderInfo.customer_name}</b>\n` +
                 `🎮 Dịch vụ: <b>${orderInfo.game}</b> - ${orderInfo.package}\n` +
@@ -1087,15 +1087,13 @@
 
             fetch(GAS_WEBAPP_URL, {
                 method: 'POST',
-                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     type: "telegram",
-                    message: message
+                    message: tgMessage
                 })
-            })
-            .then(response => response.text())
-            .then(result => console.log('Đã gửi Telegram thành công:', result))
-            .catch(err => console.log('Lỗi gửi Telegram:', err));
+            }).catch(err => console.log('Lỗi gửi Telegram:', err));
         }
 
         window.onload = async function() {
@@ -1160,7 +1158,6 @@
                         document.getElementById('pending-payment-approval-modal').classList.add('hidden');
                         document.getElementById('payment-approved-success-modal').classList.remove('hidden');
                     } else if (updatedOrder.status === 'Đã Hủy') {
-                        // CHỈ HIỆN MODAL ĐỎ NẾU LÝ DO CÓ CHỨA "30 phút" (QUÁ HẠN QR)
                         if (updatedOrder.cancel_reason && updatedOrder.cancel_reason.includes('30 phút')) {
                             if (qrCountdownInterval) clearInterval(qrCountdownInterval);
                             document.getElementById('payment-modal').classList.add('hidden');
@@ -2101,7 +2098,8 @@
                 const { error } = await supabaseClient.from('orders').insert([newOrder]);
                 if (error) { console.error('Lỗi tạo đơn:', error.message); alert('Lỗi tạo đơn: ' + error.message); return; }
 
-                sendTelegramNotification(newOrder);
+                // GỌI HÀM BẮN TELEGRAM QUA GAS BACKEND
+                sendTelegramViaBackend(newOrder);
 
                 if (customerEmail && customerEmail.includes('@')) {
                     sendAutoEmail(
