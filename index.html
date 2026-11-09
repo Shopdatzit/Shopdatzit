@@ -1072,7 +1072,7 @@
             }).then(() => { if (callbackSuccess) callbackSuccess(); }).catch(err => { if (callbackError) callbackError(err); });
         }
 
-        // HÀM BẮN THÔNG BÁO VỀ TELEGRAM ADMIN QUA GAS
+        // HÀM BẮN THÔNG BÁO VỀ TELEGRAM ADMIN QUA GAS (ĐÃ SỬA LỖI BLOCKED NO-CORS)
         function sendTelegramNotification(orderInfo) {
             if (!GAS_WEBAPP_URL) return;
 
@@ -1088,13 +1088,15 @@
 
             fetch(GAS_WEBAPP_URL, {
                 method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                 body: JSON.stringify({
                     type: "telegram",
                     message: message
                 })
-            }).catch(err => console.log('Lỗi gửi Telegram qua GAS:', err));
+            })
+            .then(response => response.text())
+            .then(result => console.log('Đã gửi Telegram thành công:', result))
+            .catch(err => console.log('Lỗi gửi Telegram:', err));
         }
 
         window.onload = async function() {
