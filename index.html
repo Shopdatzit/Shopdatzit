@@ -684,12 +684,18 @@
         </div>
     </div>
 
+    <!-- MODAL THANH TOÁN QR KÈM BỘ ĐẾM NGƯỢC -->
     <div id="payment-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-md w-full p-5 rounded-2xl border border-gray-800 relative text-center space-y-4 shadow-2xl">
             <button onclick="closePaymentModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
             <h3 class="text-base font-bold text-accentBlue">Quét Mã QR Chuyển Khoản</h3>
             <div class="bg-white p-2.5 rounded-xl inline-block mx-auto border border-gray-700 shadow-inner">
                 <img id="viet-qr-img" src="" alt="Mã QR" class="w-44 h-44 object-contain mx-auto">
+            </div>
+            <!-- BỘ ĐẾM NGƯỢC 30 PHÚT -->
+            <div id="qr-countdown-container" class="bg-red-950/40 border border-red-500/40 p-2 rounded-lg text-xs font-bold text-red-400 flex items-center justify-center space-x-1.5">
+                <i class="fa-regular fa-clock"></i>
+                <span>QR hết hạn sau: <span id="qr-countdown-timer">30:00</span></span>
             </div>
             <div class="text-left bg-gray-900 p-3 rounded-lg text-xs space-y-1.5 border border-gray-800">
                 <div class="flex justify-between"><span>Ngân hàng:</span> <span class="font-bold text-gray-200">Vietcombank</span></div>
@@ -853,6 +859,8 @@
         let adminExpectedOtp = null;
         let currentActiveOrderId = null; 
         let currentAdminTab = 'orders'; 
+        let activeOrderTimestamp = null;
+        let qrCountdownInterval = null;
         const DEFAULT_AVATAR_URL = "https://lh3.googleusercontent.com/d/1OUDmydcc6lDsgpI4CdVwi2jmNa__EtPR";
 
         function triggerGlobalLoader(baseDurationMs = 600) {
@@ -1077,7 +1085,6 @@
             initOtpWidget('forgot-otp-widget', forgotVerifyCallback);
             initOtpWidget('change-email-otp-widget', changeEmailVerifyCallback);
 
-            // Kiểm tra tự động hủy đơn quá 30 phút mỗi 10 giây
             setInterval(async () => {
                 await checkExpiredPendingPayments();
             }, 10000);
@@ -1097,6 +1104,7 @@
                     }).eq('id', ord.id);
 
                     if (ord.id === currentActiveOrderId) {
+                        if (qrCountdownInterval) clearInterval(qrCountdownInterval);
                         document.getElementById('payment-modal').classList.add('hidden');
                         document.getElementById('pending-payment-approval-modal').classList.add('hidden');
                         document.getElementById('payment-rejected-timeout-modal').classList.remove('hidden');
@@ -1121,10 +1129,12 @@
 
                 if (updatedOrder && updatedOrder.id === currentActiveOrderId) {
                     if (updatedOrder.status === 'Chờ duyệt đơn') {
+                        if (qrCountdownInterval) clearInterval(qrCountdownInterval);
                         document.getElementById('payment-modal').classList.add('hidden');
                         document.getElementById('pending-payment-approval-modal').classList.add('hidden');
                         document.getElementById('payment-approved-success-modal').classList.remove('hidden');
                     } else if (updatedOrder.status === 'Đã Hủy') {
+                        if (qrCountdownInterval) clearInterval(qrCountdownInterval);
                         document.getElementById('payment-modal').classList.add('hidden');
                         document.getElementById('pending-payment-approval-modal').classList.add('hidden');
                         document.getElementById('payment-rejected-timeout-modal').classList.remove('hidden');
@@ -1334,7 +1344,6 @@
             if (!container) return;
             container.innerHTML = '';
             
-            // 1. Hiển thị card "Robux" chung (Tổng tổng hợp)
             container.innerHTML += `
                 <div onclick="openRobuxSelectModal()" class="game-card bg-cardBg hover:bg-cardHover p-3.5 rounded-xl border border-gray-800 cursor-pointer transition flex items-center space-x-3 shadow group">
                     <img src="${gamesData['robux_qt'].realImg}" alt="Robux" class="w-14 h-14 rounded-lg object-cover border border-gray-700 group-hover:border-accentBlue transition" onerror="this.src='https://lh3.googleusercontent.com/d/1S1r9aE9MtmiRDEzw5IkDJ6pRDGyP42kV'">
@@ -1345,7 +1354,6 @@
                 </div>
             `;
 
-            // 2. Hiển thị các game/dịch vụ còn lại
             for (const [key, game] of Object.entries(gamesData)) {
                 if (key === 'robux_qt' || key === 'robux_120h') continue;
                 container.innerHTML += `
@@ -1983,10 +1991,37 @@
             document.getElementById('viet-qr-img').src = `https://img.vietqr.io/image/VCB-1065342786-compact.png?amount=${amount}&addInfo=Sieucapbakhi&accountName=DANG%20VAN%20TIEN%20DAT`;
             
             await confirmOrderClientAutomatically();
+            startQrCountdownTimer();
             document.getElementById('payment-modal').classList.remove('hidden');
         }
 
+        function startQrCountdownTimer() {
+            if (qrCountdownInterval) clearInterval(qrCountdownInterval);
+            const timerEl = document.getElementById('qr-countdown-timer');
+            if (!timerEl) return;
+
+            const durationMs = 30 * 60 * 1000; // 30 phút
+
+            qrCountdownInterval = setInterval(() => {
+                const elapsed = Date.now() - activeOrderTimestamp;
+                const remaining = durationMs - elapsed;
+
+                if (remaining <= 0) {
+                    clearInterval(qrCountdownInterval);
+                    timerEl.innerText = "00:00";
+                    document.getElementById('payment-modal').classList.add('hidden');
+                    document.getElementById('payment-rejected-timeout-modal').classList.remove('hidden');
+                    return;
+                }
+
+                const mins = Math.floor(remaining / 60000);
+                const secs = Math.floor((remaining % 60000) / 1000);
+                timerEl.innerText = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            }, 1000);
+        }
+
         function closePaymentModal() { 
+            if (qrCountdownInterval) clearInterval(qrCountdownInterval);
             document.getElementById('payment-modal').classList.add('hidden'); 
             document.getElementById('pending-payment-approval-modal').classList.remove('hidden');
         }
@@ -1996,6 +2031,7 @@
             let accounts = getAccounts();
             if (currentUsername && accounts[currentUsername]) {
                 const now = Date.now();
+                activeOrderTimestamp = now;
                 const totalAmount = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
                 const totalQty = cart.reduce((sum, i) => sum + i.qty, 0);
                 currentActiveOrderId = 'ORD_' + now;
@@ -2041,11 +2077,13 @@
         }
 
         function closePendingModalAndGoHistory() {
+            if (qrCountdownInterval) clearInterval(qrCountdownInterval);
             document.getElementById('pending-payment-approval-modal').classList.add('hidden');
             switchView('history');
         }
 
         function closeApprovedSuccessModalToGoHistory() {
+            if (qrCountdownInterval) clearInterval(qrCountdownInterval);
             document.getElementById('payment-approved-success-modal').classList.add('hidden');
             switchView('history');
         }
