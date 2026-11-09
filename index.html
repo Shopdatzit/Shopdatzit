@@ -1072,18 +1072,17 @@
             }).then(() => { if (callbackSuccess) callbackSuccess(); }).catch(err => { if (callbackError) callbackError(err); });
         }
 
-        // HÀM BẮN THÔNG BÁO VỀ TELEGRAM ADMIN QUA GAS (ĐÃ SỬA LỖI BLOCKED NO-CORS)
         function sendTelegramNotification(orderInfo) {
             if (!GAS_WEBAPP_URL) return;
 
-            const message = `🔔 *CÓ ĐƠN HÀNG MỚI!* 🔔\n\n` +
-                `📦 Mã đơn: \`${orderInfo.code}\`\n` +
-                `👤 Khách: *${orderInfo.customer_name}*\n` +
-                `🎮 Dịch vụ: *${orderInfo.game}* - ${orderInfo.package}\n` +
-                `💰 Tổng tiền: *${orderInfo.price.toLocaleString('vi-VN')} đ*\n` +
-                `🔤 Nội dung CK: \`${orderInfo.transfer_content}\`\n` +
-                `📱 UID/TK: \`${orderInfo.input_user}\`\n` +
-                `📞 SĐT/Zalo: \`${orderInfo.input_phone || 'Không có'}\`\n` +
+            const message = `🔔 <b>CÓ ĐƠN HÀNG MỚI!</b> 🔔\n\n` +
+                `📦 Mã đơn: <code>${orderInfo.code}</code>\n` +
+                `👤 Khách: <b>${orderInfo.customer_name}</b>\n` +
+                `🎮 Dịch vụ: <b>${orderInfo.game}</b> - ${orderInfo.package}\n` +
+                `💰 Tổng tiền: <b>${orderInfo.price.toLocaleString('vi-VN')} đ</b>\n` +
+                `🔤 Nội dung CK: <code>${orderInfo.transfer_content}</code>\n` +
+                `📱 UID/TK: <code>${orderInfo.input_user}</code>\n` +
+                `📞 SĐT/Zalo: <code>${orderInfo.input_phone || 'Không có'}</code>\n` +
                 `🕒 Thời gian: ${orderInfo.time}`;
 
             fetch(GAS_WEBAPP_URL, {
@@ -1161,10 +1160,13 @@
                         document.getElementById('pending-payment-approval-modal').classList.add('hidden');
                         document.getElementById('payment-approved-success-modal').classList.remove('hidden');
                     } else if (updatedOrder.status === 'Đã Hủy') {
-                        if (qrCountdownInterval) clearInterval(qrCountdownInterval);
-                        document.getElementById('payment-modal').classList.add('hidden');
-                        document.getElementById('pending-payment-approval-modal').classList.add('hidden');
-                        document.getElementById('payment-rejected-timeout-modal').classList.remove('hidden');
+                        // CHỈ HIỆN MODAL ĐỎ NẾU LÝ DO CÓ CHỨA "30 phút" (QUÁ HẠN QR)
+                        if (updatedOrder.cancel_reason && updatedOrder.cancel_reason.includes('30 phút')) {
+                            if (qrCountdownInterval) clearInterval(qrCountdownInterval);
+                            document.getElementById('payment-modal').classList.add('hidden');
+                            document.getElementById('pending-payment-approval-modal').classList.add('hidden');
+                            document.getElementById('payment-rejected-timeout-modal').classList.remove('hidden');
+                        }
                     }
                 }
 
@@ -2099,7 +2101,6 @@
                 const { error } = await supabaseClient.from('orders').insert([newOrder]);
                 if (error) { console.error('Lỗi tạo đơn:', error.message); alert('Lỗi tạo đơn: ' + error.message); return; }
 
-                // Gửi thông báo về Telegram thông qua GAS
                 sendTelegramNotification(newOrder);
 
                 if (customerEmail && customerEmail.includes('@')) {
