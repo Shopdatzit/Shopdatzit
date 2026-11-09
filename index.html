@@ -834,7 +834,7 @@
             if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || (e.ctrlKey && e.keyCode === 85)) { e.preventDefault(); return false; }
         });
 
-        const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxV8J9cGa6YaYkkzxvx3CKt6mX318xkrtL0mxU3MidJ4EOwVhcf8zLdTHdLdv71B2s/exec";
+        const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbx3CqNSFo_M-2kpMQOdyuvQ7tEoBsTjWB3mO1ncCL0LHrt9D22C4KMKH9iZcUSYpGEC/exec";
         const SUPABASE_URL = 'https://iopcnnbcjycgfnpbeqvo.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_9ioPYsftnZkUOpoN4812gw_-rLTaDfu';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -1072,10 +1072,9 @@
             }).then(() => { if (callbackSuccess) callbackSuccess(); }).catch(err => { if (callbackError) callbackError(err); });
         }
 
-        // HÀM BẮN THÔNG BÁO VỀ TELEGRAM ADMIN
+        // HÀM BẮN THÔNG BÁO VỀ TELEGRAM ADMIN QUA GAS
         function sendTelegramNotification(orderInfo) {
-            const BOT_TOKEN = "9272614990:AAGsVR1PvtLuI2ycv_Jf5mtbGPGl9TVaEZ8";
-            const CHAT_ID = "8930625500";
+            if (!GAS_WEBAPP_URL) return;
 
             const message = `🔔 *CÓ ĐƠN HÀNG MỚI!* 🔔\n\n` +
                 `📦 Mã đơn: \`${orderInfo.code}\`\n` +
@@ -1087,15 +1086,15 @@
                 `📞 SĐT/Zalo: \`${orderInfo.input_phone || 'Không có'}\`\n` +
                 `🕒 Thời gian: ${orderInfo.time}`;
 
-            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+            fetch(GAS_WEBAPP_URL, {
                 method: 'POST',
+                mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    chat_id: CHAT_ID,
-                    text: message,
-                    parse_mode: 'Markdown'
+                    type: "telegram",
+                    message: message
                 })
-            }).catch(err => console.log('Lỗi gửi Telegram:', err));
+            }).catch(err => console.log('Lỗi gửi Telegram qua GAS:', err));
         }
 
         window.onload = async function() {
@@ -2014,7 +2013,6 @@
 
             const amount = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
             
-            // Tạo mã giao dịch chứa tiền tố U2hvc kèm theo mã đơn ngẫu nhiên để MacroDroid quét
             const randomCodeNum = Math.floor(100000 + Math.random() * 900000);
             const dynamicTransferContent = 'U2hvc' + randomCodeNum;
 
@@ -2032,7 +2030,7 @@
             const timerEl = document.getElementById('qr-countdown-timer');
             if (!timerEl) return;
 
-            const durationMs = 30 * 60 * 1000; // 30 phút
+            const durationMs = 30 * 60 * 1000;
 
             qrCountdownInterval = setInterval(() => {
                 const elapsed = Date.now() - activeOrderTimestamp;
@@ -2070,7 +2068,6 @@
                 const passEl = document.getElementById('input-password');
                 const phoneEl = document.getElementById('input-phone');
                 
-                // Lấy email của khách hàng để hệ thống gửi mail xác nhận
                 const customerEmail = accounts[currentUsername].email || currentUsername;
 
                 const newOrder = {
@@ -2100,10 +2097,9 @@
                 const { error } = await supabaseClient.from('orders').insert([newOrder]);
                 if (error) { console.error('Lỗi tạo đơn:', error.message); alert('Lỗi tạo đơn: ' + error.message); return; }
 
-                // 1. Gửi thông báo về Telegram cho Admin ngay khi tạo đơn thành công
+                // Gửi thông báo về Telegram thông qua GAS
                 sendTelegramNotification(newOrder);
 
-                // 2. Gửi Email thông báo xác nhận tạo đơn hàng thành công cho khách hàng
                 if (customerEmail && customerEmail.includes('@')) {
                     sendAutoEmail(
                         customerEmail,
