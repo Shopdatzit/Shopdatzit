@@ -701,12 +701,12 @@
                 <div class="flex justify-between"><span>Ngân hàng:</span> <span class="font-bold text-gray-200">Vietcombank</span></div>
                 <div class="flex justify-between"><span>Số tài khoản:</span> <span class="font-bold text-accentBlue text-sm select-all">1065342786</span></div>
                 <div class="flex justify-between"><span>Chủ tài khoản:</span> <span class="font-bold text-gray-200 select-all">DANG VAN TIEN DAT</span></div>
-                <div class="flex justify-between"><span>Nội dung CK:</span> <span class="font-bold text-yellow-400 select-all">Sieucapbakhi</span></div>
+                <div class="flex justify-between"><span>Nội dung CK:</span> <span id="transfer-content-label" class="font-bold text-yellow-400 select-all">U2hvc</span></div>
                 <div class="flex justify-between items-center border-t border-gray-800 pt-2">
                     <span>Số tiền:</span> <span id="modal-amount" class="font-bold text-green-400 text-sm select-all">0 đ</span>
                 </div>
             </div>
-            <p class="text-[11px] text-yellow-400 font-medium">💡 Vui lòng quét mã chuyển khoản. Khi Admin duyệt tiền, bảng này sẽ tự động đóng và hiển thị thành công!</p>
+            <p class="text-[11px] text-yellow-400 font-medium">💡 Vui lòng quét mã chuyển khoản kèm nội dung có chứa <b>U2hvc</b>. Khi hệ thống nhận dạng, đơn hàng sẽ tự động duyệt!</p>
         </div>
     </div>
 
@@ -1987,10 +1987,16 @@
             }
 
             const amount = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
-            document.getElementById('modal-amount').innerText = amount.toLocaleString('vi-VN') + ' đ';
-            document.getElementById('viet-qr-img').src = `https://img.vietqr.io/image/VCB-1065342786-compact.png?amount=${amount}&addInfo=Sieucapbakhi&accountName=DANG%20VAN%20TIEN%20DAT`;
             
-            await confirmOrderClientAutomatically();
+            // Tạo mã giao dịch chứa tiền tố U2hvc kèm theo mã đơn ngẫu nhiên để MacroDroid quét
+            const randomCodeNum = Math.floor(100000 + Math.random() * 900000);
+            const dynamicTransferContent = 'U2hvc' + randomCodeNum;
+
+            document.getElementById('modal-amount').innerText = amount.toLocaleString('vi-VN') + ' đ';
+            document.getElementById('transfer-content-label').innerText = dynamicTransferContent;
+            document.getElementById('viet-qr-img').src = `https://img.vietqr.io/image/VCB-1065342786-compact.png?amount=${amount}&addInfo=${encodeURIComponent(dynamicTransferContent)}&accountName=DANG%20VAN%20TIEN%20DAT`;
+            
+            await confirmOrderClientAutomatically(dynamicTransferContent, randomCodeNum);
             startQrCountdownTimer();
             document.getElementById('payment-modal').classList.remove('hidden');
         }
@@ -2026,8 +2032,7 @@
             document.getElementById('pending-payment-approval-modal').classList.remove('hidden');
         }
 
-        async function confirmOrderClientAutomatically() {
-            const randomCode = Math.floor(100000 + Math.random() * 900000);
+        async function confirmOrderClientAutomatically(transferContent, randomCodeNum) {
             let accounts = getAccounts();
             if (currentUsername && accounts[currentUsername]) {
                 const now = Date.now();
@@ -2038,10 +2043,15 @@
 
                 const passEl = document.getElementById('input-password');
                 const phoneEl = document.getElementById('input-phone');
+                
+                // Lấy email của khách hàng để hệ thống gửi mail xác nhận
+                const customerEmail = accounts[currentUsername].email || currentUsername;
+
                 const newOrder = {
                     id: currentActiveOrderId, 
-                    code: '#' + randomCode, 
+                    code: '#' + randomCodeNum, 
                     customer_name: currentUsername,
+                    email: customerEmail,
                     uid: accounts[currentUsername].uid || '10000', 
                     game: cart.length === 1 ? cart[0].gameName : `Nhiều dịch vụ (${cart.length})`, 
                     package: cart.map(i => `${i.pkgName} (x${i.qty})`).join(', '),
@@ -2057,18 +2067,22 @@
                     input_phone: phoneEl ? phoneEl.value : 'Không có',
                     input_note: (document.getElementById('input-user-note') ? document.getElementById('input-user-note').value : '') || 'Không có',
                     admin_note: '',
-                    cancel_reason: ''
+                    cancel_reason: '',
+                    transfer_content: transferContent
                 };
 
                 const { error } = await supabaseClient.from('orders').insert([newOrder]);
                 if (error) { console.error('Lỗi tạo đơn:', error.message); alert('Lỗi tạo đơn: ' + error.message); return; }
 
-                sendAutoEmail(
-                    "ngocdiemdang90@gmail.com",
-                    `Yêu cầu duyệt tiền đơn #${randomCode} từ ${currentUsername}`,
-                    `Khách hàng <b>${currentUsername}</b> vừa tạo đơn hàng <b>#${randomCode}</b> và quét QR chuyển khoản.<br>Tổng tiền: <b>${totalAmount.toLocaleString('vi-VN')} đ</b>.<br>Nội dung CK: <b>Sieucapbakhi</b>.<br>Vui lòng vào trang quản trị (Mục Duyệt Chuyển Tiền) để xác nhận!`,
-                    true
-                );
+                // 1. Gửi Email thông báo xác nhận tạo đơn hàng thành công cho khách hàng
+                if (customerEmail && customerEmail.includes('@')) {
+                    sendAutoEmail(
+                        customerEmail,
+                        `Xác nhận tạo đơn hàng #${randomCodeNum} - ShopDatZit`,
+                        `Xin chào <b>${currentUsername}</b>,<br>Đơn hàng <b>#${randomCodeNum}</b> của bạn đã được khởi tạo thành công.<br>Nội dung chuyển khoản: <b>${transferContent}</b><br>Tổng tiền: <b>${totalAmount.toLocaleString('vi-VN')} đ</b>.<br>Hệ thống đang chờ bạn quét mã QR chuyển khoản để tự động duyệt!`,
+                        true
+                    );
+                }
 
                 clearCart(); 
                 await fetchAndCalculateSolds();
@@ -2304,7 +2318,7 @@
                                 <div class="font-bold text-white">${ord.game}</div>
                                 <div class="text-accentBlue text-[11px]">${ord.package}</div>
                                 <div class="text-green-400 font-bold mt-1 text-sm">${ord.price.toLocaleString('vi-VN')} đ</div>
-                                <div class="text-[11px] text-gray-300 mt-1">UID/TK: <b class="text-white">${ord.input_user}</b> | Nội dung CK: <b class="text-yellow-400">Sieucapbakhi</b></div>
+                                <div class="text-[11px] text-gray-300 mt-1">UID/TK: <b class="text-white">${ord.input_user}</b> | Nội dung CK: <b class="text-yellow-400">${ord.transfer_content || 'U2hvc'}</b></div>
                             </div>
                             <div class="flex flex-col items-end space-y-2">
                                 <button onclick="approvePaymentByAdmin('${ord.id}')" class="bg-yellow-600 hover:bg-yellow-500 text-white px-3 py-2 rounded-xl text-xs font-bold cursor-pointer shadow transition flex items-center space-x-1.5">
@@ -2406,12 +2420,12 @@
                 if (ord) {
                     let accounts = getAccounts();
                     let custAcc = accounts[ord.customer_name.toLowerCase()] || accounts[ord.customer_name];
-                    let custEmail = custAcc ? custAcc.email : ord.customer_name;
+                    let custEmail = ord.email || (custAcc ? custAcc.email : ord.customer_name);
                     if (custEmail && custEmail.includes('@')) {
                         sendAutoEmail(
                             custEmail,
                             `Đơn hàng ${ord.code} đã hoàn thành`,
-                            `Xin chào <b>${ord.customer_name}</b>,<br>Đơn hàng <b>${ord.code}</b> của bạn đã được hoàn thành!<br>Tổng cộng: <b>${ord.price.toLocaleString('vi-VN')} đ</b>.<br><br><b>💬 Ghi chú từ Admin:</b><br><i>"${adminNote}"</i><br><br>Cảm ơn mọi người đã tin tưởng và sử dụng dịch vụ!<br><br>Cảm ơn bạn đã ủng hộ ShopDatZit!`,
+                            `Xin chào <b>${ord.customer_name}</b>,<br>Đơn hàng <b>${ord.code}</b> của bạn đã được hoàn thành!<br>Tổng cộng: <b>${ord.price.toLocaleString('vi-VN')} đ</b>.<br><br><b>💬 Ghi chú từ Admin:</b><br><i>"${adminNote}"</i><br><br>Cảm ơn bạn đã ủng hộ ShopDatZit!`,
                             true
                         );
                     }
@@ -2448,7 +2462,7 @@
                 if (ord) {
                     let accounts = getAccounts();
                     let custAcc = accounts[ord.customer_name.toLowerCase()] || accounts[ord.customer_name];
-                    let custEmail = custAcc ? custAcc.email : ord.customer_name;
+                    let custEmail = ord.email || (custAcc ? custAcc.email : ord.customer_name);
                     if (custEmail && custEmail.includes('@')) {
                         sendAutoEmail(
                             custEmail,
