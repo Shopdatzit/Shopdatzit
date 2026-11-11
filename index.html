@@ -706,7 +706,7 @@
                     <span>Số tiền:</span> <span id="modal-amount" class="font-bold text-green-400 text-sm select-all">0 đ</span>
                 </div>
             </div>
-            <p class="text-[11px] text-yellow-400 font-medium">💡 Vui lòng quét mã chuyển khoản kèm nội dung có chứa <b>U2hvc</b>. Khi hệ thống nhận dạng, đơn hàng sẽ tự động duyệt!</p>
+            <p class="text-[11px] text-yellow-400 font-medium">💡 Vui lòng quét mã chuyển khoản kèm nội dung chính xác là <b>U2hvc</b>. Khi hệ thống nhận dạng, đơn hàng sẽ tự động duyệt!</p>
         </div>
     </div>
 
@@ -2014,8 +2014,9 @@
 
             const amount = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
             
+            // CHỈ ĐÚNG CHỮ "U2hvc", TUYỆT ĐỐI KHÔNG THÊM MÃ ĐƠN HAY SỐ NÀO KHÁC NỮA
             const randomCodeNum = Math.floor(100000 + Math.random() * 900000);
-            const dynamicTransferContent = 'U2hvc' + randomCodeNum;
+            const dynamicTransferContent = 'U2hvc';
 
             document.getElementById('modal-amount').innerText = amount.toLocaleString('vi-VN') + ' đ';
             document.getElementById('transfer-content-label').innerText = dynamicTransferContent;
@@ -2098,7 +2099,6 @@
                 const { error } = await supabaseClient.from('orders').insert([newOrder]);
                 if (error) { console.error('Lỗi tạo đơn:', error.message); alert('Lỗi tạo đơn: ' + error.message); return; }
 
-                // GỌI HÀM BẮN TELEGRAM QUA GAS BACKEND
                 sendTelegramViaBackend(newOrder);
 
                 if (customerEmail && customerEmail.includes('@')) {
