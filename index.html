@@ -300,8 +300,8 @@
     <main class="flex-grow max-w-7xl mx-auto px-4 py-5 w-full space-y-4">
         <div id="home-view" class="view-section space-y-4">
             <div class="bg-cardBg border border-gray-800 p-3.5 rounded-xl text-center shadow-md">
-                <h2 class="text-base sm:text-lg font-bold rgb-text">🔥 NẠP GAME & THẺ CÀO NHANH CHÓNG - UY TÍN 24/7 (MB BANK) 🔥</h2>
-                <p class="text-[11px] sm:text-xs text-white font-bold mt-1">Lưu ý: hãy copy link dán lên google</p>
+                <h2 class="text-base sm:text-lg font-bold rgb-text">🔥 NẠP GAME & THẺ CÀO NHANH CHÓNG - UY TÍN 24/7 🔥</h2>
+                <p class="text-[11px] sm:text-xs text-white font-bold mt-1">Lưu ý: Hãy Copy Link Dán Lên Google</p>
             </div>
 
             <h1 class="text-lg font-bold flex items-center mt-5"><i class="fa-solid fa-gamepad mr-2 text-accentBlue"></i> Danh Sách Nạp Game & Thẻ Cào</h1>
@@ -471,7 +471,7 @@
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
             <div class="space-y-2 text-left pr-0 md:pr-4">
                 <p class="text-gray-400 text-xs leading-relaxed">
-                    Shopdatzit.site sẽ cung cấp các gói nạp đảm bảo an toàn tuyệt đối. Hệ thống tích hợp phê duyệt tự động hoá toàn bộ quy trình đặt hàng qua MB Bank. Hoạt động tháng 9/2026. Shopdatzit cảm ơn mọi người đã tin tưởng và sử dụng dịch vụ. Shopdatzit.site sẵn sàng phục vụ mọi người!
+                    Shopdatzit.Site Sẽ Cung Cấp Các Gói Nạp Đảm Bảo An Toàn Tuyệt Đối. Hệ Thống Tích Hợp Phê Duyệt Tự Động Hoá Toàn Bộ Quy Trình Đặt Hàng Và Thanh Toán. Hoạt Động Tháng 9/2026. Shopdatzit Cảm Ơn Mọi Người Đã Tin Tưởng Và Sử Dụng Dịch Vụ. Shopdatzit.site Sẵn Sàng Phục Vụ Mọi Người!
                 </p>
             </div>
             <div class="bg-gray-900/60 p-4 rounded-2xl border border-gray-800 space-y-3 text-left">
@@ -481,7 +481,7 @@
                 <div class="space-y-2 text-xs text-gray-300">
                     <div class="flex items-center space-x-2.5">
                         <i class="fa-regular fa-clock text-accentBlue w-4 text-center"></i>
-                        <span><strong class="text-white">08:00</strong> đến <strong class="text-white">22:00</strong></span>
+                        <span><strong class="text-white">08:00</strong> Đến <strong class="text-white">22:00</strong></span>
                     </div>
                     <div class="flex items-center space-x-2.5">
                         <i class="fa-regular fa-calendar-check text-accentBlue w-4 text-center"></i>
@@ -500,7 +500,7 @@
         </div>
         <div class="max-w-7xl mx-auto border-t border-gray-800/80 mt-6 pt-4 text-center space-y-1">
             <p class="font-bold text-gray-300 text-xs">© 2026 SHOPDATZIT.SITE - DỊCH VỤ TRUNG GIAN NẠP GAME 24/7</p>
-            <p class="text-[10px] text-gray-500">Shopdatzit là hệ thống dịch vụ trung gian. Tất cả bản quyền hình ảnh, tên game thuộc về nhà phát hành tương ứng.</p>
+            <p class="text-[10px] text-gray-500">Shopdatzit Là Hệ Thống Dịch Vụ Trung Gian. Tất Cả Bản Quyền Hình Ảnh, Tên Game Thuộc Về Nhà Phát Hành Tương Ứng.</p>
         </div>
     </footer>
 
@@ -854,7 +854,6 @@
         let qrCountdownInterval = null;
         const DEFAULT_AVATAR_URL = "https://lh3.googleusercontent.com/d/1OUDmydcc6lDsgpI4CdVwi2jmNa__EtPR";
 
-        // Bảng ánh xạ Slug URL cho từng danh mục game (Dạng: Shopdatzit.site/danh-muc/game-danh-sach)
         const routeSlugMap = {
             'robux-quoc-te': 'robux_qt',
             'robux-120h': 'robux_120h',
@@ -1087,7 +1086,6 @@
             }
         };
 
-        // --- HỆ THỐNG ĐỊNH TUYẾN (ROUTER) URL ĐỘC LẬP ---
         function handleRoute() {
             const path = window.location.pathname.replace(/^\/+/, ''); 
             if (!path || path === 'home' || path === '') {
@@ -1153,7 +1151,9 @@
         }
 
         window.onload = async function() {
-            triggerGlobalLoader(800);
+            if (window.location.pathname === '/' || window.location.pathname === '') {
+                triggerGlobalLoader(800);
+            }
             initAdminAccount();
             initTheme();
             await checkExpiredPendingPayments();
@@ -1165,7 +1165,7 @@
             initOtpWidget('forgot-otp-widget', forgotVerifyCallback);
             initOtpWidget('change-email-otp-widget', changeEmailVerifyCallback);
 
-            handleRoute(); // Tải đúng view hoặc game dựa trên URL hiện tại
+            handleRoute();
 
             setInterval(async () => {
                 await checkExpiredPendingPayments();
@@ -1779,7 +1779,6 @@
             }
         }
 
-        // --- HÀM CHUYỂN VIEW CÓ HỖ TRỢ LỊCH SỬ TRÌNH DUYỆT (HISTORY API) ---
         async function switchView(viewName, pushState = true) {
             triggerGlobalLoader(viewName === 'home' ? 800 : 450);
             if (pushState) {
