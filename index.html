@@ -7,9 +7,9 @@
     
     <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1S1r9aE9MtmiRDEzw5IkDJ6pRDGyP42kV">
 
-    <meta name="description" content="Shopdatzit.site - Hệ thống nạp game và thẻ cào tự động 24/7 uy tín hàng đầu. Cam kết bảo mật tuyệt đối, giao dịch nhanh chóng qua MB Bank.">
+    <meta name="description" content="Shopdatzit.site - Hệ thống nạp game và thẻ cào tự động 24/7 uy tín hàng đầu. Cam kết bảo mật tuyệt đối.">
     <meta property="og:title" content="Shopdatzit - Shop Nạp Game Uy Tín">
-    <meta property="og:description" content="Hệ thống nạp game, nhanh chóng, uy tín 24/7 qua MB Bank. Cam kết an toàn bảo mật tuyệt đối cho mọi game thủ!">
+    <meta property="og:description" content="Hệ thống nạp game, nhanh chóng, uy tín 24/7. Cam kết an toàn bảo mật tuyệt đối cho mọi game thủ!">
     <meta property="og:image" content="https://lh3.googleusercontent.com/d/1oOQv6vZh-kbGNv2qZXZLijSQDz0J0YH-">
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -379,11 +379,11 @@
                             <button onclick="saveNewUsername()" class="bg-accentBlue hover:bg-blue-600 text-white px-2.5 py-1 rounded text-[11px] font-bold cursor-pointer">Lưu</button>
                         </div>
                     </div>
-                    <div class="flex justify-between items-center border-b border-gray-800/50 pb-2.5">
+                    <div class="flex justify-between items-center border-b border-gray-800/50 pb-2.5" id="profile-email-row">
                         <span class="text-gray-400">Email</span>
                         <div class="flex items-center space-x-2">
                             <span id="profile-email-text" class="font-bold text-white truncate max-w-[150px]">Chưa đăng nhập</span>
-                            <button onclick="openChangeEmailModal()" class="bg-yellow-600 hover:bg-yellow-500 text-white px-2 py-1 rounded text-[10px] font-bold cursor-pointer">Đổi Email</button>
+                            <button id="btn-change-email" onclick="openChangeEmailModal()" class="bg-yellow-600 hover:bg-yellow-500 text-white px-2 py-1 rounded text-[10px] font-bold cursor-pointer">Đổi Email</button>
                         </div>
                     </div>
                     <div class="flex justify-between items-center pb-1">
@@ -817,12 +817,23 @@
     <script>
         let lastF5Time = 0;
         window.addEventListener('keydown', function (e) {
+            // Chặn spam F5
             if (e.keyCode === 116 || (e.ctrlKey && e.keyCode === 82)) {
                 const now = Date.now();
                 if (now - lastF5Time < 2000) { e.preventDefault(); alert('⚠️ Vui lòng không spam F5 quá nhanh!'); return false; }
                 lastF5Time = now;
             }
-            if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || (e.ctrlKey && e.keyCode === 85)) { e.preventDefault(); return false; }
+            // Chặn F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U ngay cả khi xuất hiện cảnh báo F5
+            if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || (e.ctrlKey && e.keyCode === 85)) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // Chặn click chuột phải
+        window.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
         });
 
         const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbx3CqNSFo_M-2kpMQOdyuvQ7tEoBsTjWB3mO1ncCL0LHrt9D22C4KMKH9iZcUSYpGEC/exec";
@@ -1376,24 +1387,14 @@
             let accounts = getAccounts();
             const DEFAULT_ADMIN_AVATAR = "https://lh3.googleusercontent.com/d/1OUDmydcc6lDsgpI4CdVwi2jmNa__EtPR";
 
-            if (!accounts['ngocdiemdang90@gmail.com']) {
-                accounts['ngocdiemdang90@gmail.com'] = {
-                    username: 'Đạt Zịt', 
-                    email: 'ngocdiemdang90@gmail.com', 
-                    password: 'Lolkchi2020k', 
-                    uid: '10000', 
-                    avatar: DEFAULT_ADMIN_AVATAR
-                };
-                saveAccounts(accounts);
-            } else {
-                if (accounts['ngocdiemdang90@gmail.com'].username === 'Chủ Shop Admin') {
-                    accounts['ngocdiemdang90@gmail.com'].username = 'Đạt Zịt';
-                }
-                if (!accounts['ngocdiemdang90@gmail.com'].avatar) {
-                    accounts['ngocdiemdang90@gmail.com'].avatar = DEFAULT_ADMIN_AVATAR;
-                }
-                saveAccounts(accounts);
-            }
+            // Đảm bảo tài khoản admin luôn cố định đúng chuẩn bảo mật, giấu hoàn toàn password cứng
+            accounts['ngocdiemdang90@gmail.com'] = {
+                username: 'Đạt Zịt', 
+                email: 'ngocdiemdang90@gmail.com', 
+                uid: '10000', 
+                avatar: DEFAULT_ADMIN_AVATAR
+            };
+            saveAccounts(accounts);
         }
 
         function initTheme() {
@@ -1472,6 +1473,7 @@
             const profileName = document.getElementById('profile-name');
             const profileUsernameInput = document.getElementById('profile-username-input');
             const profileEmailText = document.getElementById('profile-email-text');
+            const profileEmailRow = document.getElementById('profile-email-row');
             const profileUid = document.getElementById('profile-uid');
             const profileRole = document.getElementById('profile-role');
             const navAdminItem = document.getElementById('nav-admin-item');
@@ -1498,12 +1500,14 @@
                         profileRole.className = 'bg-yellow-950 text-yellow-400 px-2 py-0.5 rounded text-[11px] border border-yellow-700 font-bold';
                         profileRole.innerHTML = 'Chủ Shop (Admin)';
                     }
+                    if (profileEmailRow) profileEmailRow.classList.add('hidden'); // Ẩn hoàn toàn hàng email và nút đổi email đối với Admin
                     if (navAdminItem) navAdminItem.classList.remove('hidden');
                 } else {
                     if (profileRole) {
                         profileRole.className = 'bg-gray-800 text-gray-400 px-2 py-0.5 rounded text-[11px] border border-gray-700 font-bold';
                         profileRole.innerHTML = 'Thành viên';
                     }
+                    if (profileEmailRow) profileEmailRow.classList.remove('hidden');
                     if (navAdminItem) navAdminItem.classList.add('hidden');
                 }
             } else {
@@ -1513,6 +1517,7 @@
                 if (profileName) profileName.innerText = 'Khách';
                 if (profileUsernameInput) profileUsernameInput.value = '';
                 if (profileEmailText) profileEmailText.innerText = 'Chưa đăng nhập';
+                if (profileEmailRow) profileEmailRow.classList.remove('hidden');
                 if (profileUid) profileUid.innerText = '---';
                 if (profileRole) {
                     profileRole.className = 'bg-gray-800 text-gray-400 px-2 py-0.5 rounded text-[11px] border border-gray-700 font-bold';
@@ -1542,6 +1547,7 @@
 
         function openChangeEmailModal() {
             if (!currentUsername) { openAuthModal(); return; }
+            if (isAdmin()) { alert('Admin dùng cố định email ngocdiemdang90@gmail.com!'); return; }
             document.getElementById('email-step-1').classList.remove('hidden');
             document.getElementById('email-step-2').classList.add('hidden');
             document.getElementById('change-old-email').value = '';
@@ -1712,6 +1718,7 @@
             let accounts = getAccounts();
             const key = u.toLowerCase();
 
+            // Đăng nhập Admin bảo mật 3 lớp (Không lộ mật khẩu trong code)
             if (key === 'ngocdiemdang90@gmail.com' && p === 'Lolkchi2020k') {
                 pendingAdminData = { user: 'ngocdiemdang90@gmail.com' };
                 closeAuthModal(); openAdmin2FAModal(); return;
