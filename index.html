@@ -257,7 +257,7 @@
 
     <header class="bg-cardBg border-b border-gray-800 sticky top-0 z-40 transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-3 h-16 flex items-center justify-between">
-            <div class="flex items-center cursor-pointer" onclick="switchView('home')">
+            <div class="flex items-center cursor-pointer" onclick="navigateTo('home')">
                 <div class="animated-shop-logo">
                     <div class="flex flex-col leading-tight text-left">
                         <span class="font-black text-sm tracking-wide logo-text-anim">SHOPDATZIT</span>
@@ -287,8 +287,8 @@
                                 <div class="text-[10px] text-gray-400">UID: <span id="dropdown-uid">60742</span></div>
                             </div>
                         </div>
-                        <a href="#" onclick="switchView('profile')" class="block px-4 py-2.5 hover:bg-gray-800 text-gray-300 transition"><i class="fa-solid fa-user mr-2 text-accentBlue"></i> Thông tin chung</a>
-                        <a href="#" onclick="switchView('history')" class="block px-4 py-2.5 hover:bg-gray-800 text-gray-300 transition"><i class="fa-solid fa-clock-rotate-left mr-2 text-accentBlue"></i> Lịch sử mua hàng</a>
+                        <a href="#" onclick="navigateTo('profile'); return false;" class="block px-4 py-2.5 hover:bg-gray-800 text-gray-300 transition"><i class="fa-solid fa-user mr-2 text-accentBlue"></i> Thông tin chung</a>
+                        <a href="#" onclick="navigateTo('history'); return false;" class="block px-4 py-2.5 hover:bg-gray-800 text-gray-300 transition"><i class="fa-solid fa-clock-rotate-left mr-2 text-accentBlue"></i> Lịch sử mua hàng</a>
                         <div class="border-t border-gray-800 my-1"></div>
                         <a href="#" onclick="handleLogout()" class="block px-4 py-2.5 hover:bg-red-950/40 text-red-400 transition font-bold"><i class="fa-solid fa-right-from-bracket mr-2"></i> Đăng xuất</a>
                     </div>
@@ -309,7 +309,7 @@
         </div>
 
         <div id="detail-view" class="view-section hidden space-y-5">
-            <button onclick="switchView('home')" class="text-xs bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded-lg transition flex items-center w-max border border-gray-700 cursor-pointer">
+            <button onclick="navigateTo('home')" class="text-xs bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded-lg transition flex items-center w-max border border-gray-700 cursor-pointer">
                 <i class="fa-solid fa-arrow-left mr-2"></i> Quay lại trang chủ
             </button>
 
@@ -324,7 +324,6 @@
             </div>
 
             <div class="space-y-5">
-                <!-- 1. Gói / Mệnh giá -->
                 <div class="bg-cardBg p-4 sm:p-5 rounded-xl border border-gray-800 shadow-md space-y-4">
                     <div class="flex items-center justify-between border-b border-gray-800 pb-3">
                         <h3 class="font-bold text-accentBlue text-xs sm:text-sm flex items-center"><i class="fa-solid fa-box-open mr-2"></i> Chọn Gói / Mệnh Giá</h3>
@@ -333,7 +332,6 @@
                     <div id="package-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-3"></div>
                 </div>
 
-                <!-- 2. Giỏ Hàng -->
                 <div class="bg-cardBg p-4 sm:p-5 rounded-xl border border-gray-800 shadow-md">
                     <h3 class="font-bold mb-3 border-b border-gray-800 pb-2 text-xs sm:text-sm flex items-center justify-between">
                         <span class="flex items-center"><i class="fa-solid fa-cart-shopping mr-2 text-accentBlue"></i> Giỏ Hàng</span>
@@ -352,7 +350,6 @@
                     </div>
                 </div>
 
-                <!-- 3. Thông Tin Đơn Hàng -->
                 <div class="bg-cardBg p-4 sm:p-5 rounded-xl border border-gray-800 space-y-4 shadow-md">
                     <h3 class="font-bold text-accentBlue text-xs sm:text-sm flex items-center"><i class="fa-solid fa-id-card mr-2"></i> Thông Tin Đơn Hàng</h3>
                     <div id="order-inputs-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5"></div>
@@ -508,7 +505,6 @@
     </footer>
 
     <!-- MODALS -->
-    <!-- POPUP CHỌN PHÂN LOẠI ROBUX -->
     <div id="robux-select-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-sm w-full p-5 rounded-2xl border border-gray-800 relative space-y-4 shadow-2xl text-center">
             <button onclick="closeRobuxSelectModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -517,14 +513,12 @@
                 <p class="text-[11px] text-accentBlue font-medium">Vui lòng chọn loại Robux bạn muốn nạp:</p>
             </div>
             <div class="grid grid-cols-2 gap-3 pt-2">
-                <!-- Robux Quốc Tế (Bình thường) -->
                 <div onclick="selectRobuxType('robux_qt')" class="bg-gray-900 hover:bg-gray-800 border border-gray-700 hover:border-accentBlue p-3 rounded-xl cursor-pointer transition flex flex-col items-center justify-center space-y-2 group">
                     <img src="https://lh3.googleusercontent.com/d/1eFiikthGQFgYwpu4rYAfjRpjGitze1yX" class="w-12 h-12 rounded-lg object-cover border border-gray-700 group-hover:border-accentBlue" alt="">
                     <div>
                         <div class="font-bold text-xs text-white">Robux Quốc Tế</div>
                     </div>
                 </div>
-                <!-- Robux 120h (Vô hiệu hóa: xám mờ, không bấm được) -->
                 <div class="bg-gray-900/50 border border-gray-800 p-3 rounded-xl opacity-40 cursor-not-allowed pointer-events-none flex flex-col items-center justify-center space-y-1.5">
                     <img src="https://lh3.googleusercontent.com/d/1eFiikthGQFgYwpu4rYAfjRpjGitze1yX" class="w-12 h-12 rounded-lg object-cover border border-gray-800 filter grayscale" alt="">
                     <div class="text-center">
@@ -556,7 +550,6 @@
         </div>
     </div>
 
-    <!-- MODAL TỪ CHỐI / HỦY DO QUÁ HẠN 30 PHÚT -->
     <div id="payment-rejected-timeout-modal" class="fixed inset-0 bg-black/85 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-md w-full p-6 rounded-2xl border border-red-500/60 relative space-y-4 shadow-2xl text-center">
             <div class="w-14 h-14 bg-red-950 text-red-500 rounded-full flex items-center justify-center mx-auto text-2xl border border-red-700">
@@ -684,7 +677,6 @@
         </div>
     </div>
 
-    <!-- MODAL THANH TOÁN QR MB BANK KÈM BỘ ĐẾM NGƯỢC -->
     <div id="payment-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-md w-full p-5 rounded-2xl border border-gray-800 relative text-center space-y-4 shadow-2xl">
             <button onclick="closePaymentModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
@@ -692,7 +684,6 @@
             <div class="bg-white p-2.5 rounded-xl inline-block mx-auto border border-gray-700 shadow-inner">
                 <img id="viet-qr-img" src="" alt="Mã QR MB Bank" class="w-44 h-44 object-contain mx-auto">
             </div>
-            <!-- BỘ ĐẾM NGƯỢC 30 PHÚT -->
             <div id="qr-countdown-container" class="bg-red-950/40 border border-red-500/40 p-2 rounded-lg text-xs font-bold text-red-400 flex items-center justify-center space-x-1.5">
                 <i class="fa-regular fa-clock"></i>
                 <span>QR hết hạn sau: <span id="qr-countdown-timer">30:00</span></span>
@@ -805,19 +796,19 @@
 
     <div class="mobile-nav-container">
         <ul class="navigation-ul" id="mobile-nav-list">
-            <li class="list active" onclick="navClick(this, 'home')">
+            <li class="list active" onclick="navigateTo('home')">
                 <a href="javascript:void(0)"><span class="icon"><i class="fa-solid fa-house"></i></span><span class="text">Trang chủ</span></a>
             </li>
-            <li class="list" onclick="navClick(this, 'history')">
+            <li class="list" onclick="navigateTo('history')">
                 <a href="javascript:void(0)"><span class="icon"><i class="fa-solid fa-clock-rotate-left"></i></span><span class="text">Lịch sử</span></a>
             </li>
-            <li class="list" onclick="navClick(this, 'profile')">
+            <li class="list" onclick="navigateTo('profile')">
                 <a href="javascript:void(0)"><span class="icon"><i class="fa-solid fa-user"></i></span><span class="text">Hồ sơ</span></a>
             </li>
-            <li class="list" onclick="navClick(this, 'cskh')">
+            <li class="list" onclick="navigateTo('cskh')">
                 <a href="javascript:void(0)"><span class="icon"><i class="fa-solid fa-headset"></i></span><span class="text">CSKH</span></a>
             </li>
-            <li id="nav-admin-item" class="list hidden" onclick="navClick(this, 'admin')">
+            <li id="nav-admin-item" class="list hidden" onclick="navigateTo('admin')">
                 <a href="javascript:void(0)"><span class="icon text-yellow-400"><i class="fa-solid fa-shield-halved text-yellow-400"></i></span><span class="text text-yellow-400 font-bold">Admin</span></a>
             </li>
         </ul>
@@ -862,6 +853,39 @@
         let activeOrderTimestamp = null;
         let qrCountdownInterval = null;
         const DEFAULT_AVATAR_URL = "https://lh3.googleusercontent.com/d/1OUDmydcc6lDsgpI4CdVwi2jmNa__EtPR";
+
+        // Bảng ánh xạ Slug URL cho từng danh mục game (Dạng: Shopdatzit.site/danh-muc/game-danh-sach)
+        const routeSlugMap = {
+            'robux-quoc-te': 'robux_qt',
+            'robux-120h': 'robux_120h',
+            'identity-v': 'identityv',
+            'the-garena': 'garena',
+            'aniimo': 'aniimo',
+            'arknights-endfield': 'arknights',
+            'genshin-impact': 'genshin',
+            'honor-of-kings': 'hok',
+            'punishing-gray-raven': 'pgr',
+            'wuthering-waves': 'wuwa',
+            'zenless-zone-zero': 'zzz',
+            'honkai-star-rail': 'hsr',
+            'honkai-impact-3': 'honkai'
+        };
+
+        const gameKeyToSlugMap = {
+            'robux_qt': 'robux-quoc-te',
+            'robux_120h': 'robux-120h',
+            'identityv': 'identity-v',
+            'garena': 'the-garena',
+            'aniimo': 'aniimo',
+            'arknights': 'arknights-endfield',
+            'genshin': 'genshin-impact',
+            'hok': 'honor-of-kings',
+            'pgr': 'punishing-gray-raven',
+            'wuwa': 'wuthering-waves',
+            'zzz': 'zenless-zone-zero',
+            'hsr': 'honkai-star-rail',
+            'honkai': 'honkai-impact-3'
+        };
 
         function triggerGlobalLoader(baseDurationMs = 600) {
             const loader = document.getElementById('global-page-loader');
@@ -1063,6 +1087,38 @@
             }
         };
 
+        // --- HỆ THỐNG ĐỊNH TUYẾN (ROUTER) URL ĐỘC LẬP ---
+        function handleRoute() {
+            const path = window.location.pathname.replace(/^\/+/, ''); 
+            if (!path || path === 'home' || path === '') {
+                switchView('home', false);
+            } else if (path.startsWith('danh-muc/')) {
+                const slug = path.replace('danh-muc/', '');
+                const gameKey = routeSlugMap[slug];
+                if (gameKey) {
+                    openGameDetail(gameKey, false);
+                } else {
+                    switchView('home', false);
+                }
+            } else if (['profile', 'history', 'cskh', 'admin'].includes(path)) {
+                switchView(path, false);
+            } else {
+                switchView('home', false);
+            }
+        }
+
+        window.addEventListener('popstate', () => {
+            handleRoute();
+        });
+
+        function navigateTo(target, gameKey = null) {
+            if (target === 'detail' && gameKey) {
+                openGameDetail(gameKey, true);
+            } else {
+                switchView(target, true);
+            }
+        }
+
         function sendAutoEmail(targetEmail, subjectText, messageHtml, isHtmlFlag = false, callbackSuccess, callbackError) {
             if (!GAS_WEBAPP_URL) { if (callbackError) callbackError(); return; }
             fetch(GAS_WEBAPP_URL, {
@@ -1109,6 +1165,8 @@
             initOtpWidget('forgot-otp-widget', forgotVerifyCallback);
             initOtpWidget('change-email-otp-widget', changeEmailVerifyCallback);
 
+            handleRoute(); // Tải đúng view hoặc game dựa trên URL hiện tại
+
             setInterval(async () => {
                 await checkExpiredPendingPayments();
             }, 10000);
@@ -1144,7 +1202,7 @@
 
         function closeTimeoutModal() {
             document.getElementById('payment-rejected-timeout-modal').classList.add('hidden');
-            switchView('home');
+            navigateTo('home');
         }
 
         function initRealtimeListener() {
@@ -1252,12 +1310,6 @@
                     setTimeout(function () { root.classList.remove('is-bad'); root.querySelector('.u026-real').value = ''; initOtpWidget('change-email-otp-widget', changeEmailVerifyCallback); }, rm ? 600 : 900);
                 }
             }, rm ? 60 : 640);
-        }
-
-        function navClick(element, target) {
-            document.querySelectorAll('.navigation-ul li').forEach(item => item.classList.remove('active'));
-            element.classList.add('active');
-            switchView(target);
         }
 
         function syncNavActive(viewName) {
@@ -1393,7 +1445,10 @@
                 `;
             }
             document.querySelectorAll('.game-card[data-game]').forEach(card => {
-                card.addEventListener('click', () => openGameDetail(card.getAttribute('data-game')));
+                card.addEventListener('click', () => {
+                    const gameKey = card.getAttribute('data-game');
+                    navigateTo('detail', gameKey);
+                });
             });
         }
 
@@ -1407,7 +1462,7 @@
 
         function selectRobuxType(typeKey) {
             closeRobuxSelectModal();
-            openGameDetail(typeKey);
+            navigateTo('detail', typeKey);
         }
 
         function updateAuthUI() {
@@ -1712,7 +1767,7 @@
             }
             currentUsername = pendingAdminData.user;
             localStorage.setItem(USER_KEY, currentUsername);
-            closeAdmin2FAModal(); updateAuthUI(); switchView('admin');
+            closeAdmin2FAModal(); updateAuthUI(); navigateTo('admin');
         }
 
         function handleLogout() {
@@ -1720,12 +1775,17 @@
                 localStorage.removeItem(USER_KEY);
                 currentUsername = null;
                 updateAuthUI();
-                switchView('home');
+                navigateTo('home');
             }
         }
 
-        async function switchView(viewName) {
+        // --- HÀM CHUYỂN VIEW CÓ HỖ TRỢ LỊCH SỬ TRÌNH DUYỆT (HISTORY API) ---
+        async function switchView(viewName, pushState = true) {
             triggerGlobalLoader(viewName === 'home' ? 800 : 450);
+            if (pushState) {
+                const url = viewName === 'home' ? '/' : `/${viewName}`;
+                history.pushState({ view: viewName }, '', url);
+            }
             document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
             document.getElementById('user-dropdown').classList.add('hidden');
             
@@ -1734,13 +1794,44 @@
             else if (viewName === 'history') { if (!currentUsername) { openAuthModal(); return; } document.getElementById('history-view').classList.remove('hidden'); renderHistory(); }
             else if (viewName === 'cskh') { document.getElementById('cskh-view').classList.remove('hidden'); }
             else if (viewName === 'admin') {
-                if (checkIsIpBanned() > 0 || !isAdmin()) { alert('Không có quyền!'); switchView('home'); return; }
+                if (checkIsIpBanned() > 0 || !isAdmin()) { alert('Không có quyền!'); navigateTo('home'); return; }
                 document.getElementById('admin-view').classList.remove('hidden'); 
                 renderAdminOrders();
                 renderAdminPayments();
                 renderAdminAllHistory();
             }
             syncNavActive(viewName); window.scrollTo(0, 0);
+        }
+
+        function openGameDetail(gameKey, pushState = true) {
+            triggerGlobalLoader(450);
+            currentGameKey = gameKey;
+            currentGame = gamesData[gameKey];
+            if (!currentGame) return;
+
+            if (pushState) {
+                const slug = gameKeyToSlugMap[gameKey] || gameKey;
+                history.pushState({ view: 'detail', gameKey: gameKey }, '', `/danh-muc/${slug}`);
+            }
+
+            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+            document.getElementById('detail-view').classList.remove('hidden');
+            document.getElementById('detail-game-img').src = currentGame.realImg;
+            document.getElementById('detail-game-name').innerText = currentGame.name;
+            document.getElementById('detail-game-sold').innerText = getGameSold(gameKey);
+
+            const noteEl = document.getElementById('detail-game-note');
+            if (currentGame.note) {
+                noteEl.innerText = currentGame.note;
+                noteEl.classList.remove('hidden');
+            } else {
+                noteEl.classList.add('hidden');
+            }
+
+            renderPackageGrid();
+            renderOrderInputs();
+            renderCart(); 
+            window.scrollTo(0, 0);
         }
 
         function switchAdminTab(tabName) {
@@ -1772,32 +1863,6 @@
                 secAllHistory.classList.remove('hidden');
                 renderAdminAllHistory();
             }
-        }
-
-        function openGameDetail(gameKey) {
-            triggerGlobalLoader(450);
-            currentGameKey = gameKey;
-            currentGame = gamesData[gameKey];
-            if (!currentGame) return;
-
-            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
-            document.getElementById('detail-view').classList.remove('hidden');
-            document.getElementById('detail-game-img').src = currentGame.realImg;
-            document.getElementById('detail-game-name').innerText = currentGame.name;
-            document.getElementById('detail-game-sold').innerText = getGameSold(gameKey);
-
-            const noteEl = document.getElementById('detail-game-note');
-            if (currentGame.note) {
-                noteEl.innerText = currentGame.note;
-                noteEl.classList.remove('hidden');
-            } else {
-                noteEl.classList.add('hidden');
-            }
-
-            renderPackageGrid();
-            renderOrderInputs();
-            renderCart(); 
-            window.scrollTo(0, 0);
         }
 
         function renderPackageGrid() {
@@ -2013,15 +2078,11 @@
             }
 
             const amount = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
-            
             const randomCodeNum = Math.floor(100000 + Math.random() * 900000);
-            // Cấu hình nội dung QR chuyển khoản quét qua MB Bank
             const dynamicTransferContent = 'U2hvc';
 
             document.getElementById('modal-amount').innerText = amount.toLocaleString('vi-VN') + ' đ';
             document.getElementById('transfer-content-label').innerText = dynamicTransferContent;
-            
-            // THAY ĐỔI SANG MÃ QR MB BANK (Mã BIN ngân hàng quân đội MB là 'MB')
             document.getElementById('viet-qr-img').src = `https://img.vietqr.io/image/MB-0358108139-compact.png?amount=${amount}&addInfo=${encodeURIComponent(dynamicTransferContent)}&accountName=DANG%20VAN%20TIEN%20DAT`;
             
             await confirmOrderClientAutomatically(dynamicTransferContent, randomCodeNum);
@@ -2071,7 +2132,6 @@
 
                 const passEl = document.getElementById('input-password');
                 const phoneEl = document.getElementById('input-phone');
-                
                 const customerEmail = accounts[currentUsername].email || currentUsername;
 
                 const newOrder = {
@@ -2121,13 +2181,13 @@
         function closePendingModalAndGoHistory() {
             if (qrCountdownInterval) clearInterval(qrCountdownInterval);
             document.getElementById('pending-payment-approval-modal').classList.add('hidden');
-            switchView('history');
+            navigateTo('history');
         }
 
         function closeApprovedSuccessModalToGoHistory() {
             if (qrCountdownInterval) clearInterval(qrCountdownInterval);
             document.getElementById('payment-approved-success-modal').classList.add('hidden');
-            switchView('history');
+            navigateTo('history');
         }
 
         async function approvePaymentByAdmin(orderId) {
