@@ -343,7 +343,7 @@
                             <span id="cart-total" class="text-green-400 text-base">0 đ</span>
                         </div>
                         <div class="pt-2">
-                            <button onclick="payWithBankTransfer()" class="w-full bg-accentBlue hover:bg-blue-600 text-white font-bold py-2.5 rounded-xl transition text-xs shadow-md cursor-pointer flex items-center justify-center space-x-2">
+                            <button onclick="payWithBankTransfer(this)" class="w-full bg-accentBlue hover:bg-blue-600 text-white font-bold py-2.5 rounded-xl transition text-xs shadow-md cursor-pointer flex items-center justify-center space-x-2">
                                 <i class="fa-solid fa-qrcode"></i> <span>Quét QR MB Bank (Tự Động)</span>
                             </button>
                         </div>
@@ -376,7 +376,7 @@
                         <span class="text-gray-400">Tên Đăng Nhập</span>
                         <div class="flex items-center space-x-2">
                             <input type="text" id="profile-username-input" class="bg-gray-900 border border-gray-700 rounded px-2 py-1 text-xs text-white text-right font-bold w-40 outline-none focus:border-accentBlue" placeholder="Nhập tên">
-                            <button onclick="saveNewUsername()" class="bg-accentBlue hover:bg-blue-600 text-white px-2.5 py-1 rounded text-[11px] font-bold cursor-pointer">Lưu</button>
+                            <button onclick="saveNewUsername(this)" class="bg-accentBlue hover:bg-blue-600 text-white px-2.5 py-1 rounded text-[11px] font-bold cursor-pointer">Lưu</button>
                         </div>
                     </div>
                     <div class="flex justify-between items-center border-b border-gray-800/50 pb-2.5" id="profile-email-row">
@@ -591,7 +591,7 @@
             <div class="space-y-3">
                 <p class="text-xs text-gray-300">Nhập lời nhắn hoặc lưu ý cho khách hàng (sẽ gửi qua email và hiển thị trong đơn):</p>
                 <textarea id="approve-note-input" rows="3" placeholder="Ví dụ: Đã nạp thành công vào tài khoản của bạn, vui lòng kiểm tra game nhé!" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white outline-none focus:border-green-500 resize-none"></textarea>
-                <button onclick="submitApproveOrderWithNote()" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow">XÁC NHẬN DUYỆT HOÀN THÀNH</button>
+                <button onclick="submitApproveOrderWithNote(this)" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow">XÁC NHẬN DUYỆT HOÀN THÀNH</button>
             </div>
         </div>
     </div>
@@ -602,7 +602,7 @@
             <h3 class="text-base font-bold text-red-400 tracking-wide text-center">NHẬP LÝ DO HỦY ĐƠN</h3>
             <div class="space-y-3">
                 <textarea id="cancel-reason-input" rows="3" placeholder="Nhập lý do hủy đơn (sai thông tin, hết gói...)..." class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white outline-none focus:border-red-500 resize-none"></textarea>
-                <button onclick="submitCancelOrderWithReason()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow">XÁC NHẬN HỦY ĐƠN</button>
+                <button onclick="submitCancelOrderWithReason(this)" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow">XÁC NHẬN HỦY ĐƠN</button>
             </div>
         </div>
     </div>
@@ -615,7 +615,7 @@
                 <p class="text-[11px] text-gray-300">Mã OTP 6 số và khóa bảo mật được gửi đến Gmail Admin:</p>
             </div>
             <div class="space-y-3">
-                <button onclick="sendAdminEmail3LayerSecurity()" id="btn-send-admin-3layer" class="w-full bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center justify-center space-x-1.5">
+                <button onclick="sendAdminEmail3LayerSecurity(this)" id="btn-send-admin-3layer" class="w-full bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center justify-center space-x-1.5">
                     <i class="fa-solid fa-paper-plane"></i> <span>GỬI MÃ XÁC THỰC VỀ EMAIL</span>
                 </button>
                 <div class="ux u026 py-1" id="admin-otp-widget">
@@ -640,7 +640,7 @@
                     <textarea id="admin-secret-128-input" rows="2" placeholder="Dán mã 128 ký tự..." class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2 text-[10px] text-gray-200 outline-none focus:border-yellow-400 font-mono resize-none leading-relaxed break-all select-all"></textarea>
                     <div id="admin-ban-warning" class="text-[10px] text-red-400 font-bold mt-1"></div>
                 </div>
-                <button onclick="verifyAdmin3LayerSecurity()" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2.5 rounded-xl text-xs transition cursor-pointer shadow mt-1">
+                <button onclick="verifyAdmin3LayerSecurity(this)" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2.5 rounded-xl text-xs transition cursor-pointer shadow mt-1">
                     XÁC NHẬN ĐĂNG NHẬP ADMIN
                 </button>
             </div>
@@ -654,7 +654,7 @@
             <div id="email-step-1" class="space-y-3">
                 <p class="text-xs text-gray-300 text-center">Nhập Email cũ hiện tại để nhận mã OTP.</p>
                 <input type="text" id="change-old-email" placeholder="Nhập email cũ" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white outline-none focus:border-accentBlue">
-                <button onclick="sendEmailChangeOTP()" id="btn-send-email-otp" class="w-full bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow">GỬI MÃ OTP XÁC THỰC</button>
+                <button onclick="sendEmailChangeOTP(this)" id="btn-send-email-otp" class="w-full bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow">GỬI MÃ OTP XÁC THỰC</button>
             </div>
             <div id="email-step-2" class="hidden space-y-3">
                 <p class="text-xs text-green-400 text-center font-bold">Mã OTP đã được gửi!</p>
@@ -672,7 +672,7 @@
                     <span class="u026-live" aria-live="polite"></span>
                 </div>
                 <input type="text" id="change-new-email" placeholder="Nhập email mới" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white outline-none focus:border-accentBlue">
-                <button onclick="verifyAndChangeEmail()" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow">XÁC NHẬN ĐỔI EMAIL</button>
+                <button onclick="verifyAndChangeEmail(this)" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow">XÁC NHẬN ĐỔI EMAIL</button>
             </div>
         </div>
     </div>
@@ -722,7 +722,7 @@
             <div id="avatar-preview-container" class="hidden text-center space-y-2">
                 <img id="avatar-preview-img" src="" class="w-20 h-20 rounded-full object-cover mx-auto border-2 border-accentBlue shadow-lg">
             </div>
-            <button onclick="saveNewAvatar()" id="btn-save-avatar" class="hidden w-full bg-accentBlue hover:bg-blue-600 text-white font-bold py-2 rounded-xl transition text-xs cursor-pointer">Cập nhật</button>
+            <button onclick="saveNewAvatar(this)" id="btn-save-avatar" class="hidden w-full bg-accentBlue hover:bg-blue-600 text-white font-bold py-2 rounded-xl transition text-xs cursor-pointer">Cập nhật</button>
         </div>
     </div>
 
@@ -736,7 +736,7 @@
                     <input type="password" id="login-pass" placeholder="Mật khẩu" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white pr-10 outline-none focus:border-accentBlue">
                     <i class="fa-solid fa-eye absolute right-3 top-3 text-gray-400 cursor-pointer text-xs" onclick="togglePasswordVisibility('login-pass')"></i>
                 </div>
-                <button onclick="handleLogin()" class="w-full bg-accentBlue text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer">ĐĂNG NHẬP</button>
+                <button onclick="handleLogin(this)" class="w-full bg-accentBlue text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer">ĐĂNG NHẬP</button>
                 <div class="flex justify-between items-center text-[10px] pt-1">
                     <a href="#" onclick="openForgotModal()" class="text-yellow-400 font-bold hover:underline">Quên mật khẩu?</a>
                     <a href="#" onclick="openRegisterModal()" class="text-accentBlue font-bold hover:underline">Chưa có tài khoản? Đăng ký</a>
@@ -755,7 +755,7 @@
                     <input type="password" id="reg-pass" placeholder="Mật khẩu" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white pr-10 outline-none focus:border-accentBlue">
                     <i class="fa-solid fa-eye absolute right-3 top-3 text-gray-400 cursor-pointer text-xs" onclick="togglePasswordVisibility('reg-pass')"></i>
                 </div>
-                <button onclick="handleRegister()" class="w-full bg-green-600 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer">ĐĂNG KÝ NGAY</button>
+                <button onclick="handleRegister(this)" class="w-full bg-green-600 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer">ĐĂNG KÝ NGAY</button>
                 <div class="text-center text-[10px] pt-1"><a href="#" onclick="openAuthModal()" class="text-gray-400 font-bold hover:underline">Quay lại đăng nhập</a></div>
             </div>
         </div>
@@ -768,7 +768,7 @@
             <div id="forgot-step-1" class="space-y-3">
                 <p class="text-xs text-gray-300 text-center">Nhập Email / Tên đăng nhập để nhận mã OTP.</p>
                 <input type="text" id="forgot-email" placeholder="Email / Tên đăng nhập" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white outline-none focus:border-accentBlue">
-                <button onclick="handleSendOTP()" id="btn-send-otp" class="w-full bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow">GỬI MÃ OTP QUA EMAIL</button>
+                <button onclick="handleSendOTP(this)" id="btn-send-otp" class="w-full bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow">GỬI MÃ OTP QUA EMAIL</button>
             </div>
             <div id="forgot-step-2" class="hidden space-y-3">
                 <p class="text-xs text-green-400 text-center font-bold">Mã OTP đã được gửi!</p>
@@ -786,7 +786,7 @@
                     <span class="u026-live" aria-live="polite"></span>
                 </div>
                 <input type="password" id="forgot-new-pass" placeholder="Nhập mật khẩu mới" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white outline-none focus:border-accentBlue">
-                <button onclick="handleResetPassword()" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow">XÁC NHẬN ĐỔI MẬT KHẨU</button>
+                <button onclick="handleResetPassword(this)" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow">XÁC NHẬN ĐỔI MẬT KHẨU</button>
             </div>
             <div class="text-center text-[10px] pt-1 border-t border-gray-800">
                 <a href="#" onclick="openAuthModal()" class="text-gray-400 font-bold hover:underline">Quay lại đăng nhập</a>
@@ -817,24 +817,40 @@
     <script>
         let lastF5Time = 0;
         window.addEventListener('keydown', function (e) {
-            // Chặn spam F5
             if (e.keyCode === 116 || (e.ctrlKey && e.keyCode === 82)) {
                 const now = Date.now();
                 if (now - lastF5Time < 2000) { e.preventDefault(); alert('⚠️ Vui lòng không spam F5 quá nhanh!'); return false; }
                 lastF5Time = now;
             }
-            // Chặn F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U ngay cả khi xuất hiện cảnh báo F5
             if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || (e.ctrlKey && e.keyCode === 85)) {
                 e.preventDefault();
                 return false;
             }
         });
 
-        // Chặn click chuột phải
         window.addEventListener('contextmenu', function(e) {
             e.preventDefault();
             return false;
         });
+
+        // HÀM HỖ TRỢ HIỆU ỨNG XOAY TRÒN & VÔ HIỆU HÓA NÚT KHI BẤM
+        function setButtonLoading(btn, isLoading, customText = '') {
+            if (!btn) return;
+            if (isLoading) {
+                if (!btn.dataset.originalHtml) {
+                    btn.dataset.originalHtml = btn.innerHTML;
+                }
+                btn.disabled = true;
+                btn.classList.add('opacity-75', 'cursor-not-allowed');
+                btn.innerHTML = `<i class="fa-solid fa-spinner animate-spin mr-2"></i><span>${customText || 'Đang xử lý...'}</span>`;
+            } else {
+                btn.disabled = false;
+                btn.classList.remove('opacity-75', 'cursor-not-allowed');
+                if (btn.dataset.originalHtml) {
+                    btn.innerHTML = btn.dataset.originalHtml;
+                }
+            }
+        }
 
         const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbx3CqNSFo_M-2kpMQOdyuvQ7tEoBsTjWB3mO1ncCL0LHrt9D22C4KMKH9iZcUSYpGEC/exec";
         const SUPABASE_URL = 'https://iopcnnbcjycgfnpbeqvo.supabase.co';
@@ -1527,17 +1543,21 @@
             renderAdminAllHistory();
         }
 
-        function saveNewUsername() {
+        function saveNewUsername(btn) {
             if (!currentUsername) { openAuthModal(); return; }
             const newName = document.getElementById('profile-username-input').value.trim();
             if (!newName) { alert('Tên không được để trống!'); return; }
-            let accounts = getAccounts();
-            if (accounts[currentUsername]) {
-                accounts[currentUsername].username = newName;
-                saveAccounts(accounts);
-                updateAuthUI();
-                alert('Cập nhật tên thành công!');
-            }
+            setButtonLoading(btn, true, 'Đang lưu...');
+            setTimeout(() => {
+                let accounts = getAccounts();
+                if (accounts[currentUsername]) {
+                    accounts[currentUsername].username = newName;
+                    saveAccounts(accounts);
+                    updateAuthUI();
+                    alert('Cập nhật tên thành công!');
+                }
+                setButtonLoading(btn, false);
+            }, 400);
         }
 
         function openChangeEmailModal() {
@@ -1553,7 +1573,7 @@
 
         function closeChangeEmailModal() { document.getElementById('change-email-modal').classList.add('hidden'); }
 
-        function sendEmailChangeOTP() {
+        function sendEmailChangeOTP(btn) {
             const oldEmailInput = document.getElementById('change-old-email').value.trim().toLowerCase();
             if (!oldEmailInput) { alert('Vui lòng nhập Email cũ!'); return; }
             let accounts = getAccounts();
@@ -1561,32 +1581,39 @@
             const actualEmail = (currentAcc && currentAcc.email) ? currentAcc.email.toLowerCase() : currentUsername.toLowerCase();
             if (oldEmailInput !== actualEmail) { alert('Email cũ không khớp!'); return; }
 
+            setButtonLoading(btn, true, 'Đang gửi...');
             changeEmailOTP = Math.floor(100000 + Math.random() * 900000).toString();
             sendAutoEmail(oldEmailInput, "Mã OTP Đổi Email - ShopDatZit", "Mã OTP: " + changeEmailOTP, false, () => {
+                setButtonLoading(btn, false);
                 alert('Đã gửi mã OTP!');
                 document.getElementById('email-step-1').classList.add('hidden');
                 document.getElementById('email-step-2').classList.remove('hidden');
             }, () => {
+                setButtonLoading(btn, false);
                 alert('Mã OTP test: ' + changeEmailOTP);
                 document.getElementById('email-step-1').classList.add('hidden');
                 document.getElementById('email-step-2').classList.remove('hidden');
             });
         }
 
-        function verifyAndChangeEmail() {
+        function verifyAndChangeEmail(btn) {
             const otpInput = document.getElementById('change-email-otp').value.trim();
             const newEmailInput = document.getElementById('change-new-email').value.trim().toLowerCase();
             if (!otpInput || !newEmailInput) { alert('Vui lòng điền đủ!'); return; }
             if (otpInput !== changeEmailOTP) { alert('Sai OTP!'); return; }
 
-            let accounts = getAccounts();
-            if (accounts[currentUsername]) {
-                accounts[currentUsername].email = newEmailInput;
-                saveAccounts(accounts);
-                updateAuthUI();
-                closeChangeEmailModal();
-                alert('Đổi Email thành công!');
-            }
+            setButtonLoading(btn, true, 'Đang xác thực...');
+            setTimeout(() => {
+                let accounts = getAccounts();
+                if (accounts[currentUsername]) {
+                    accounts[currentUsername].email = newEmailInput;
+                    saveAccounts(accounts);
+                    updateAuthUI();
+                    closeChangeEmailModal();
+                    alert('Đổi Email thành công!');
+                }
+                setButtonLoading(btn, false);
+            }, 400);
         }
 
         function toggleUserDropdown() {
@@ -1622,16 +1649,20 @@
                 reader.readAsDataURL(file);
             }
         }
-        function saveNewAvatar() {
+        function saveNewAvatar(btn) {
             if (!currentUsername || !tempAvatarBase64) return;
-            let accounts = getAccounts();
-            if (accounts[currentUsername]) {
-                accounts[currentUsername].avatar = tempAvatarBase64;
-                saveAccounts(accounts);
-                updateAuthUI();
-                closeAvatarModal();
-                alert('Đổi ảnh đại diện thành công!');
-            }
+            setButtonLoading(btn, true, 'Đang cập nhật...');
+            setTimeout(() => {
+                let accounts = getAccounts();
+                if (accounts[currentUsername]) {
+                    accounts[currentUsername].avatar = tempAvatarBase64;
+                    saveAccounts(accounts);
+                    updateAuthUI();
+                    closeAvatarModal();
+                    alert('Đổi ảnh đại diện thành công!');
+                }
+                setButtonLoading(btn, false);
+            }, 400);
         }
 
         function togglePasswordVisibility(fieldId) {
@@ -1651,7 +1682,7 @@
         }
         function closeForgotModal() { document.getElementById('forgot-modal').classList.add('hidden'); }
 
-        function handleSendOTP() {
+        function handleSendOTP(btn) {
             const emailInput = document.getElementById('forgot-email').value.trim().toLowerCase();
             if (!emailInput) { alert('Vui lòng nhập Email!'); return; }
             let accounts = getAccounts();
@@ -1661,50 +1692,61 @@
             }
             if (!foundKey) { alert('Tài khoản không tồn tại!'); return; }
 
+            setButtonLoading(btn, true, 'Đang gửi...');
             generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
             targetForgotUser = foundKey;
 
             sendAutoEmail(emailInput, "OTP Khôi Phục Mật Khẩu", "Mã OTP: " + generatedOTP, false, () => {
+                setButtonLoading(btn, false);
                 alert('Đã gửi OTP!');
                 document.getElementById('forgot-step-1').classList.add('hidden');
                 document.getElementById('forgot-step-2').classList.remove('hidden');
             }, () => {
+                setButtonLoading(btn, false);
                 alert('OTP test: ' + generatedOTP);
                 document.getElementById('forgot-step-1').classList.add('hidden');
                 document.getElementById('forgot-step-2').classList.remove('hidden');
             });
         }
 
-        function handleResetPassword() {
+        function handleResetPassword(btn) {
             const otpInput = document.getElementById('forgot-otp').value.trim();
             const newPass = document.getElementById('forgot-new-pass').value.trim();
             if (!otpInput || !newPass) { alert('Điền đủ thông tin!'); return; }
             if (otpInput !== generatedOTP) { alert('Sai mã OTP!'); return; }
 
-            let accounts = getAccounts();
-            if (accounts[targetForgotUser]) {
-                accounts[targetForgotUser].password = newPass;
-                saveAccounts(accounts);
-                alert('Đổi mật khẩu thành công!');
-                closeForgotModal(); openAuthModal();
-            }
+            setButtonLoading(btn, true, 'Đang xử lý...');
+            setTimeout(() => {
+                let accounts = getAccounts();
+                if (accounts[targetForgotUser]) {
+                    accounts[targetForgotUser].password = newPass;
+                    saveAccounts(accounts);
+                    alert('Đổi mật khẩu thành công!');
+                    closeForgotModal(); openAuthModal();
+                }
+                setButtonLoading(btn, false);
+            }, 400);
         }
 
-        function handleRegister() {
+        function handleRegister(btn) {
             const u = document.getElementById('reg-user').value.trim();
             const p = document.getElementById('reg-pass').value.trim();
             if (!u || !p) { alert('Điền đủ thông tin!'); return; }
             let accounts = getAccounts();
             if (accounts[u.toLowerCase()]) { alert('Tài khoản đã tồn tại!'); return; }
             
-            const randomUid = Math.floor(10000 + Math.random() * 90000).toString();
-            accounts[u.toLowerCase()] = { username: u, email: u.includes('@') ? u : `${u}@gmail.com`, password: p, uid: randomUid, avatar: '' };
-            saveAccounts(accounts);
-            alert('Đăng ký thành công!');
-            closeRegisterModal(); openAuthModal();
+            setButtonLoading(btn, true, 'Đang đăng ký...');
+            setTimeout(() => {
+                const randomUid = Math.floor(10000 + Math.random() * 90000).toString();
+                accounts[u.toLowerCase()] = { username: u, email: u.includes('@') ? u : `${u}@gmail.com`, password: p, uid: randomUid, avatar: '' };
+                saveAccounts(accounts);
+                alert('Đăng ký thành công!');
+                closeRegisterModal(); openAuthModal();
+                setButtonLoading(btn, false);
+            }, 400);
         }
 
-        function handleLogin() {
+        function handleLogin(btn) {
             if (checkIsIpBanned() > 0) { alert('IP của bạn đang bị khóa tạm thời!'); return; }
             const u = document.getElementById('login-user').value.trim();
             const p = document.getElementById('login-pass').value.trim();
@@ -1724,10 +1766,15 @@
             }
 
             if (!foundKey || accounts[foundKey].password !== p) { alert('Sai tài khoản hoặc mật khẩu!'); return; }
-            currentUsername = foundKey;
-            localStorage.setItem(USER_KEY, foundKey);
-            updateAuthUI(); closeAuthModal();
-            alert('Đăng nhập thành công!');
+            
+            setButtonLoading(btn, true, 'Đang đăng nhập...');
+            setTimeout(() => {
+                currentUsername = foundKey;
+                localStorage.setItem(USER_KEY, foundKey);
+                updateAuthUI(); closeAuthModal();
+                alert('Đăng nhập thành công!');
+                setButtonLoading(btn, false);
+            }, 400);
         }
 
         function openAdmin2FAModal() {
@@ -1747,17 +1794,20 @@
             return s;
         }
 
-        function sendAdminEmail3LayerSecurity() {
+        function sendAdminEmail3LayerSecurity(btn) {
+            setButtonLoading(btn, true, 'Đang gửi...');
             adminExpectedOtp = Math.floor(100000 + Math.random() * 900000).toString();
             ADMIN_SECURE_SECRET_128 = generateRandomBase32Secret128();
             sendAutoEmail("ngocdiemdang90@gmail.com", "Mã OTP Admin", `OTP: ${adminExpectedOtp}\nSecret: ${ADMIN_SECURE_SECRET_128}`, false, () => {
+                setButtonLoading(btn, false);
                 alert('Đã gửi mã đến Email Admin!');
             }, () => {
+                setButtonLoading(btn, false);
                 alert(`OTP: ${adminExpectedOtp}\nSecret: ${ADMIN_SECURE_SECRET_128}`);
             });
         }
 
-        function verifyAdmin3LayerSecurity() {
+        function verifyAdmin3LayerSecurity(btn) {
             if (checkIsIpBanned() > 0) { alert('IP bị khóa!'); closeAdmin2FAModal(); return; }
             const otpVal = document.getElementById('admin-otp-code-input').value.trim();
             const secretVal = document.getElementById('admin-secret-128-input').value.trim();
@@ -1766,9 +1816,13 @@
                 alert('Sai mã xác thực!');
                 return;
             }
-            currentUsername = pendingAdminData.user;
-            localStorage.setItem(USER_KEY, currentUsername);
-            closeAdmin2FAModal(); updateAuthUI(); navigateTo('admin');
+            setButtonLoading(btn, true, 'Đang xác thực...');
+            setTimeout(() => {
+                currentUsername = pendingAdminData.user;
+                localStorage.setItem(USER_KEY, currentUsername);
+                closeAdmin2FAModal(); updateAuthUI(); navigateTo('admin');
+                setButtonLoading(btn, false);
+            }, 400);
         }
 
         function handleLogout() {
@@ -2043,7 +2097,7 @@
             if (checkoutSection) checkoutSection.classList.remove('hidden');
         }
 
-        async function payWithBankTransfer() {
+        async function payWithBankTransfer(btn) {
             if (!currentUsername) { openAuthModal(); return; }
             if (!cart || cart.length === 0) { alert("Giỏ hàng trống!"); return; }
 
@@ -2077,6 +2131,7 @@
                 }
             }
 
+            setButtonLoading(btn, true, 'Đang tạo QR...');
             const amount = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
             const randomCodeNum = Math.floor(100000 + Math.random() * 900000);
             const dynamicTransferContent = 'U2hvc';
@@ -2087,6 +2142,7 @@
             
             await confirmOrderClientAutomatically(dynamicTransferContent, randomCodeNum);
             startQrCountdownTimer();
+            setButtonLoading(btn, false);
             document.getElementById('payment-modal').classList.remove('hidden');
         }
 
@@ -2190,17 +2246,23 @@
             navigateTo('history');
         }
 
-        async function approvePaymentByAdmin(orderId) {
+        async function approvePaymentByAdmin(orderId, btn) {
+            if (btn) setButtonLoading(btn, true, 'Đang duyệt...');
             const { data: orders } = await supabaseClient.from('orders').select('*').eq('id', orderId);
             const ord = orders ? orders[0] : null;
 
-            if (!ord) { alert('Không tìm thấy đơn hàng!'); return; }
+            if (!ord) { 
+                alert('Không tìm thấy đơn hàng!'); 
+                if (btn) setButtonLoading(btn, false);
+                return; 
+            }
 
             const { error } = await supabaseClient.from('orders').update({ 
                 status: 'Chờ duyệt đơn', 
                 admin_note: '' 
             }).eq('id', orderId);
 
+            if (btn) setButtonLoading(btn, false);
             if (!error) {
                 alert('Duyệt tiền thành công! Đơn hàng chuyển sang chờ xử lý nạp game.');
                 renderAdminOrders();
@@ -2409,7 +2471,7 @@
                                 <div class="text-[11px] text-gray-300 mt-1">UID/TK: <b class="text-white">${ord.input_user}</b> | Nội dung CK: <b class="text-yellow-400">${ord.transfer_content || 'U2hvc'}</b></div>
                             </div>
                             <div class="flex flex-col items-end space-y-2">
-                                <button onclick="approvePaymentByAdmin('${ord.id}')" class="bg-yellow-600 hover:bg-yellow-500 text-white px-3 py-2 rounded-xl text-xs font-bold cursor-pointer shadow transition flex items-center space-x-1.5">
+                                <button onclick="approvePaymentByAdmin('${ord.id}', this)" class="bg-yellow-600 hover:bg-yellow-500 text-white px-3 py-2 rounded-xl text-xs font-bold cursor-pointer shadow transition flex items-center space-x-1.5">
                                     <i class="fa-solid fa-check"></i> <span>Duyệt Tiền (MB Bank)</span>
                                 </button>
                                 <button onclick="openOrderDetail('${ord.id}')" class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-2.5 py-1 rounded text-[11px]">Chi tiết đơn</button>
@@ -2496,14 +2558,17 @@
 
         function closeApproveNoteModal() { document.getElementById('approve-note-modal').classList.add('hidden'); approveTargetOrderId = null; }
 
-        async function submitApproveOrderWithNote() {
+        async function submitApproveOrderWithNote(btn) {
             if (!approveTargetOrderId) return;
             const adminNote = document.getElementById('approve-note-input').value.trim() || 'Đã nạp thành công!';
 
+            setButtonLoading(btn, true, 'Đang duyệt...');
             const { data: orders } = await supabaseClient.from('orders').select('*').eq('id', approveTargetOrderId);
             const ord = orders && orders.length > 0 ? orders[0] : null;
 
             const { error } = await supabaseClient.from('orders').update({ status: 'Đã Nạp Thành Công', admin_note: adminNote }).eq('id', approveTargetOrderId);
+            setButtonLoading(btn, false);
+
             if (!error) {
                 if (ord) {
                     let accounts = getAccounts();
@@ -2538,14 +2603,17 @@
 
         function closeCancelReasonModal() { document.getElementById('cancel-reason-modal').classList.add('hidden'); cancelTargetOrderId = null; }
 
-        async function submitCancelOrderWithReason() {
+        async function submitCancelOrderWithReason(btn) {
             if (!cancelTargetOrderId) return;
             const reason = document.getElementById('cancel-reason-input').value.trim() || 'Admin Hủy';
             
+            setButtonLoading(btn, true, 'Đang hủy...');
             const { data: orders } = await supabaseClient.from('orders').select('*').eq('id', cancelTargetOrderId);
             const ord = orders && orders.length > 0 ? orders[0] : null;
 
             const { error } = await supabaseClient.from('orders').update({ status: 'Đã Hủy', cancel_reason: reason }).eq('id', cancelTargetOrderId);
+            setButtonLoading(btn, false);
+
             if (!error) {
                 if (ord) {
                     let accounts = getAccounts();
