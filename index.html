@@ -740,25 +740,27 @@
                 </div>
                 <button onclick="handleLogin(this)" class="w-full bg-accentBlue text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer">ĐĂNG NHẬP</button>
 
-                <!-- NÚT ĐĂNG NHẬP BẰNG GOOGLE ĐÃ ĐƯỢC THÊM VÀO ĐÂY -->
-                <div id="g_id_onload"
-                     data-client_id="916319287930-fo4b67larijmvlcmlrpdave8l4u59565.apps.googleusercontent.com"
-                     data-callback="handleGoogleSignIn"
-                     data-auto_prompt="false">
-                </div>
-                <div class="g_id_signin"
-                     data-type="standard"
-                     data-size="large"
-                     data-theme="outline"
-                     data-text="sign_in_with"
-                     data-shape="rectangular"
-                     data-logo_alignment="left"
-                     data-width="100%">
+                <!-- NÚT ĐĂNG NHẬP BẰNG GOOGLE ĐÃ ĐƯỢC CHỈNH KÍCH THƯỚC VỪA VẶN -->
+                <div class="w-full overflow-hidden flex justify-center">
+                    <div id="g_id_onload"
+                         data-client_id="916319287930-fo4b67larijmvlcmlrpdave8l4u59565.apps.googleusercontent.com"
+                         data-callback="handleGoogleSignIn"
+                         data-auto_prompt="false">
+                    </div>
+                    <div class="g_id_signin w-full"
+                         data-type="standard"
+                         data-size="large"
+                         data-theme="outline"
+                         data-text="sign_in_with"
+                         data-shape="rectangular"
+                         data-logo_alignment="left"
+                         data-width="320">
+                    </div>
                 </div>
 
                 <div class="flex justify-between items-center text-[10px] pt-1">
-                    <a href="#" onclick="openForgotModal()" class="text-yellow-400 font-bold hover:underline">Quên mật khẩu?</a>
-                    <a href="#" onclick="openRegisterModal()" class="text-accentBlue font-bold hover:underline">Chưa có tài khoản? Đăng ký</a>
+                    <a href="#" onclick="openForgotModal(); return false;" class="text-yellow-400 font-bold hover:underline">Quên mật khẩu?</a>
+                    <a href="#" onclick="openRegisterModal(); return false;" class="text-accentBlue font-bold hover:underline">Chưa có tài khoản? Đăng ký</a>
                 </div>
             </div>
         </div>
@@ -775,7 +777,7 @@
                     <i class="fa-solid fa-eye absolute right-3 top-3 text-gray-400 cursor-pointer text-xs" onclick="togglePasswordVisibility('reg-pass')"></i>
                 </div>
                 <button onclick="handleRegister(this)" class="w-full bg-green-600 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer">ĐĂNG KÝ NGAY</button>
-                <div class="text-center text-[10px] pt-1"><a href="#" onclick="openAuthModal()" class="text-gray-400 font-bold hover:underline">Quay lại đăng nhập</a></div>
+                <div class="text-center text-[10px] pt-1"><a href="#" onclick="openAuthModal(); return false;" class="text-gray-400 font-bold hover:underline">Quay lại đăng nhập</a></div>
             </div>
         </div>
     </div>
@@ -808,7 +810,7 @@
                 <button onclick="handleResetPassword(this)" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow">XÁC NHẬN ĐỔI MẬT KHẨU</button>
             </div>
             <div class="text-center text-[10px] pt-1 border-t border-gray-800">
-                <a href="#" onclick="openAuthModal()" class="text-gray-400 font-bold hover:underline">Quay lại đăng nhập</a>
+                <a href="#" onclick="openAuthModal(); return false;" class="text-gray-400 font-bold hover:underline">Quay lại đăng nhập</a>
             </div>
         </div>
     </div>
