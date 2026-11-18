@@ -3,17 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Shopdatzit - Shop Nạp Game Uy Tín</title>
+    <title>Shopdatzit - Dịch Vụ Nạp Game Trung Gian</title>
     
     <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1S1r9aE9MtmiRDEzw5IkDJ6pRDGyP42kV">
 
     <meta name="description" content="Shopdatzit.site - Hệ thống nạp game và thẻ cào tự động 24/7 uy tín hàng đầu. Cam kết bảo mật tuyệt đối.">
-    <meta property="og:title" content="Shopdatzit - Shop Nạp Game Uy Tín">
+    <meta property="og:title" content="Shopdatzit - Dịch Vụ Nạp Game Trung Gian">
     <meta property="og:description" content="Hệ thống nạp game, nhanh chóng, uy tín 24/7. Cam kết an toàn bảo mật tuyệt đối cho mọi game thủ!">
     <meta property="og:image" content="https://lh3.googleusercontent.com/d/1oOQv6vZh-kbGNv2qZXZLijSQDz0J0YH-">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Thư viện Google Identity Services chính thức -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 
     <script>
         tailwind.config = {
@@ -301,7 +303,6 @@
         <div id="home-view" class="view-section space-y-4">
             <div class="bg-cardBg border border-gray-800 p-3.5 rounded-xl text-center shadow-md">
                 <h2 class="text-base sm:text-lg font-bold rgb-text">🔥 NẠP GAME & THẺ CÀO NHANH CHÓNG - UY TÍN 24/7 🔥</h2>
-                <p class="text-[11px] sm:text-xs text-white font-bold mt-1">Lưu ý: Hãy Copy Link Dán Lên Google</p>
             </div>
 
             <h1 class="text-lg font-bold flex items-center mt-5"><i class="fa-solid fa-gamepad mr-2 text-accentBlue"></i> Danh Sách Nạp Game & Thẻ Cào</h1>
@@ -736,10 +737,10 @@
                     <input type="password" id="login-pass" placeholder="Mật khẩu" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white pr-10 outline-none focus:border-accentBlue">
                     <i class="fa-solid fa-eye absolute right-3 top-3 text-gray-400 cursor-pointer text-xs" onclick="togglePasswordVisibility('login-pass')"></i>
                 </div>
-                <button onclick="handleLogin(this)" class="w-full bg-accentBlue text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer">ĐĂNG NHẬP</button>
+                <button onclick="handleLogin(this)" class="w-full bg-accentBlue hover:bg-blue-600 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition">ĐĂNG NHẬP</button>
                 
-                <!-- NÚT ĐĂNG NHẬP BẰNG GOOGLE (ĐÃ BO TRÒN rounded-xl VÀ CÙNG KÍCH THƯỚC) -->
-                <button onclick="handleGoogleLogin(this)" class="w-full bg-white hover:bg-gray-100 text-gray-800 font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow flex items-center justify-center space-x-2 border border-gray-300">
+                <!-- NÚT ĐĂNG NHẬP BẰNG GOOGLE CHÍNH THỨC -->
+                <button onclick="triggerGoogleSignIn(this)" class="w-full bg-white hover:bg-gray-100 text-gray-800 font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow flex items-center justify-center space-x-2 border border-gray-300">
                     <i class="fa-brands fa-google text-red-500"></i>
                     <span>Đăng nhập bằng Google</span>
                 </button>
@@ -859,6 +860,7 @@
             }
         }
 
+        const GOOGLE_CLIENT_ID = "916319287930-fo4b67larijmvlcmlrpdave8l4u59565.apps.googleusercontent.com";
         const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbx3CqNSFo_M-2kpMQOdyuvQ7tEoBsTjWB3mO1ncCL0LHrt9D22C4KMKH9iZcUSYpGEC/exec";
         const SUPABASE_URL = 'https://iopcnnbcjycgfnpbeqvo.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_9ioPYsftnZkUOpoN4812gw_-rLTaDfu';
@@ -1180,10 +1182,73 @@
             }).catch(err => console.log('Lỗi gửi Telegram:', err));
         }
 
+        // XỬ LÝ ĐĂNG NHẬP GOOGLE CHÍNH THỨC (GOOGLE IDENTITY SERVICES)
+        let googleTokenClient = null;
+
+        function initGoogleOAuth() {
+            if (typeof google !== 'undefined' && google.accounts && google.accounts.oauth2) {
+                googleTokenClient = google.accounts.oauth2.initTokenClient({
+                    client_id: GOOGLE_CLIENT_ID,
+                    scope: 'email profile openid',
+                    callback: async (tokenResponse) => {
+                        if (tokenResponse && tokenResponse.access_token) {
+                            try {
+                                const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                                    headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
+                                });
+                                const profile = await res.json();
+                                if (profile && profile.email) {
+                                    const gEmail = profile.email.toLowerCase();
+                                    let accounts = getAccounts();
+                                    if (!accounts[gEmail]) {
+                                        const randomUid = Math.floor(10000 + Math.random() * 90000).toString();
+                                        accounts[gEmail] = {
+                                            username: profile.name || gEmail.split('@')[0],
+                                            email: gEmail,
+                                            password: 'GOOGLE_LOGIN_USER',
+                                            uid: randomUid,
+                                            avatar: profile.picture || DEFAULT_AVATAR_URL
+                                        };
+                                    } else {
+                                        if (profile.picture && !accounts[gEmail].avatar) {
+                                            accounts[gEmail].avatar = profile.picture;
+                                        }
+                                    }
+                                    saveAccounts(accounts);
+                                    currentUsername = gEmail;
+                                    localStorage.setItem(USER_KEY, gEmail);
+                                    updateAuthUI();
+                                    closeAuthModal();
+                                    alert('Đăng nhập bằng Google thành công!');
+                                }
+                            } catch (err) {
+                                alert('Không thể lấy thông tin tài khoản Google!');
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        function triggerGoogleSignIn(btn) {
+            if (checkIsIpBanned() > 0) { alert('IP của bạn đang bị khóa tạm thời!'); return; }
+            if (!googleTokenClient) {
+                initGoogleOAuth();
+            }
+            if (googleTokenClient) {
+                setButtonLoading(btn, true, 'Đang mở Google...');
+                setTimeout(() => setButtonLoading(btn, false), 1500);
+                googleTokenClient.requestAccessToken();
+            } else {
+                alert('Dịch vụ Google đang tải, vui lòng thử lại sau 1 giây!');
+            }
+        }
+
         window.onload = async function() {
             if (window.location.pathname === '/' || window.location.pathname === '') {
                 triggerGlobalLoader(800);
             }
+            initGoogleOAuth();
             initAdminAccount();
             initTheme();
             await checkExpiredPendingPayments();
@@ -1784,30 +1849,6 @@
             }, 400);
         }
 
-        function handleGoogleLogin(btn) {
-            setButtonLoading(btn, true, 'Đang kết nối Google...');
-            setTimeout(() => {
-                let accounts = getAccounts();
-                const googleUserKey = 'google_user_demo@gmail.com';
-                if (!accounts[googleUserKey]) {
-                    accounts[googleUserKey] = {
-                        username: 'Google User',
-                        email: googleUserKey,
-                        password: 'N/A',
-                        uid: '88888',
-                        avatar: 'https://lh3.googleusercontent.com/d/1OUDmydcc6lDsgpI4CdVwi2jmNa__EtPR'
-                    };
-                    saveAccounts(accounts);
-                }
-                currentUsername = googleUserKey;
-                localStorage.setItem(USER_KEY, googleUserKey);
-                updateAuthUI();
-                closeAuthModal();
-                setButtonLoading(btn, false);
-                alert('Đăng nhập bằng Google thành công!');
-            }, 800);
-        }
-
         function openAdmin2FAModal() {
             if (checkIsIpBanned() > 0) { alert('IP bị khóa!'); return; }
             document.getElementById('admin-otp-code-input').value = '';
@@ -1858,6 +1899,9 @@
 
         function handleLogout() {
             if (confirm("Đăng xuất?")) {
+                if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
+                    google.accounts.id.disableAutoSelect();
+                }
                 localStorage.removeItem(USER_KEY);
                 currentUsername = null;
                 updateAuthUI();
