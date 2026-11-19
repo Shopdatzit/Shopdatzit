@@ -1151,6 +1151,31 @@
             }
         }
 
+        // Bảng HTML thông báo dành cho khách hàng đồng bộ giao diện dark card với bảng xác nhận thanh toán của Admin
+        function buildCustomerEmailCard({ title, titleColor = '#facc15', greeting, introHtml, rows = [], footerNoteHtml = '' }) {
+            const rowsHtml = rows.map(r => {
+                const valColor = r.color || '#f3f4f6';
+                return `<div style="margin:6px 0;font-size:13px;line-height:1.5;color:#e5e7eb;"><strong style="color:#f3f4f6;">${r.label}:</strong> <span style="color:${valColor};${r.bold ? 'font-weight:700;' : ''}">${r.value}</span></div>`;
+            }).join('');
+
+            const extraBlock = footerNoteHtml
+                ? `<div style="margin-top:12px;font-size:13px;line-height:1.5;color:#d1d5db;">${footerNoteHtml}</div>`
+                : '';
+
+            return `
+                <div style="background:#1c1c1e;border:1px solid #323236;border-radius:10px;padding:18px 18px 14px 18px;max-width:480px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;color:#e5e7eb;">
+                    <div style="font-size:16px;font-weight:700;color:${titleColor};line-height:1.35;margin-bottom:10px;">${title}</div>
+                    ${greeting ? `<div style="font-size:13px;font-weight:600;color:#f3f4f6;margin-bottom:8px;">${greeting}</div>` : ''}
+                    ${introHtml ? `<div style="font-size:13px;line-height:1.5;color:#d1d5db;margin-bottom:12px;">${introHtml}</div>` : ''}
+                    ${rows.length > 0 ? `<div style="border-top:1px solid #343438;border-bottom:1px solid #343438;padding:10px 0;margin:10px 0;">${rowsHtml}</div>` : ''}
+                    ${extraBlock}
+                    <div style="margin-top:14px;padding-top:10px;border-top:1px solid #2b2b2f;text-align:center;font-size:11px;color:#9ca3af;line-height:1.4;">
+                        Shopdatzit | Email này được gửi tự động, vui lòng không trả lời.
+                    </div>
+                </div>
+            `.trim();
+        }
+
         // Email thông báo tự động luôn gửi từ no-reply@shopdatzit.site qua GAS backend
         function sendAutoEmail(targetEmail, subjectText, messageHtml, isHtmlFlag = false, callbackSuccess, callbackError) {
             if (!GAS_WEBAPP_URL) { if (callbackError) callbackError(); return; }
@@ -2329,16 +2354,24 @@
                 sendTelegramViaBackend(newOrder);
 
                 if (customerEmail && customerEmail.includes('@')) {
+                    const createdEmailHtml = buildCustomerEmailCard({
+                        title: `ShopDatZit - Xác Nhận Tạo Đơn Hàng #${randomCodeNum}`,
+                        titleColor: '#facc15',
+                        greeting: `Xin chào ${currentUsername},`,
+                        introHtml: `Đơn hàng <strong style="color:#f3f4f6;">#${randomCodeNum}</strong> của bạn đã được khởi tạo thành công qua MB Bank.`,
+                        rows: [
+                            { label: 'Mã đơn', value: `#${randomCodeNum}`, bold: true },
+                            { label: 'Dịch vụ', value: `${gameSummary} (${pkgSummary})` },
+                            { label: 'Nội dung CK', value: transferContent, color: '#facc15', bold: true },
+                            { label: 'Số tiền', value: `${totalAmount.toLocaleString('vi-VN')} đ`, color: '#4ade80', bold: true }
+                        ],
+                        footerNoteHtml: `Hệ thống đang chờ bạn quét mã QR chuyển khoản MB Bank để tự động duyệt. Cần hỗ trợ liên hệ <span style="color:#60a5fa;">${SUPPORT_EMAIL}</span>.`
+                    });
+
                     sendAutoEmail(
                         customerEmail,
                         `[ShopDatZit] Xác nhận tạo đơn hàng #${randomCodeNum}`,
-                        `Xin chào <b>${currentUsername}</b>,<br><br>` +
-                        `Đơn hàng <b>#${randomCodeNum}</b> của bạn đã được khởi tạo thành công qua MB Bank.<br>` +
-                        `• Dịch vụ: <b>${gameSummary}</b> (${pkgSummary})<br>` +
-                        `• Nội dung chuyển khoản: <b>${transferContent}</b><br>` +
-                        `• Tổng tiền: <b>${totalAmount.toLocaleString('vi-VN')} đ</b><br><br>` +
-                        `Hệ thống đang chờ bạn quét mã QR chuyển khoản MB Bank để tự động duyệt.<br>` +
-                        `<i>(Email thông báo tự động từ ${AUTO_NOTIFY_SENDER_EMAIL} — Cần hỗ trợ liên hệ ${SUPPORT_EMAIL})</i>`,
+                        createdEmailHtml,
                         true
                     );
                 }
@@ -2690,16 +2723,24 @@
                     let custAcc = accounts[ord.customer_name.toLowerCase()] || accounts[ord.customer_name];
                     let custEmail = ord.email || (custAcc ? custAcc.email : ord.customer_name);
                     if (custEmail && custEmail.includes('@')) {
+                        const completedEmailHtml = buildCustomerEmailCard({
+                            title: `ShopDatZit - Đơn Hàng ${ord.code} Đã Hoàn Thành`,
+                            titleColor: '#4ade80',
+                            greeting: `Xin chào ${ord.customer_name},`,
+                            introHtml: `Đơn hàng <strong style="color:#f3f4f6;">${ord.code}</strong> của bạn đã được duyệt nạp thành công!`,
+                            rows: [
+                                { label: 'Mã đơn', value: ord.code, bold: true },
+                                { label: 'Dịch vụ', value: `${ord.game} - ${ord.package}` },
+                                { label: 'Tổng cộng', value: `${ord.price.toLocaleString('vi-VN')} đ`, color: '#4ade80', bold: true },
+                                { label: 'Ghi chú từ Admin', value: `<i>"${adminNote}"</i>`, color: '#60a5fa' }
+                            ],
+                            footerNoteHtml: `Cảm ơn bạn đã tin tưởng và sử dụng dịch vụ tại ShopDatZit! Cần hỗ trợ liên hệ <span style="color:#60a5fa;">${SUPPORT_EMAIL}</span>.`
+                        });
+
                         sendAutoEmail(
                             custEmail,
                             `[ShopDatZit] Đơn hàng ${ord.code} đã được duyệt hoàn thành`,
-                            `Xin chào <b>${ord.customer_name}</b>,<br><br>` +
-                            `Đơn hàng <b>${ord.code}</b> của bạn đã được duyệt nạp thành công!<br>` +
-                            `• Dịch vụ: <b>${ord.game}</b> - ${ord.package}<br>` +
-                            `• Tổng cộng: <b>${ord.price.toLocaleString('vi-VN')} đ</b><br><br>` +
-                            `<b>💬 Ghi chú từ Admin:</b><br><i>"${adminNote}"</i><br><br>` +
-                            `Cảm ơn bạn đã ủng hộ ShopDatZit!<br>` +
-                            `<i>(Email thông báo tự động từ ${AUTO_NOTIFY_SENDER_EMAIL} — Cần hỗ trợ liên hệ ${SUPPORT_EMAIL})</i>`,
+                            completedEmailHtml,
                             true
                         );
                     }
@@ -2741,13 +2782,23 @@
                     let custAcc = accounts[ord.customer_name.toLowerCase()] || accounts[ord.customer_name];
                     let custEmail = ord.email || (custAcc ? custAcc.email : ord.customer_name);
                     if (custEmail && custEmail.includes('@')) {
+                        const cancelledEmailHtml = buildCustomerEmailCard({
+                            title: `ShopDatZit - Đơn Hàng ${ord.code} Đã Bị Hủy`,
+                            titleColor: '#f87171',
+                            greeting: `Xin chào ${ord.customer_name},`,
+                            introHtml: `Đơn hàng <strong style="color:#f3f4f6;">${ord.code}</strong> của bạn đã bị hủy.`,
+                            rows: [
+                                { label: 'Mã đơn', value: ord.code, bold: true },
+                                { label: 'Dịch vụ', value: `${ord.game} - ${ord.package}` },
+                                { label: 'Lý do hủy', value: reason, color: '#f87171', bold: true }
+                            ],
+                            footerNoteHtml: `Nếu cần hỗ trợ thêm, vui lòng liên hệ <span style="color:#60a5fa;">${SUPPORT_EMAIL}</span>.`
+                        });
+
                         sendAutoEmail(
                             custEmail,
                             `[ShopDatZit] Đơn hàng ${ord.code} đã bị hủy`,
-                            `Xin chào <b>${ord.customer_name}</b>,<br><br>` +
-                            `Đơn hàng <b>${ord.code}</b> của bạn đã bị hủy.<br>` +
-                            `• Lý do: <b>${reason}</b><br><br>` +
-                            `<i>(Email thông báo tự động từ ${AUTO_NOTIFY_SENDER_EMAIL} — Cần hỗ trợ liên hệ ${SUPPORT_EMAIL})</i>`,
+                            cancelledEmailHtml,
                             true
                         );
                     }
