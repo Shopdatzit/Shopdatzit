@@ -490,7 +490,7 @@
                     </div>
                     <div class="flex items-center space-x-2.5">
                         <i class="fa-regular fa-envelope text-accentBlue w-4 text-center"></i>
-                        <span>Email: <strong class="text-white select-all">ngocdiemdang90@gmail.com</strong></span>
+                        <span>Email hỗ trợ: <strong class="text-white select-all">ngocdiemdang90@gmail.com</strong></span>
                     </div>
                     <div class="flex items-center space-x-2.5">
                         <i class="fa-solid fa-phone text-accentBlue w-4 text-center"></i>
@@ -590,7 +590,7 @@
             <button onclick="closeApproveNoteModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
             <h3 class="text-base font-bold text-green-400 tracking-wide text-center">GHI CHÚ KHI DUYỆT ĐƠN</h3>
             <div class="space-y-3">
-                <p class="text-xs text-gray-300">Nhập lời nhắn hoặc lưu ý cho khách hàng (sẽ gửi qua email và hiển thị trong đơn):</p>
+                <p class="text-xs text-gray-300">Nhập lời nhắn hoặc lưu ý cho khách hàng (sẽ gửi thông báo tự động qua email và hiển thị trong đơn):</p>
                 <textarea id="approve-note-input" rows="3" placeholder="Ví dụ: Đã nạp thành công vào tài khoản của bạn, vui lòng kiểm tra game nhé!" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white outline-none focus:border-green-500 resize-none"></textarea>
                 <button onclick="submitApproveOrderWithNote(this)" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow">XÁC NHẬN DUYỆT HOÀN THÀNH</button>
             </div>
@@ -613,7 +613,7 @@
             <button onclick="closeAdmin2FAModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
             <div class="text-center space-y-1">
                 <h3 class="text-base font-bold text-yellow-400 tracking-wide">XÁC THỰC BẢO MẬT 3 LỚP ADMIN</h3>
-                <p class="text-[11px] text-gray-300">Mã OTP 6 số và khóa bảo mật được gửi đến Gmail Admin:</p>
+                <p class="text-[11px] text-gray-300">Mã OTP 6 số và khóa bảo mật được gửi tự động từ <b class="text-accentBlue">no-reply@shopdatzit.site</b> đến Gmail Admin:</p>
             </div>
             <div class="space-y-3">
                 <button onclick="sendAdminEmail3LayerSecurity(this)" id="btn-send-admin-3layer" class="w-full bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center justify-center space-x-1.5">
@@ -653,12 +653,12 @@
             <button onclick="closeChangeEmailModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
             <h3 class="text-base font-bold text-white tracking-wide text-center">THAY ĐỔI EMAIL TÀI KHOẢN</h3>
             <div id="email-step-1" class="space-y-3">
-                <p class="text-xs text-gray-300 text-center">Nhập Email cũ hiện tại để nhận mã OTP.</p>
+                <p class="text-xs text-gray-300 text-center">Nhập Email cũ hiện tại để nhận mã OTP tự động.</p>
                 <input type="text" id="change-old-email" placeholder="Nhập email cũ" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white outline-none focus:border-accentBlue">
                 <button onclick="sendEmailChangeOTP(this)" id="btn-send-email-otp" class="w-full bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow">GỬI MÃ OTP XÁC THỰC</button>
             </div>
             <div id="email-step-2" class="hidden space-y-3">
-                <p class="text-xs text-green-400 text-center font-bold">Mã OTP đã được gửi!</p>
+                <p class="text-xs text-green-400 text-center font-bold">Mã OTP đã được gửi tự động!</p>
                 <div class="ux u026 py-2" id="change-email-otp-widget">
                     <span class="u026-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
                     <p class="u026-t">Xác thực email</p>
@@ -774,12 +774,12 @@
             <button onclick="closeForgotModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
             <h3 class="text-lg font-bold text-white tracking-wide text-center">KHÔI PHỤC MẬT KHẨU</h3>
             <div id="forgot-step-1" class="space-y-3">
-                <p class="text-xs text-gray-300 text-center">Nhập Email / Tên đăng nhập để nhận mã OTP.</p>
+                <p class="text-xs text-gray-300 text-center">Nhập Email / Tên đăng nhập để nhận mã OTP tự động.</p>
                 <input type="text" id="forgot-email" placeholder="Email / Tên đăng nhập" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs text-white outline-none focus:border-accentBlue">
                 <button onclick="handleSendOTP(this)" id="btn-send-otp" class="w-full bg-yellow-600 hover:bg-yellow-500 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow">GỬI MÃ OTP QUA EMAIL</button>
             </div>
             <div id="forgot-step-2" class="hidden space-y-3">
-                <p class="text-xs text-green-400 text-center font-bold">Mã OTP đã được gửi!</p>
+                <p class="text-xs text-green-400 text-center font-bold">Mã OTP đã được gửi tự động!</p>
                 <div class="ux u026 py-2" id="forgot-otp-widget">
                     <span class="u026-ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span>
                     <p class="u026-t">Nhập mã xác nhận</p>
@@ -862,6 +862,8 @@
 
         const GOOGLE_CLIENT_ID = "916319287930-fo4b67larijmvlcmlrpdave8l4u59565.apps.googleusercontent.com";
         const GAS_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbx3CqNSFo_M-2kpMQOdyuvQ7tEoBsTjWB3mO1ncCL0LHrt9D22C4KMKH9iZcUSYpGEC/exec";
+        const AUTO_NOTIFY_SENDER_EMAIL = "no-reply@shopdatzit.site";
+        const SUPPORT_EMAIL = "ngocdiemdang90@gmail.com";
         const SUPABASE_URL = 'https://iopcnnbcjycgfnpbeqvo.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_9ioPYsftnZkUOpoN4812gw_-rLTaDfu';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -1082,7 +1084,7 @@
                 packages: [
                     { name: 'Hội Viên Inter-Knot (5$)', price: calcPrice(102500) },
                     { name: 'Kế Hoạch Trưởng Thành (10$)', price: calcPrice(205000) },
-                    { name: '60 Film Trắng Đен', price: calcPrice(22000) },
+                    { name: '60 Film Trắng Đen', price: calcPrice(22000) },
                     { name: '300 + 30 Film Trắng Đen', price: calcPrice(102500) },
                     { name: '980 + 110 Film Trắng Đen', price: calcPrice(307500) },
                     { name: '3280 + 600 Film Trắng Đen', price: calcPrice(1025000) },
@@ -1149,12 +1151,21 @@
             }
         }
 
+        // Email thông báo tự động luôn gửi từ no-reply@shopdatzit.site qua GAS backend
         function sendAutoEmail(targetEmail, subjectText, messageHtml, isHtmlFlag = false, callbackSuccess, callbackError) {
             if (!GAS_WEBAPP_URL) { if (callbackError) callbackError(); return; }
             fetch(GAS_WEBAPP_URL, {
-                method: 'POST', mode: 'no-cors',
+                method: 'POST',
+                mode: 'no-cors',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: targetEmail, subject: subjectText, message: messageHtml, isHtml: isHtmlFlag })
+                body: JSON.stringify({
+                    type: "email",
+                    from: AUTO_NOTIFY_SENDER_EMAIL,
+                    email: targetEmail,
+                    subject: subjectText,
+                    message: messageHtml,
+                    isHtml: isHtmlFlag
+                })
             }).then(() => { if (callbackSuccess) callbackSuccess(); }).catch(err => { if (callbackError) callbackError(err); });
         }
 
@@ -1422,7 +1433,7 @@
 
         function isAdmin() { 
             let accounts = getAccounts();
-            return currentUsername && accounts[currentUsername] && (accounts[currentUsername].email === 'ngocdiemdang90@gmail.com' || currentUsername === 'ngocdiemdang90@gmail.com'); 
+            return currentUsername && accounts[currentUsername] && (accounts[currentUsername].email === SUPPORT_EMAIL || currentUsername === SUPPORT_EMAIL); 
         }
 
         async function fetchAndCalculateSolds() {
@@ -1471,9 +1482,9 @@
             let accounts = getAccounts();
             const DEFAULT_ADMIN_AVATAR = "https://lh3.googleusercontent.com/d/1OUDmydcc6lDsgpI4CdVwi2jmNa__EtPR";
 
-            accounts['ngocdiemdang90@gmail.com'] = {
+            accounts[SUPPORT_EMAIL] = {
                 username: 'Đạt Zịt', 
-                email: 'ngocdiemdang90@gmail.com', 
+                email: SUPPORT_EMAIL, 
                 uid: '10000', 
                 avatar: DEFAULT_ADMIN_AVATAR
             };
@@ -1634,7 +1645,7 @@
 
         function openChangeEmailModal() {
             if (!currentUsername) { openAuthModal(); return; }
-            if (isAdmin()) { alert('Admin dùng cố định email ngocdiemdang90@gmail.com!'); return; }
+            if (isAdmin()) { alert(`Tài khoản quản trị cố định email hỗ trợ ${SUPPORT_EMAIL}!`); return; }
             document.getElementById('email-step-1').classList.remove('hidden');
             document.getElementById('email-step-2').classList.add('hidden');
             document.getElementById('change-old-email').value = '';
@@ -1655,17 +1666,24 @@
 
             setButtonLoading(btn, true, 'Đang gửi...');
             changeEmailOTP = Math.floor(100000 + Math.random() * 900000).toString();
-            sendAutoEmail(oldEmailInput, "Mã OTP Đổi Email - ShopDatZit", "Mã OTP: " + changeEmailOTP, false, () => {
-                setButtonLoading(btn, false);
-                alert('Đã gửi mã OTP!');
-                document.getElementById('email-step-1').classList.add('hidden');
-                document.getElementById('email-step-2').classList.remove('hidden');
-            }, () => {
-                setButtonLoading(btn, false);
-                alert('Mã OTP test: ' + changeEmailOTP);
-                document.getElementById('email-step-1').classList.add('hidden');
-                document.getElementById('email-step-2').classList.remove('hidden');
-            });
+            sendAutoEmail(
+                oldEmailInput,
+                "Mã OTP Đổi Email - ShopDatZit",
+                `Mã OTP xác thực đổi email của bạn là: <b>${changeEmailOTP}</b>. Gửi tự động từ ${AUTO_NOTIFY_SENDER_EMAIL}.`,
+                true,
+                () => {
+                    setButtonLoading(btn, false);
+                    alert('Đã gửi mã OTP tự động!');
+                    document.getElementById('email-step-1').classList.add('hidden');
+                    document.getElementById('email-step-2').classList.remove('hidden');
+                },
+                () => {
+                    setButtonLoading(btn, false);
+                    alert('OTP test: ' + changeEmailOTP);
+                    document.getElementById('email-step-1').classList.add('hidden');
+                    document.getElementById('email-step-2').classList.remove('hidden');
+                }
+            );
         }
 
         function verifyAndChangeEmail(btn) {
@@ -1768,17 +1786,24 @@
             generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
             targetForgotUser = foundKey;
 
-            sendAutoEmail(emailInput, "OTP Khôi Phục Mật Khẩu", "Mã OTP: " + generatedOTP, false, () => {
-                setButtonLoading(btn, false);
-                alert('Đã gửi OTP!');
-                document.getElementById('forgot-step-1').classList.add('hidden');
-                document.getElementById('forgot-step-2').classList.remove('hidden');
-            }, () => {
-                setButtonLoading(btn, false);
-                alert('OTP test: ' + generatedOTP);
-                document.getElementById('forgot-step-1').classList.add('hidden');
-                document.getElementById('forgot-step-2').classList.remove('hidden');
-            });
+            sendAutoEmail(
+                emailInput,
+                "OTP Khôi Phục Mật Khẩu - ShopDatZit",
+                `Mã OTP khôi phục mật khẩu của bạn là: <b>${generatedOTP}</b>. Email thông báo tự động từ ${AUTO_NOTIFY_SENDER_EMAIL}.`,
+                true,
+                () => {
+                    setButtonLoading(btn, false);
+                    alert('Đã gửi OTP tự động!');
+                    document.getElementById('forgot-step-1').classList.add('hidden');
+                    document.getElementById('forgot-step-2').classList.remove('hidden');
+                },
+                () => {
+                    setButtonLoading(btn, false);
+                    alert('OTP test: ' + generatedOTP);
+                    document.getElementById('forgot-step-1').classList.add('hidden');
+                    document.getElementById('forgot-step-2').classList.remove('hidden');
+                }
+            );
         }
 
         function handleResetPassword(btn) {
@@ -1827,8 +1852,8 @@
             let accounts = getAccounts();
             const key = u.toLowerCase();
 
-            if (key === 'ngocdiemdang90@gmail.com' && p === 'Lolkchi2020k') {
-                pendingAdminData = { user: 'ngocdiemdang90@gmail.com' };
+            if (key === SUPPORT_EMAIL && p === 'Lolkchi2020k') {
+                pendingAdminData = { user: SUPPORT_EMAIL };
                 closeAuthModal(); openAdmin2FAModal(); return;
             }
 
@@ -1870,13 +1895,20 @@
             setButtonLoading(btn, true, 'Đang gửi...');
             adminExpectedOtp = Math.floor(100000 + Math.random() * 900000).toString();
             ADMIN_SECURE_SECRET_128 = generateRandomBase32Secret128();
-            sendAutoEmail("ngocdiemdang90@gmail.com", "Mã OTP Admin", `OTP: ${adminExpectedOtp}\nSecret: ${ADMIN_SECURE_SECRET_128}`, false, () => {
-                setButtonLoading(btn, false);
-                alert('Đã gửi mã đến Email Admin!');
-            }, () => {
-                setButtonLoading(btn, false);
-                alert(`OTP: ${adminExpectedOtp}\nSecret: ${ADMIN_SECURE_SECRET_128}`);
-            });
+            sendAutoEmail(
+                SUPPORT_EMAIL,
+                "Mã OTP Admin - ShopDatZit",
+                `<b>Mã xác thực bảo mật Admin</b><br>OTP: <b>${adminExpectedOtp}</b><br>Secret (128 ký tự): <code>${ADMIN_SECURE_SECRET_128}</code>`,
+                true,
+                () => {
+                    setButtonLoading(btn, false);
+                    alert('Đã gửi mã tự động đến Email Admin!');
+                },
+                () => {
+                    setButtonLoading(btn, false);
+                    alert(`OTP: ${adminExpectedOtp}\nSecret: ${ADMIN_SECURE_SECRET_128}`);
+                }
+            );
         }
 
         function verifyAdmin3LayerSecurity(btn) {
@@ -2264,6 +2296,8 @@
                 const passEl = document.getElementById('input-password');
                 const phoneEl = document.getElementById('input-phone');
                 const customerEmail = accounts[currentUsername].email || currentUsername;
+                const pkgSummary = cart.map(i => `${i.pkgName} (x${i.qty})`).join(', ');
+                const gameSummary = cart.length === 1 ? cart[0].gameName : `Nhiều dịch vụ (${cart.length})`;
 
                 const newOrder = {
                     id: currentActiveOrderId, 
@@ -2271,8 +2305,8 @@
                     customer_name: currentUsername,
                     email: customerEmail,
                     uid: accounts[currentUsername].uid || '10000', 
-                    game: cart.length === 1 ? cart[0].gameName : `Nhiều dịch vụ (${cart.length})`, 
-                    package: cart.map(i => `${i.pkgName} (x${i.qty})`).join(', '),
+                    game: gameSummary, 
+                    package: pkgSummary,
                     total_qty: totalQty, 
                     items: cart, 
                     price: totalAmount,
@@ -2297,8 +2331,14 @@
                 if (customerEmail && customerEmail.includes('@')) {
                     sendAutoEmail(
                         customerEmail,
-                        `Xác nhận tạo đơn hàng #${randomCodeNum} - ShopDatZit`,
-                        `Xin chào <b>${currentUsername}</b>,<br>Đơn hàng <b>#${randomCodeNum}</b> của bạn đã được khởi tạo thành công qua MB Bank.<br>Nội dung chuyển khoản: <b>${transferContent}</b><br>Tổng tiền: <b>${totalAmount.toLocaleString('vi-VN')} đ</b>.<br>Hệ thống đang chờ bạn quét mã QR chuyển khoản MB Bank để tự động duyệt!`,
+                        `[ShopDatZit] Xác nhận tạo đơn hàng #${randomCodeNum}`,
+                        `Xin chào <b>${currentUsername}</b>,<br><br>` +
+                        `Đơn hàng <b>#${randomCodeNum}</b> của bạn đã được khởi tạo thành công qua MB Bank.<br>` +
+                        `• Dịch vụ: <b>${gameSummary}</b> (${pkgSummary})<br>` +
+                        `• Nội dung chuyển khoản: <b>${transferContent}</b><br>` +
+                        `• Tổng tiền: <b>${totalAmount.toLocaleString('vi-VN')} đ</b><br><br>` +
+                        `Hệ thống đang chờ bạn quét mã QR chuyển khoản MB Bank để tự động duyệt.<br>` +
+                        `<i>(Email thông báo tự động từ ${AUTO_NOTIFY_SENDER_EMAIL} — Cần hỗ trợ liên hệ ${SUPPORT_EMAIL})</i>`,
                         true
                     );
                 }
@@ -2652,8 +2692,14 @@
                     if (custEmail && custEmail.includes('@')) {
                         sendAutoEmail(
                             custEmail,
-                            `Đơn hàng ${ord.code} đã hoàn thành`,
-                            `Xin chào <b>${ord.customer_name}</b>,<br>Đơn hàng <b>${ord.code}</b> của bạn đã được hoàn thành!<br>Tổng cộng: <b>${ord.price.toLocaleString('vi-VN')} đ</b>.<br><br><b>💬 Ghi chú từ Admin:</b><br><i>"${adminNote}"</i><br><br>Cảm ơn bạn đã ủng hộ ShopDatZit!`,
+                            `[ShopDatZit] Đơn hàng ${ord.code} đã được duyệt hoàn thành`,
+                            `Xin chào <b>${ord.customer_name}</b>,<br><br>` +
+                            `Đơn hàng <b>${ord.code}</b> của bạn đã được duyệt nạp thành công!<br>` +
+                            `• Dịch vụ: <b>${ord.game}</b> - ${ord.package}<br>` +
+                            `• Tổng cộng: <b>${ord.price.toLocaleString('vi-VN')} đ</b><br><br>` +
+                            `<b>💬 Ghi chú từ Admin:</b><br><i>"${adminNote}"</i><br><br>` +
+                            `Cảm ơn bạn đã ủng hộ ShopDatZit!<br>` +
+                            `<i>(Email thông báo tự động từ ${AUTO_NOTIFY_SENDER_EMAIL} — Cần hỗ trợ liên hệ ${SUPPORT_EMAIL})</i>`,
                             true
                         );
                     }
@@ -2666,7 +2712,7 @@
                 renderAdminPayments();
                 renderAdminAllHistory();
                 updateAuthUI();
-                alert('Đã hoàn tất đơn hàng!');
+                alert('Đã hoàn tất đơn hàng và gửi thông báo tự động qua email!');
             }
         }
 
@@ -2697,8 +2743,11 @@
                     if (custEmail && custEmail.includes('@')) {
                         sendAutoEmail(
                             custEmail,
-                            `Đơn hàng ${ord.code} đã bị hủy`,
-                            `Xin chào <b>${ord.customer_name}</b>,<br>Đơn hàng <b>${ord.code}</b> của bạn đã bị hủy.<br>Lý do: <b>${reason}</b>.`,
+                            `[ShopDatZit] Đơn hàng ${ord.code} đã bị hủy`,
+                            `Xin chào <b>${ord.customer_name}</b>,<br><br>` +
+                            `Đơn hàng <b>${ord.code}</b> của bạn đã bị hủy.<br>` +
+                            `• Lý do: <b>${reason}</b><br><br>` +
+                            `<i>(Email thông báo tự động từ ${AUTO_NOTIFY_SENDER_EMAIL} — Cần hỗ trợ liên hệ ${SUPPORT_EMAIL})</i>`,
                             true
                         );
                     }
@@ -2708,7 +2757,7 @@
                 renderAdminOrders(); 
                 renderAdminPayments();
                 renderAdminAllHistory();
-                alert('Đã hủy đơn!');
+                alert('Đã hủy đơn và gửi thông báo tự động qua email!');
             }
         }
     </script>
