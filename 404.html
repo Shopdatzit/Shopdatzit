@@ -1199,12 +1199,35 @@
             }).then(() => { if (callbackSuccess) callbackSuccess(); }).catch(err => { if (callbackError) callbackError(err); });
         }
 
+        // HÀM LẤY ĐỊA CHỈ IP MẠNG CỦA KHÁCH
+        async function getClientIp() {
+            const apis = [
+                'https://api.ipify.org?format=json',
+                'https://api64.ipify.org?format=json',
+                'https://ipwho.is/'
+            ];
+            for (const url of apis) {
+                try {
+                    const controller = new AbortController();
+                    const timer = setTimeout(() => controller.abort(), 2500);
+                    const res = await fetch(url, { signal: controller.signal });
+                    clearTimeout(timer);
+                    if (!res.ok) continue;
+                    const data = await res.json();
+                    const ip = data.ip || data.query || '';
+                    if (ip) return ip;
+                } catch (e) {}
+            }
+            return 'Không xác định';
+        }
+
         function sendTelegramViaBackend(orderInfo) {
             if (!GAS_WEBAPP_URL) return;
 
-            const tgMessage = `🔔 <b>CÓ ĐƠN HÀNG MỚI (MB BANK)!</b> 🔔\n\n` +
+            const tgMessage = `🔔 <b>CÓ ĐƠN HÀNG MỚI!</b> 🔔\n\n` +
                 `📦 Mã đơn: <code>${orderInfo.code}</code>\n` +
                 `👤 Khách: <b>${orderInfo.customer_name}</b>\n` +
+                `🌐 IP mạng: <code>${orderInfo.ip_address || 'Không xác định'}</code>\n` +
                 `🎮 Dịch vụ: <b>${orderInfo.game}</b> - ${orderInfo.package}\n` +
                 `💰 Tổng tiền: <b>${orderInfo.price.toLocaleString('vi-VN')} đ</b>\n` +
                 `🔤 Nội dung CK: <code>${orderInfo.transfer_content}</code>\n` +
@@ -2323,8 +2346,10 @@
                 const totalQty = cart.reduce((sum, i) => sum + i.qty, 0);
                 currentActiveOrderId = 'ORD_' + now;
 
+                const clientIp = await getClientIp();
                 const passEl = document.getElementById('input-password');
                 const phoneEl = document.getElementById('input-phone');
+                const userNoteRaw = (document.getElementById('input-user-note') ? document.getElementById('input-user-note').value : '') || 'Không có';
                 const customerEmail = accounts[currentUsername].email || currentUsername;
                 const pkgSummary = cart.map(i => `${i.pkgName} (x${i.qty})`).join(', ');
                 const gameSummary = cart.length === 1 ? cart[0].gameName : `Nhiều dịch vụ (${cart.length})`;
@@ -2347,7 +2372,7 @@
                     input_pass: passEl ? passEl.value : 'Không yêu cầu',
                     input_server: currentGameKey === 'garena' ? 'Thẻ Cào / Mặc định' : (currentGameKey.includes('robux') ? 'Roblox Quốc Tế' : (document.getElementById('input-server').value || 'Mặc định')),
                     input_phone: phoneEl ? phoneEl.value : 'Không có',
-                    input_note: (document.getElementById('input-user-note') ? document.getElementById('input-user-note').value : '') || 'Không có',
+                    input_note: `[IP: ${clientIp}] ${userNoteRaw}`,
                     admin_note: '',
                     cancel_reason: '',
                     transfer_content: transferContent
@@ -2356,7 +2381,7 @@
                 const { error } = await supabaseClient.from('orders').insert([newOrder]);
                 if (error) { console.error('Lỗi tạo đơn:', error.message); alert('Lỗi tạo đơn: ' + error.message); return; }
 
-                sendTelegramViaBackend(newOrder);
+                sendTelegramViaBackend({ ...newOrder, ip_address: clientIp });
 
                 if (customerEmail && customerEmail.includes('@')) {
                     const createdEmailHtml = buildCustomerEmailCard({
