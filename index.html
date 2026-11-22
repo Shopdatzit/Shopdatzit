@@ -1189,7 +1189,6 @@
             }
         }
 
-        // Bảng HTML thông báo dành cho khách hàng đồng bộ giao diện dark card với bảng xác nhận thanh toán của Admin
         function buildCustomerEmailCard({ title, titleColor = '#facc15', greeting, introHtml, rows = [], footerNoteHtml = '' }) {
             const rowsHtml = rows.map(r => {
                 const valColor = r.color || '#f3f4f6';
@@ -1214,7 +1213,6 @@
             `.trim();
         }
 
-        // Email thông báo tự động luôn gửi từ no-reply@shopdatzit.site qua GAS backend
         function sendAutoEmail(targetEmail, subjectText, messageHtml, isHtmlFlag = false, callbackSuccess, callbackError) {
             if (!GAS_WEBAPP_URL) { if (callbackError) callbackError(); return; }
             fetch(GAS_WEBAPP_URL, {
@@ -1232,7 +1230,6 @@
             }).then(() => { if (callbackSuccess) callbackSuccess(); }).catch(err => { if (callbackError) callbackError(err); });
         }
 
-        // HÀM LẤY ĐỊA CHỈ IP MẠNG CỦA KHÁCH
         async function getClientIp() {
             const apis = [
                 'https://api.ipify.org?format=json',
@@ -1297,7 +1294,6 @@
             }).catch(err => console.log('Lỗi gửi Telegram:', err));
         }
 
-        // XỬ LÝ ĐĂNG NHẬP GOOGLE CHÍNH THỨC (GOOGLE IDENTITY SERVICES)
         let googleTokenClient = null;
 
         function initGoogleOAuth() {
@@ -2160,6 +2156,8 @@
             const inputContainer = document.getElementById('order-inputs-container');
             if (!inputContainer) return;
 
+            const phonePlaceholder = "Nhập Sdt/Zalo(Shopdatzit sẽ liên hệ)";
+
             if (currentGameKey.includes('robux')) {
                 inputContainer.innerHTML = `
                     <div>
@@ -2168,7 +2166,7 @@
                     </div>
                     <div>
                         <label class="text-xs text-gray-400 block mb-1">Số điện thoại / Zalo <span class="text-red-400">*</span></label>
-                        <input type="text" id="input-phone" placeholder="Nhập SĐT/Zalo liên hệ" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
+                        <input type="text" id="input-phone" placeholder="${phonePlaceholder}" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
                     </div>
                 `;
             } else if (currentGameKey === 'garena') {
@@ -2180,7 +2178,7 @@
                     </div>
                     <div class="sm:col-span-2">
                         <label class="text-xs text-gray-400 block mb-1">Số điện thoại / Zalo (Tùy chọn)</label>
-                        <input type="text" id="input-phone" placeholder="Nhập SĐT/Zalo nhận thông tin" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
+                        <input type="text" id="input-phone" placeholder="${phonePlaceholder}" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
                     </div>
                 `;
             } else if (currentGameKey === 'identityv') {
@@ -2199,11 +2197,51 @@
                     </div>
                     <div>
                         <label class="text-xs text-gray-400 block mb-1">Số điện thoại / Zalo (Tùy chọn)</label>
-                        <input type="text" id="input-phone" placeholder="Nhập SĐT/Zalo" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
+                        <input type="text" id="input-phone" placeholder="${phonePlaceholder}" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
                     </div>
                     <div>
                         <label class="text-xs text-gray-400 block mb-1">Ghi chú từ khách hàng (Tùy chọn)</label>
                         <input type="text" id="input-user-note" placeholder="Nhập ghi chú nếu có" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
+                    </div>
+                `;
+            } else if (currentGameKey === 'nte') {
+                inputContainer.innerHTML = `
+                    <div>
+                        <label class="text-xs text-gray-400 block mb-1">Địa chỉ Email <span class="text-red-400">*</span></label>
+                        <input type="text" id="input-username" placeholder="Nhập địa chỉ email" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-400 block mb-1">Mật khẩu <span class="text-red-400">*</span></label>
+                        <div class="relative">
+                            <input type="password" id="input-password" placeholder="Nhập mật khẩu" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100 pr-10">
+                            <i class="fa-solid fa-eye absolute right-3 top-3 text-gray-400 cursor-pointer text-xs" onclick="togglePasswordVisibility('input-password')"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-400 block mb-1">Máy chủ <span class="text-red-400">*</span></label>
+                        <select id="input-server" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
+                            <option value="">Chọn máy chủ</option>
+                            <option value="Europe">Europe</option>
+                            <option value="SEA">SEA</option>
+                            <option value="Asia">Asia</option>
+                            <option value="America">America</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-400 block mb-1">UID <span class="text-red-400">*</span></label>
+                        <input type="text" id="input-uid-game" placeholder="Nhập UID" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-400 block mb-1">Tên Nhân Vật <span class="text-red-400">*</span></label>
+                        <input type="text" id="input-char-name" placeholder="Nhập tên nhân vật" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-400 block mb-1">Số điện thoại / Zalo</label>
+                        <input type="text" id="input-phone" placeholder="${phonePlaceholder}" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="text-xs text-gray-400 block mb-1">Ghi chú từ khách hàng (Tùy chọn)</label>
+                        <textarea id="input-user-note" rows="2" placeholder="Ví dụ: Nhờ admin nạp nhanh..." class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100 resize-none"></textarea>
                     </div>
                 `;
             } else {
@@ -2223,7 +2261,6 @@
                         <label class="text-xs text-gray-400 block mb-1">Server / Máy chủ <span class="text-red-400">*</span></label>
                         <select id="input-server" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
                             <option value="">Chọn máy chủ</option>
-                            <option value="Thẻ Cào / Mặc định">Thẻ Cào / Mặc định</option>
                             <option value="Asia">Asia</option>
                             <option value="America">America</option>
                             <option value="Europe">Europe</option>
@@ -2232,7 +2269,7 @@
                     </div>
                     <div>
                         <label class="text-xs text-gray-400 block mb-1">Số điện thoại / Zalo</label>
-                        <input type="text" id="input-phone" placeholder="Nhập SĐT/Zalo" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
+                        <input type="text" id="input-phone" placeholder="${phonePlaceholder}" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
                     </div>
                     <div class="sm:col-span-2">
                         <label class="text-xs text-gray-400 block mb-1">Ghi chú từ khách hàng (Tùy chọn)</label>
@@ -2317,7 +2354,7 @@
             const inputServer = document.getElementById('input-server');
 
             if (!inputUser || !inputUser.value.trim()) {
-                alert(currentGameKey.includes('robux') ? 'Vui lòng nhập Username Roblox!' : 'Vui lòng nhập UID / Tài khoản game!');
+                alert(currentGameKey.includes('robux') ? 'Vui lòng nhập Username Roblox!' : (currentGameKey === 'nte' ? 'Vui lòng nhập Địa chỉ Email!' : 'Vui lòng nhập UID / Tài khoản game!'));
                 if (inputUser) inputUser.focus();
                 return;
             }
@@ -2339,6 +2376,20 @@
                     alert('Vui lòng chọn Máy chủ (Server) hợp lệ!');
                     if (inputServer) inputServer.focus();
                     return;
+                }
+                if (currentGameKey === 'nte') {
+                    const inputUidGame = document.getElementById('input-uid-game');
+                    const inputCharName = document.getElementById('input-char-name');
+                    if (!inputUidGame || !inputUidGame.value.trim()) {
+                        alert('Vui lòng nhập UID!');
+                        if (inputUidGame) inputUidGame.focus();
+                        return;
+                    }
+                    if (!inputCharName || !inputCharName.value.trim()) {
+                        alert('Vui lòng nhập Tên Nhân Vật!');
+                        if (inputCharName) inputCharName.focus();
+                        return;
+                    }
                 }
             }
 
@@ -2402,7 +2453,15 @@
 
                 const passEl = document.getElementById('input-password');
                 const phoneEl = document.getElementById('input-phone');
-                const userNoteRaw = (document.getElementById('input-user-note') ? document.getElementById('input-user-note').value : '').trim() || 'Không có';
+                const uidGameEl = document.getElementById('input-uid-game');
+                const charNameEl = document.getElementById('input-char-name');
+
+                let userNoteRaw = (document.getElementById('input-user-note') ? document.getElementById('input-user-note').value : '').trim() || 'Không có';
+                if (currentGameKey === 'nte') {
+                    const extraInfo = `UID: ${uidGameEl ? uidGameEl.value.trim() : ''} | Tên NV: ${charNameEl ? charNameEl.value.trim() : ''}`;
+                    userNoteRaw = userNoteRaw !== 'Không có' ? `${extraInfo} | Ghi chú: ${userNoteRaw}` : extraInfo;
+                }
+
                 const customerEmail = accounts[currentUsername].email || currentUsername;
                 const pkgSummary = cart.map(i => `${i.pkgName} (x${i.qty})`).join(', ');
                 const gameSummary = cart.length === 1 ? cart[0].gameName : `Nhiều dịch vụ (${cart.length})`;
@@ -2431,7 +2490,6 @@
                     transfer_content: transferContent
                 };
 
-                // Thử lưu kèm cột ip_address; nếu bảng Supabase chưa có cột ip_address thì tự động fallback lưu bản chuẩn (không gắn IP vào input_note)
                 let { error } = await supabaseClient.from('orders').insert([{ ...baseOrder, ip_address: clientIp }]);
                 if (error && String(error.message || '').toLowerCase().includes('ip_address')) {
                     const retryRes = await supabaseClient.from('orders').insert([baseOrder]);
@@ -2517,7 +2575,6 @@
             const body = document.getElementById('order-detail-body');
             let displayStatus = order.status;
 
-            // Tự động làm sạch [IP: ...] nếu gặp các đơn cũ, không bao giờ hiện IP trong ghi chú của khách
             const rawNote = String(order.input_note || '');
             const ipMatch = rawNote.match(/^\[IP:\s*([^\]]+)\]\s*/i);
             const extractedIp = (order.ip_address || (ipMatch ? ipMatch[1].trim() : '') || getOrderIpLocal(order.id) || '').trim();
@@ -2542,7 +2599,6 @@
                 cancelReasonHtml = `<div class="bg-red-950/50 p-2.5 rounded-lg border border-red-800 space-y-1 mt-2 text-red-200"><div class="font-bold text-red-400 text-[11px] flex items-center"><i class="fa-solid fa-triangle-exclamation mr-1.5"></i> Lý do hủy đơn:</div><p class="italic text-[11px]">${order.cancel_reason}</p></div>`;
             }
 
-            // Chỉ Admin mới nhìn thấy mục "IP mạng"
             const adminIpRowHtml = isAdmin()
                 ? `<div class="flex justify-between items-center"><span class="text-gray-400">IP mạng:</span><span class="font-bold text-accentBlue select-all">${extractedIp || 'Không có dữ liệu'}</span></div>`
                 : '';
