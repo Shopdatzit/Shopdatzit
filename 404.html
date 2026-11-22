@@ -709,7 +709,7 @@
 
     <div id="order-detail-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-md w-full p-5 rounded-2xl border border-gray-800 relative space-y-4 shadow-2xl">
-            <button onclick="closeOrderDetailModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+            <button onclick="closeOrderDetailModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
             <h3 class="text-base font-bold text-white flex items-center"><i class="fa-solid fa-circle-info mr-2 text-accentBlue"></i> Chi Tiết Đơn Hàng</h3>
             <div id="order-detail-body" class="space-y-2.5 text-xs bg-gray-900 p-3.5 rounded-xl border border-gray-800 max-h-[60vh] overflow-y-auto"></div>
             <button onclick="closeOrderDetailModal()" class="w-full bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 rounded-xl text-xs border border-gray-700 cursor-pointer">Đóng</button>
@@ -718,7 +718,7 @@
 
     <div id="avatar-modal" class="fixed inset-0 bg-black/80 hidden z-50 flex items-center justify-center p-4">
         <div class="bg-cardBg max-w-sm w-full p-5 rounded-2xl border border-gray-800 relative space-y-4 shadow-2xl">
-            <button onclick="closeAvatarModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark"></i></button>
+            <button onclick="closeAvatarModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-lg"></i></button>
             <h3 class="font-bold text-sm text-white">Đổi ảnh đại diện</h3>
             <div class="border-2 border-dashed border-gray-700 rounded-xl p-5 text-center cursor-pointer hover:border-accentBlue transition bg-gray-900/50" onclick="document.getElementById('avatar-file-input').click()">
                 <i class="fa-solid fa-cloud-arrow-up text-2xl text-accentBlue mb-1.5"></i>
@@ -903,6 +903,7 @@
             'robux-120h': 'robux_120h',
             'identity-v': 'identityv',
             'the-garena': 'garena',
+            'nte-neverness-to-everness': 'nte',
             'aniimo': 'aniimo',
             'genshin-impact': 'genshin',
             'honor-of-kings': 'hok',
@@ -918,6 +919,7 @@
             'robux_120h': 'robux-120h',
             'identityv': 'identity-v',
             'garena': 'the-garena',
+            'nte': 'nte-neverness-to-everness',
             'aniimo': 'aniimo',
             'genshin': 'genshin-impact',
             'hok': 'honor-of-kings',
@@ -1009,6 +1011,36 @@
                     { name: 'Thẻ Garena 100.000', price: 97000 },
                     { name: 'Thẻ Garena 200.000', price: 194000 },
                     { name: 'Thẻ Garena 500.000', price: 486000 }
+                ]
+            },
+            'nte': {
+                name: 'NTE: Neverness to Everness',
+                realImg: 'https://lh3.googleusercontent.com/d/1bKgGUVMdB6RUiegsky_YCZhgXqgGRhqD',
+                note: 'Lưu ý: Vui lòng kiểm tra kỹ tài khoản / máy chủ trước khi thanh toán.',
+                packages: [
+                    { name: 'Riftcrystal Mining Permit', price: 95000 },
+                    { name: 'Elite Hunter Supplies (10$)', price: 190000 },
+                    { name: 'Honor Hunter Supplies (20$)', price: 385000 },
+                    { name: '60 Riftcrystal (1$)', price: 22000 },
+                    { name: '300 + 30 Riftcrystal', price: 95000 },
+                    { name: '980 + 110 Riftcrystal', price: 285000 },
+                    { name: '1980 + 260 Riftcrystal', price: 580000 },
+                    { name: '3280 + 600 Riftcrystal', price: 960000 },
+                    { name: '6480 + 1600 Riftcrystal', price: 1920000 },
+                    { name: 'Dual Band Dice Pack (1$)', price: 22000 },
+                    { name: 'Serendipity Single Roll', price: 22000 },
+                    { name: 'Limited Press Arc Pack (3$)', price: 60000 },
+                    { name: 'Diversified Assets Pack', price: 100000 },
+                    { name: 'Dial Dice Pack (15$)', price: 285000 },
+                    { name: 'Resolve Dice Pack (15$)', price: 285000 },
+                    { name: 'Connection Bond Bundle', price: 120000 },
+                    { name: 'Treasure Bond Bundle (6$)', price: 120000 },
+                    { name: 'Echo Research Pack (15$)', price: 285000 },
+                    { name: 'Resolve Research Pack', price: 285000 },
+                    { name: 'De-noise Sustain Pack', price: 190000 },
+                    { name: 'Forward Momentum', price: 190000 },
+                    { name: 'Pilgrimage Reserve Box', price: 410000 },
+                    { name: 'Supersonic Pack (26$)', price: 480000 }
                 ]
             },
             'aniimo': { 
