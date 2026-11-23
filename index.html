@@ -318,7 +318,7 @@
                 <img id="detail-game-img" src="" alt="" class="w-14 h-14 rounded-xl object-cover border border-gray-700">
                 <div>
                     <h2 id="detail-game-name" class="text-base font-bold"></h2>
-                    <p id="detail-game-note" class="text-[11px] text-yellow-400 font-semibold mt-0.5 hidden"></p>
+                    <p id="detail-game-note" class="text-[11px] text-yellow-400 font-semibold mt-0.5 whitespace-pre-line hidden"></p>
                     <span class="text-[9px] bg-blue-900/50 text-accentBlue px-2 py-0.5 rounded border border-blue-800 inline-block mt-1">⚡ THANH TOÁN TỰ ĐỘNG QUA MB BANK</span>
                     <div class="text-xs text-gray-400 mt-1"><span id="detail-game-sold" class="font-bold text-white">0</span> đã bán</div>
                 </div>
@@ -525,11 +525,10 @@
                         <div class="font-bold text-xs text-white">Robux Quốc Tế</div>
                     </div>
                 </div>
-                <div class="bg-gray-900/50 border border-gray-800 p-3 rounded-xl opacity-40 cursor-not-allowed pointer-events-none flex flex-col items-center justify-center space-y-1.5">
-                    <img src="https://lh3.googleusercontent.com/d/1eFiikthGQFgYwpu4rYAfjRpjGitze1yX" class="w-12 h-12 rounded-lg object-cover border border-gray-800 filter grayscale" alt="">
-                    <div class="text-center">
-                        <div class="font-bold text-xs text-gray-400">Robux 120h</div>
-                        <div class="text-[9px] text-gray-500 font-semibold mt-0.5">Dự Kiến Sắp Có</div>
+                <div onclick="selectRobuxType('robux_120h')" class="bg-gray-900 hover:bg-gray-800 border border-gray-700 hover:border-accentBlue p-3 rounded-xl cursor-pointer transition flex flex-col items-center justify-center space-y-2 group">
+                    <img src="https://lh3.googleusercontent.com/d/1eFiikthGQFgYwpu4rYAfjRpjGitze1yX" class="w-12 h-12 rounded-lg object-cover border border-gray-700 group-hover:border-accentBlue" alt="">
+                    <div>
+                        <div class="font-bold text-xs text-white">Robux 120h</div>
                     </div>
                 </div>
             </div>
@@ -974,13 +973,13 @@
             'robux_120h': {
                 name: 'Robux 120h',
                 realImg: 'https://lh3.googleusercontent.com/d/1eFiikthGQFgYwpu4rYAfjRpjGitze1yX',
-                note: '',
+                note: 'Áp Dụng Được Cho Roblox Quốc Tế/Vng\nGiá Bên Dưới Là Chưa Thuế 30%',
                 packages: [
-                    { name: '100 Robux (120h)', price: -1 },
-                    { name: '200 Robux (120h)', price: -1 },
-                    { name: '300 Robux (120h)', price: -1 },
-                    { name: '500 Robux (120h)', price: -1 },
-                    { name: '1000 Robux (120h)', price: -1 }
+                    { name: '100 Robux (120h)', price: 12500 },
+                    { name: '200 Robux (120h)', price: 25000 },
+                    { name: '300 Robux (120h)', price: 37500 },
+                    { name: '500 Robux (120h)', price: 62500 },
+                    { name: '1000 Robux (120h)', price: 125000 }
                 ]
             },
             'identityv': {
