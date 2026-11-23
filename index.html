@@ -10,7 +10,7 @@
     <meta name="description" content="Shopdatzit - dịch vụ trung gian tự động xử lí 1s, Thanh toán nhanh chóng, bảo mật cao. Hỗ trợ nạp LOGIN/UID, an toàn và giá tốt nhất.">
     <meta property="og:title" content="Shopdatzit - Dịch Vụ Nạp Game Trung Gian">
     <meta property="og:description" content="Shopdatzit - dịch vụ trung gian tự động xử lí 1s, Thanh toán nhanh chóng, bảo mật cao. Hỗ trợ nạp LOGIN/UID, an toàn và giá tốt nhất.">
-    <meta property="og:image" content="https://lh3.googleusercontent.com/d/1oOQv6vZh-kbGNv2qZXZLijSQDz0J0YH-">
+    <meta property="og:image" content="https://lh3.googleusercontent.com/d/1kzsiYt5U3zSEgsRi0w6tLU_riP7vVNGo">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -353,31 +353,28 @@
 
                 <div class="bg-cardBg p-4 sm:p-5 rounded-xl border border-gray-800 space-y-4 shadow-md">
                     <h3 class="font-bold text-accentBlue text-xs sm:text-sm flex items-center"><i class="fa-solid fa-id-card mr-2"></i> Thông Tin Đơn Hàng</h3>
-                    <div id="order-inputs-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5"></div>
-                </div>
 
-                <!-- VIDEO YOUTUBE NẰM DƯỚI THÔNG TIN ĐƠN HÀNG -->
-                <div class="bg-cardBg p-4 sm:p-5 rounded-xl border border-gray-800 shadow-md space-y-3">
-                    <div class="flex items-center justify-between border-b border-gray-800 pb-2.5">
-                        <h3 class="font-bold text-white text-xs sm:text-sm flex items-center">
-                            <i class="fa-brands fa-youtube text-red-500 mr-2 text-base"></i> Video Hướng Dẫn
-                        </h3>
-                        <a href="https://youtu.be/U2t3S4UqIw8?si=My6dwigLR8olLy39" target="_blank" rel="noopener noreferrer" class="text-[11px] text-red-400 hover:underline font-semibold flex items-center space-x-1">
-                            <span>Mở trên YouTube</span>
-                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-                        </a>
+                    <!-- VIDEO YOUTUBE NẰM NGAY DƯỚI CHỮ "THÔNG TIN ĐƠN HÀNG" -->
+                    <div class="space-y-2 pb-2 border-b border-gray-800/80">
+                        <div class="flex items-center">
+                            <span class="text-xs font-bold text-white flex items-center">
+                                <i class="fa-brands fa-youtube text-red-500 mr-2 text-sm"></i> Video Hướng Dẫn
+                            </span>
+                        </div>
+                        <div class="relative w-full overflow-hidden rounded-xl border border-gray-700 bg-black" style="padding-top: 56.25%;">
+                            <iframe
+                                class="absolute inset-0 w-full h-full"
+                                src="https://www.youtube.com/embed/U2t3S4UqIw8?si=My6dwigLR8olLy39"
+                                title="YouTube video player"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                referrerpolicy="strict-origin-when-cross-origin"
+                                allowfullscreen>
+                            </iframe>
+                        </div>
                     </div>
-                    <div class="relative w-full overflow-hidden rounded-xl border border-gray-700 bg-black" style="padding-top: 56.25%;">
-                        <iframe
-                            class="absolute inset-0 w-full h-full"
-                            src="https://www.youtube.com/embed/U2t3S4UqIw8?si=My6dwigLR8olLy39"
-                            title="YouTube video player"
-                            frameborder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                            referrerpolicy="strict-origin-when-cross-origin"
-                            allowfullscreen>
-                        </iframe>
-                    </div>
+
+                    <div id="order-inputs-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5"></div>
                 </div>
             </div>
         </div>
