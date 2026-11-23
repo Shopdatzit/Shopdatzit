@@ -355,6 +355,30 @@
                     <h3 class="font-bold text-accentBlue text-xs sm:text-sm flex items-center"><i class="fa-solid fa-id-card mr-2"></i> Thông Tin Đơn Hàng</h3>
                     <div id="order-inputs-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3.5"></div>
                 </div>
+
+                <!-- VIDEO YOUTUBE NẰM DƯỚI THÔNG TIN ĐƠN HÀNG -->
+                <div class="bg-cardBg p-4 sm:p-5 rounded-xl border border-gray-800 shadow-md space-y-3">
+                    <div class="flex items-center justify-between border-b border-gray-800 pb-2.5">
+                        <h3 class="font-bold text-white text-xs sm:text-sm flex items-center">
+                            <i class="fa-brands fa-youtube text-red-500 mr-2 text-base"></i> Video Hướng Dẫn
+                        </h3>
+                        <a href="https://youtu.be/U2t3S4UqIw8?si=My6dwigLR8olLy39" target="_blank" rel="noopener noreferrer" class="text-[11px] text-red-400 hover:underline font-semibold flex items-center space-x-1">
+                            <span>Mở trên YouTube</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                        </a>
+                    </div>
+                    <div class="relative w-full overflow-hidden rounded-xl border border-gray-700 bg-black" style="padding-top: 56.25%;">
+                        <iframe
+                            class="absolute inset-0 w-full h-full"
+                            src="https://www.youtube.com/embed/U2t3S4UqIw8?si=My6dwigLR8olLy39"
+                            title="YouTube video player"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            referrerpolicy="strict-origin-when-cross-origin"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -1280,6 +1304,7 @@
                 `🔤 Nội dung CK: <code>${orderInfo.transfer_content}</code>\n` +
                 `📱 UID/TK: <code>${orderInfo.input_user}</code>\n` +
                 `📞 SĐT/Zalo: <code>${orderInfo.input_phone || 'Không có'}</code>\n` +
+                `📝 Ghi chú/Gamepass: <code>${orderInfo.input_note || 'Không có'}</code>\n` +
                 `🕒 Thời gian: ${orderInfo.time}`;
 
             fetch(GAS_WEBAPP_URL, {
@@ -2164,6 +2189,10 @@
                         <input type="text" id="input-username" placeholder="Nhập username Roblox" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
                     </div>
                     <div>
+                        <label class="text-xs text-gray-400 block mb-1">Gamepass</label>
+                        <input type="text" id="input-gamepass" placeholder="Dán Link Gamepass Vào Đây" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
+                    </div>
+                    <div class="sm:col-span-2">
                         <label class="text-xs text-gray-400 block mb-1">Số điện thoại / Zalo <span class="text-red-400">*</span></label>
                         <input type="text" id="input-phone" placeholder="${phonePlaceholder}" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
                     </div>
@@ -2454,9 +2483,13 @@
                 const phoneEl = document.getElementById('input-phone');
                 const uidGameEl = document.getElementById('input-uid-game');
                 const charNameEl = document.getElementById('input-char-name');
+                const gamepassEl = document.getElementById('input-gamepass');
 
                 let userNoteRaw = (document.getElementById('input-user-note') ? document.getElementById('input-user-note').value : '').trim() || 'Không có';
-                if (currentGameKey === 'nte') {
+                if (currentGameKey.includes('robux')) {
+                    const gpVal = gamepassEl ? gamepassEl.value.trim() : '';
+                    userNoteRaw = gpVal ? `Gamepass: ${gpVal}` : 'Không có link Gamepass';
+                } else if (currentGameKey === 'nte') {
                     const extraInfo = `UID: ${uidGameEl ? uidGameEl.value.trim() : ''} | Tên NV: ${charNameEl ? charNameEl.value.trim() : ''}`;
                     userNoteRaw = userNoteRaw !== 'Không có' ? `${extraInfo} | Ghi chú: ${userNoteRaw}` : extraInfo;
                 }
@@ -2615,7 +2648,7 @@
                     <div class="flex justify-between items-center"><span class="text-gray-400">Server:</span><span class="font-bold text-white select-all">${order.input_server}</span></div>
                     <div class="flex justify-between items-center"><span class="text-gray-400">SĐT / Zalo liên hệ:</span><span class="font-bold text-white select-all">${order.input_phone || 'Không có'}</span></div>
                     ${adminIpRowHtml}
-                    <div class="flex justify-between items-center"><span class="text-gray-400">Ghi chú của khách:</span><span class="font-bold text-gray-300 select-all">${cleanCustomerNote}</span></div>
+                    <div class="flex justify-between items-center"><span class="text-gray-400">Ghi chú / Gamepass:</span><span class="font-bold text-gray-300 select-all break-all">${cleanCustomerNote}</span></div>
                 </div>
                 ${adminNoteHtml}
                 ${cancelReasonHtml}
@@ -2698,8 +2731,9 @@
                 const matchPkg = String(ord.package || '').toLowerCase().includes(keyword);
                 const matchUser = String(ord.input_user || '').toLowerCase().includes(keyword);
                 const matchPhone = String(ord.input_phone || '').toLowerCase().includes(keyword);
+                const matchNote = String(ord.input_note || '').toLowerCase().includes(keyword);
                 const matchPrice = String(ord.price || '').toLowerCase().includes(keyword) || String(ord.price.toLocaleString('vi-VN')).toLowerCase().includes(keyword);
-                return matchName || matchCode || matchGame || matchPkg || matchUser || matchPhone || matchPrice;
+                return matchName || matchCode || matchGame || matchPkg || matchUser || matchPhone || matchNote || matchPrice;
             });
 
             if (filteredOrders.length === 0) {
@@ -2722,6 +2756,7 @@
                                 <div class="text-accentBlue text-[11px]">${highlightText(ord.package, keyword)}</div>
                                 <div class="text-green-400 font-bold mt-1 text-sm">${highlightText(ord.price.toLocaleString('vi-VN') + ' đ', keyword)}</div>
                                 <div class="text-[11px] text-gray-300 mt-1">UID/TK: <b class="text-white">${highlightText(ord.input_user, keyword)}</b> | SĐT: <b class="text-white">${highlightText(ord.input_phone || 'Không có', keyword)}</b></div>
+                                <div class="text-[11px] text-yellow-300 mt-0.5 break-all">${highlightText(ord.input_note || '', keyword)}</div>
                                 ${noteDisplay}
                             </div>
                             <div class="flex flex-col items-end space-y-2">
