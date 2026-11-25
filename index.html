@@ -354,11 +354,11 @@
                 <div class="bg-cardBg p-4 sm:p-5 rounded-xl border border-gray-800 space-y-4 shadow-md">
                     <h3 class="font-bold text-accentBlue text-xs sm:text-sm flex items-center"><i class="fa-solid fa-id-card mr-2"></i> Thông Tin Đơn Hàng</h3>
 
-                    <!-- VIDEO YOUTUBE NẰM NGAY DƯỚI CHỮ "THÔNG TIN ĐƠN HÀNG" -->
-                    <div class="space-y-2 pb-2 border-b border-gray-800/80">
+                    <!-- VIDEO YOUTUBE ĐỘC QUYỀN CHO ROBUX 120H -->
+                    <div id="gamepass-guide-video-box" class="hidden space-y-2 pb-2 border-b border-gray-800/80">
                         <div class="flex items-center">
                             <span class="text-xs font-bold text-white flex items-center">
-                                <i class="fa-brands fa-youtube text-red-500 mr-2 text-sm"></i> Video Hướng Dẫn
+                                <i class="fa-brands fa-youtube text-red-500 mr-2 text-sm"></i> Video Hướng Dẫn Tạo GamePass
                             </span>
                         </div>
                         <div class="relative w-full overflow-hidden rounded-xl border border-gray-700 bg-black" style="padding-top: 56.25%;">
@@ -2110,6 +2110,16 @@
                 noteEl.classList.add('hidden');
             }
 
+            // CHỈ HIỂN THỊ VIDEO HƯỚNG DẪN TẠO GAMEPASS CHO ROBUX 120H (ROBUX VNG / QUỐC TẾ DẠNG GAMEPASS)
+            const videoBox = document.getElementById('gamepass-guide-video-box');
+            if (videoBox) {
+                if (gameKey === 'robux_120h') {
+                    videoBox.classList.remove('hidden');
+                } else {
+                    videoBox.classList.add('hidden');
+                }
+            }
+
             renderPackageGrid();
             renderOrderInputs();
             renderCart(); 
@@ -2179,19 +2189,34 @@
 
             const phonePlaceholder = "Nhập Sdt/Zalo(Shopdatzit sẽ liên hệ)";
 
-            if (currentGameKey.includes('robux')) {
+            if (currentGameKey === 'robux_120h') {
                 inputContainer.innerHTML = `
                     <div>
                         <label class="text-xs text-gray-400 block mb-1">Username Roblox <span class="text-red-400">*</span></label>
                         <input type="text" id="input-username" placeholder="Nhập username Roblox" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
                     </div>
                     <div>
-                        <label class="text-xs text-gray-400 block mb-1">Gamepass</label>
-                        <input type="text" id="input-gamepass" placeholder="Dán Link Gamepass Vào Đây" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
+                        <label class="text-xs text-gray-400 block mb-1">Gamepass <span class="text-red-400">*</span></label>
+                        <input type="text" id="input-gamepass" placeholder="Dán Link Gamepass Vào Đây (Bắt buộc)" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
                     </div>
                     <div class="sm:col-span-2">
                         <label class="text-xs text-gray-400 block mb-1">Số điện thoại / Zalo <span class="text-red-400">*</span></label>
                         <input type="text" id="input-phone" placeholder="${phonePlaceholder}" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
+                    </div>
+                `;
+            } else if (currentGameKey === 'robux_qt') {
+                inputContainer.innerHTML = `
+                    <div>
+                        <label class="text-xs text-gray-400 block mb-1">Username Roblox <span class="text-red-400">*</span></label>
+                        <input type="text" id="input-username" placeholder="Nhập username Roblox" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-400 block mb-1">Số điện thoại / Zalo <span class="text-red-400">*</span></label>
+                        <input type="text" id="input-phone" placeholder="${phonePlaceholder}" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="text-xs text-gray-400 block mb-1">Ghi chú từ khách hàng (Tùy chọn)</label>
+                        <input type="text" id="input-user-note" placeholder="Nhập ghi chú nếu có" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
                     </div>
                 `;
             } else if (currentGameKey === 'garena') {
@@ -2384,6 +2409,15 @@
                 return;
             }
 
+            if (currentGameKey === 'robux_120h') {
+                const inputGamepass = document.getElementById('input-gamepass');
+                if (!inputGamepass || !inputGamepass.value.trim()) {
+                    alert('Vui lòng dán Link Gamepass (Bắt buộc)!');
+                    if (inputGamepass) inputGamepass.focus();
+                    return;
+                }
+            }
+
             if (currentGameKey.includes('robux')) {
                 const inputPhone = document.getElementById('input-phone');
                 if (!inputPhone || !inputPhone.value.trim()) {
@@ -2483,7 +2517,7 @@
                 const gamepassEl = document.getElementById('input-gamepass');
 
                 let userNoteRaw = (document.getElementById('input-user-note') ? document.getElementById('input-user-note').value : '').trim() || 'Không có';
-                if (currentGameKey.includes('robux')) {
+                if (currentGameKey === 'robux_120h') {
                     const gpVal = gamepassEl ? gamepassEl.value.trim() : '';
                     userNoteRaw = gpVal ? `Gamepass: ${gpVal}` : 'Không có link Gamepass';
                 } else if (currentGameKey === 'nte') {
@@ -2511,7 +2545,7 @@
                     status: 'Chờ duyệt thanh toán',
                     input_user: document.getElementById('input-username').value || 'Không có',
                     input_pass: passEl ? passEl.value : 'Không yêu cầu',
-                    input_server: currentGameKey === 'garena' ? 'Thẻ Cào / Mặc định' : (currentGameKey.includes('robux') ? 'Roblox Quốc Tế' : (document.getElementById('input-server').value || 'Mặc định')),
+                    input_server: currentGameKey === 'garena' ? 'Thẻ Cào / Mặc định' : (currentGameKey === 'robux_120h' ? 'Roblox VNG / Quốc Tế (120h)' : (currentGameKey === 'robux_qt' ? 'Roblox Quốc Tế' : (document.getElementById('input-server').value || 'Mặc định'))),
                     input_phone: phoneEl ? phoneEl.value : 'Không có',
                     input_note: userNoteRaw,
                     admin_note: '',
