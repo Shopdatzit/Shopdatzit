@@ -868,7 +868,7 @@
             return false;
         });
 
-        // HÀM DỪNG VIDEO HƯỚNG DẪN TẠO GAMEPASS NGAY LẬP TỨC KHI RỜI TRANG / CHUYỂN VIEW / ẨN TAB
+        // HÀM DỪNG VIDEO ĐANG PHÁT NGAY LẬP TỨC (YOUTUBE IFRAME + THẺ VIDEO NẾU CÓ)
         function stopGamepassVideo(resetIframeSrc = true) {
             const videoBox = document.getElementById('gamepass-guide-video-box');
             const iframe = document.getElementById('gamepass-guide-iframe');
@@ -883,9 +883,11 @@
                 }
             }
 
-            document.querySelectorAll('#detail-view video').forEach(vid => {
-                vid.pause();
-                vid.currentTime = 0;
+            document.querySelectorAll('video').forEach(vid => {
+                try {
+                    vid.pause();
+                    vid.currentTime = 0;
+                } catch (e) {}
             });
 
             if (videoBox) {
@@ -901,7 +903,7 @@
             if (gameKey === 'robux_120h') {
                 videoBox.classList.remove('hidden');
                 if (iframe) {
-                    const originalSrc = iframe.getAttribute('data-src') || 'https://www.youtube.com/embed/U2t3S4UqIw8?si=My6dwigLR8olLy39';
+                    const originalSrc = iframe.getAttribute('data-src') || iframe.getAttribute('src') || 'https://www.youtube.com/embed/U2t3S4UqIw8?si=My6dwigLR8olLy39';
                     if (iframe.src !== originalSrc) {
                         iframe.src = originalSrc;
                     }
@@ -911,15 +913,24 @@
             }
         }
 
-        // BẤM LOGO SHOPDATZIT -> TỰ ĐỘNG F5 (RELOAD) & DỪNG VIDEO
+        // BẤM NÚT SHOPDATZIT -> TẮT VIDEO + QUAY VỀ TRANG CHỦ VÀ F5 NGAY LẬP TỨC
         function handleLogoReload() {
             stopGamepassVideo(true);
-            window.location.reload();
+            window.location.replace('/');
         }
 
-        // TỰ ĐỘNG DỪNG VIDEO KHI BACK TRÌNH DUYỆT / RỜI TAB / THU NHỎ APP
-        window.addEventListener('popstate', () => {
+        // NÚT TRỞ VỀ TRÊN ĐIỆN THOẠI / TRÌNH DUYỆT -> TẮT VIDEO + QUAY VỀ TRANG TRƯỚC ĐÓ
+        window.addEventListener('popstate', function(event) {
             stopGamepassVideo(true);
+
+            if (event && event.state && event.state.view === 'detail' && event.state.gameKey) {
+                openGameDetail(event.state.gameKey, false);
+                return;
+            }
+            if (event && event.state && event.state.view) {
+                switchView(event.state.view, false);
+                return;
+            }
             handleRoute();
         });
 
@@ -1299,6 +1310,7 @@
         };
 
         function handleRoute() {
+            stopGamepassVideo(true);
             const path = window.location.pathname.replace(/^\/+/, ''); 
             if (!path || path === 'home' || path === '') {
                 switchView('home', false);
@@ -1494,6 +1506,18 @@
         }
 
         window.onload = async function() {
+            if (!window.history.state) {
+                const initPath = window.location.pathname.replace(/^\/+/, '');
+                if (initPath.startsWith('danh-muc/')) {
+                    const slug = initPath.replace('danh-muc/', '');
+                    history.replaceState({ view: 'detail', gameKey: routeSlugMap[slug] || null }, '', window.location.pathname);
+                } else if (['profile', 'history', 'cskh', 'admin'].includes(initPath)) {
+                    history.replaceState({ view: initPath }, '', window.location.pathname);
+                } else {
+                    history.replaceState({ view: 'home' }, '', window.location.pathname || '/');
+                }
+            }
+
             if (window.location.pathname === '/' || window.location.pathname === '') {
                 triggerGlobalLoader(800);
             }
