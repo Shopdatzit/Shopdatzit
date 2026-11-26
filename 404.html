@@ -85,6 +85,18 @@
         html.light .text-gray-100, html.light .text-white { color: #111827 !important; }
         html.light .text-gray-400 { color: #6b7280 !important; }
         html.light input, html.light select, html.light textarea { background-color: #ffffff !important; color: #111827 !important; border-color: #d1d5db !important; }
+
+        .game-card-locked {
+            background-color: #27272a !important;
+            border-color: #52525b !important;
+            opacity: 0.68;
+            filter: grayscale(100%);
+            cursor: not-allowed !important;
+        }
+        .game-card-locked:hover {
+            background-color: #27272a !important;
+            border-color: #52525b !important;
+        }
         
         #global-page-loader {
             position: fixed;
@@ -353,7 +365,6 @@
                 <div class="bg-cardBg p-4 sm:p-5 rounded-xl border border-gray-800 space-y-4 shadow-md">
                     <h3 class="font-bold text-accentBlue text-xs sm:text-sm flex items-center"><i class="fa-solid fa-id-card mr-2"></i> Thông Tin Đơn Hàng</h3>
 
-                    <!-- VIDEO YOUTUBE ĐỘC QUYỀN CHO ROBUX 120H -->
                     <div id="gamepass-guide-video-box" class="hidden space-y-2 pb-2 border-b border-gray-800/80">
                         <div class="flex items-center">
                             <span class="text-xs font-bold text-white flex items-center">
@@ -458,6 +469,9 @@
                     <button onclick="switchAdminTab('all_history')" id="admin-tab-all-history" class="bg-gray-800 text-gray-300 hover:bg-gray-700 font-bold px-3.5 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2">
                         <i class="fa-solid fa-database"></i> <span>Lịch Sử Tất Cả Đơn</span>
                     </button>
+                    <button onclick="switchAdminTab('lock_games')" id="admin-tab-lock-games" class="bg-gray-800 text-gray-300 hover:bg-gray-700 font-bold px-3.5 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2">
+                        <i class="fa-solid fa-lock"></i> <span>Khóa Game (<span id="admin-locked-games-count">0</span>)</span>
+                    </button>
                 </div>
             </div>
 
@@ -486,6 +500,12 @@
                 </div>
 
                 <div id="admin-all-history-container" class="space-y-3"></div>
+            </div>
+
+            <div id="admin-section-lock-games" class="space-y-3 pt-1 hidden">
+                <h3 class="font-bold text-sm text-red-400 flex items-center"><i class="fa-solid fa-lock mr-2"></i> Bảng Khóa / Mở Khóa Game Trong Danh Sách Nạp</h3>
+                <p class="text-[11px] text-gray-400">Bấm <b class="text-red-400">Khóa</b> để game chuyển xám và hiện <b class="text-red-400">Tạm Ngưng Bán</b> ở trang chủ; bấm <b class="text-green-400">Mở Khóa</b> để mở bán lại bình thường.</p>
+                <div id="admin-lock-games-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3"></div>
             </div>
         </div>
     </main>
@@ -541,16 +561,18 @@
                 <p class="text-[11px] text-accentBlue font-medium">Vui lòng chọn loại Robux bạn muốn nạp:</p>
             </div>
             <div class="grid grid-cols-2 gap-3 pt-2">
-                <div onclick="selectRobuxType('robux_qt')" class="bg-gray-900 hover:bg-gray-800 border border-gray-700 hover:border-accentBlue p-3 rounded-xl cursor-pointer transition flex flex-col items-center justify-center space-y-2 group">
+                <div id="robux-choice-qt" onclick="selectRobuxType('robux_qt')" class="bg-gray-900 hover:bg-gray-800 border border-gray-700 hover:border-accentBlue p-3 rounded-xl cursor-pointer transition flex flex-col items-center justify-center space-y-2 group">
                     <img src="https://lh3.googleusercontent.com/d/1eFiikthGQFgYwpu4rYAfjRpjGitze1yX" class="w-12 h-12 rounded-lg object-cover border border-gray-700 group-hover:border-accentBlue" alt="">
                     <div>
                         <div class="font-bold text-xs text-white">Robux Quốc Tế</div>
+                        <div id="robux-choice-qt-status" class="hidden text-[10px] font-bold text-red-400 mt-0.5">Tạm Ngưng Bán</div>
                     </div>
                 </div>
-                <div onclick="selectRobuxType('robux_120h')" class="bg-gray-900 hover:bg-gray-800 border border-gray-700 hover:border-accentBlue p-3 rounded-xl cursor-pointer transition flex flex-col items-center justify-center space-y-2 group">
+                <div id="robux-choice-120h" onclick="selectRobuxType('robux_120h')" class="bg-gray-900 hover:bg-gray-800 border border-gray-700 hover:border-accentBlue p-3 rounded-xl cursor-pointer transition flex flex-col items-center justify-center space-y-2 group">
                     <img src="https://lh3.googleusercontent.com/d/1eFiikthGQFgYwpu4rYAfjRpjGitze1yX" class="w-12 h-12 rounded-lg object-cover border border-gray-700 group-hover:border-accentBlue" alt="">
                     <div>
                         <div class="font-bold text-xs text-white">Robux 120h</div>
+                        <div id="robux-choice-120h-status" class="hidden text-[10px] font-bold text-red-400 mt-0.5">Tạm Ngưng Bán</div>
                     </div>
                 </div>
             </div>
@@ -993,6 +1015,7 @@
         const STORAGE_KEY = 'shopdatzit_v11_local_data';
         const USER_KEY = 'shopdatzit_v11_user';
         const ORDER_IPS_KEY = 'shopdatzit_order_ips_cache';
+        const LOCKED_GAMES_KEY = 'shopdatzit_locked_games_v1';
         const EXPIRE_TIME_MS = 24 * 60 * 60 * 1000;
 
         let cart = []; 
@@ -1004,6 +1027,7 @@
         let cancelTargetOrderId = null;
         let approveTargetOrderId = null;
         let globalGameSoldCounts = {};
+        let lockedGamesMap = {};
         let generatedOTP = null;
         let targetForgotUser = null;
         let changeEmailOTP = null;
@@ -1045,6 +1069,135 @@
             'hsr': 'honkai-star-rail',
             'honkai': 'honkai-impact-3'
         };
+
+        function loadLocalLockedGames() {
+            try {
+                const raw = JSON.parse(localStorage.getItem(LOCKED_GAMES_KEY) || '{}');
+                return raw && typeof raw === 'object' ? raw : {};
+            } catch (e) {
+                return {};
+            }
+        }
+
+        function saveLocalLockedGames(map) {
+            try {
+                localStorage.setItem(LOCKED_GAMES_KEY, JSON.stringify(map || {}));
+            } catch (e) {}
+        }
+
+        async function fetchLockedGames() {
+            lockedGamesMap = loadLocalLockedGames();
+            try {
+                const { data, error } = await supabaseClient.from('game_locks').select('*');
+                if (!error && Array.isArray(data)) {
+                    const merged = { ...lockedGamesMap };
+                    data.forEach(row => {
+                        if (row && row.game_key) {
+                            merged[row.game_key] = Boolean(row.is_locked);
+                        }
+                    });
+                    lockedGamesMap = merged;
+                    saveLocalLockedGames(lockedGamesMap);
+                }
+            } catch (e) {}
+            updateLockedGamesBadgeCount();
+        }
+
+        function isGameLocked(gameKey) {
+            if (gameKey === 'robux') {
+                return Boolean(lockedGamesMap['robux_qt']) && Boolean(lockedGamesMap['robux_120h']);
+            }
+            return Boolean(lockedGamesMap[gameKey]);
+        }
+
+        function updateLockedGamesBadgeCount() {
+            const badge = document.getElementById('admin-locked-games-count');
+            if (!badge) return;
+            const keys = ['robux_qt', 'robux_120h', ...Object.keys(gamesData).filter(k => k !== 'robux_qt' && k !== 'robux_120h')];
+            const lockedTotal = keys.filter(k => Boolean(lockedGamesMap[k])).length;
+            badge.innerText = lockedTotal;
+        }
+
+        async function toggleGameLock(gameKey, btn) {
+            if (!isAdmin()) {
+                alert('Chỉ Admin mới có quyền khóa/mở khóa game!');
+                return;
+            }
+            const nextLocked = !Boolean(lockedGamesMap[gameKey]);
+            if (btn) setButtonLoading(btn, true, nextLocked ? 'Đang khóa...' : 'Đang mở...');
+
+            lockedGamesMap[gameKey] = nextLocked;
+            saveLocalLockedGames(lockedGamesMap);
+            updateLockedGamesBadgeCount();
+
+            try {
+                await supabaseClient.from('game_locks').upsert([{
+                    game_key: gameKey,
+                    is_locked: nextLocked,
+                    updated_at: new Date().toISOString()
+                }], { onConflict: 'game_key' });
+            } catch (e) {}
+
+            if (btn) setButtonLoading(btn, false);
+            renderGameList();
+            renderAdminLockGames();
+        }
+
+        function renderAdminLockGames() {
+            const container = document.getElementById('admin-lock-games-container');
+            if (!container) return;
+            updateLockedGamesBadgeCount();
+
+            const lockItems = [
+                {
+                    key: 'robux_qt',
+                    name: 'Robux Quốc Tế',
+                    img: gamesData['robux_qt'].realImg
+                },
+                {
+                    key: 'robux_120h',
+                    name: 'Robux 120h',
+                    img: gamesData['robux_120h'].realImg
+                }
+            ];
+
+            for (const [key, game] of Object.entries(gamesData)) {
+                if (key === 'robux_qt' || key === 'robux_120h') continue;
+                lockItems.push({
+                    key,
+                    name: game.name,
+                    img: game.realImg
+                });
+            }
+
+            container.innerHTML = '';
+            lockItems.forEach(item => {
+                const locked = Boolean(lockedGamesMap[item.key]);
+                const cardClass = locked
+                    ? 'bg-zinc-900 border-zinc-600 opacity-85'
+                    : 'bg-cardBg border-gray-800';
+                const statusHtml = locked
+                    ? `<span class="text-[10px] font-extrabold text-red-400">Tạm Ngưng Bán</span>`
+                    : `<span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span><span class="text-[11px] text-accentBlue font-medium">Giao ngay</span>`;
+
+                const actionBtnHtml = locked
+                    ? `<button onclick="toggleGameLock('${item.key}', this)" class="bg-green-500 hover:bg-green-400 text-black font-extrabold px-3 py-1.5 rounded-lg text-[11px] cursor-pointer transition shadow shrink-0">Mở Khóa</button>`
+                    : `<button onclick="toggleGameLock('${item.key}', this)" class="bg-red-600 hover:bg-red-500 text-black font-extrabold px-3 py-1.5 rounded-lg text-[11px] cursor-pointer transition shadow shrink-0">Khóa</button>`;
+
+                container.innerHTML += `
+                    <div class="${cardClass} p-3.5 rounded-xl border flex items-center justify-between gap-2 shadow transition">
+                        <div class="flex items-center space-x-3 min-w-0">
+                            <img src="${item.img}" alt="${item.name}" class="w-12 h-12 rounded-lg object-cover border border-gray-700 shrink-0 ${locked ? 'grayscale' : ''}" onerror="this.src='https://lh3.googleusercontent.com/d/1S1r9aE9MtmiRDEzw5IkDJ6pRDGyP42kV'">
+                            <div class="min-w-0">
+                                <h4 class="font-bold text-xs sm:text-sm text-white truncate">${item.name}</h4>
+                                <div class="flex items-center space-x-1.5 mt-1">${statusHtml}</div>
+                            </div>
+                        </div>
+                        ${actionBtnHtml}
+                    </div>
+                `;
+            });
+        }
 
         function triggerGlobalLoader(baseDurationMs = 600) {
             const loader = document.getElementById('global-page-loader');
@@ -1335,6 +1488,11 @@
                 const slug = path.replace('danh-muc/', '');
                 const gameKey = routeSlugMap[slug];
                 if (gameKey) {
+                    if (isGameLocked(gameKey)) {
+                        alert('Game này hiện đang Tạm Ngưng Bán!');
+                        switchView('home', false);
+                        return;
+                    }
                     openGameDetail(gameKey, false);
                 } else {
                     switchView('home', false);
@@ -1541,6 +1699,7 @@
             initGoogleOAuth();
             initAdminAccount();
             initTheme();
+            await fetchLockedGames();
             await checkExpiredPendingPayments();
             await fetchAndCalculateSolds();
             renderGameList();
@@ -1617,6 +1776,21 @@
                 renderAdminPayments();
                 renderAdminAllHistory();
                 updateAuthUI();
+            }).subscribe();
+
+            supabaseClient.channel('public:game_locks').on('postgres_changes', { event: '*', schema: 'public', table: 'game_locks' }, async (payload) => {
+                const row = payload.new || payload.old;
+                if (row && row.game_key) {
+                    if (payload.eventType === 'DELETE') {
+                        delete lockedGamesMap[row.game_key];
+                    } else {
+                        lockedGamesMap[row.game_key] = Boolean(row.is_locked);
+                    }
+                    saveLocalLockedGames(lockedGamesMap);
+                    updateLockedGamesBadgeCount();
+                    renderGameList();
+                    renderAdminLockGames();
+                }
             }).subscribe();
         }
 
@@ -1795,25 +1969,41 @@
             const container = document.getElementById('game-list-container');
             if (!container) return;
             container.innerHTML = '';
-            
+
+            const robuxLocked = isGameLocked('robux');
+            const robuxCardClass = robuxLocked
+                ? 'game-card game-card-locked p-3.5 rounded-xl border flex items-center space-x-3 shadow'
+                : 'game-card bg-cardBg hover:bg-cardHover p-3.5 rounded-xl border border-gray-800 cursor-pointer transition flex items-center space-x-3 shadow group';
+            const robuxStatusHtml = robuxLocked
+                ? `<span class="text-[11px] text-red-400 font-extrabold">Tạm Ngưng Bán</span>`
+                : `<span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span><span class="text-[11px] text-accentBlue font-medium">Giao ngay</span>`;
+
             container.innerHTML += `
-                <div onclick="openRobuxSelectModal()" class="game-card bg-cardBg hover:bg-cardHover p-3.5 rounded-xl border border-gray-800 cursor-pointer transition flex items-center space-x-3 shadow group">
-                    <img src="${gamesData['robux_qt'].realImg}" alt="Robux" class="w-14 h-14 rounded-lg object-cover border border-gray-700 group-hover:border-accentBlue transition" onerror="this.src='https://lh3.googleusercontent.com/d/1S1r9aE9MtmiRDEzw5IkDJ6pRDGyP42kV'">
+                <div onclick="${robuxLocked ? "alert('Game này hiện đang Tạm Ngưng Bán!')" : "openRobuxSelectModal()"}" class="${robuxCardClass}">
+                    <img src="${gamesData['robux_qt'].realImg}" alt="Robux" class="w-14 h-14 rounded-lg object-cover border border-gray-700 ${robuxLocked ? 'grayscale' : 'group-hover:border-accentBlue'} transition" onerror="this.src='https://lh3.googleusercontent.com/d/1S1r9aE9MtmiRDEzw5IkDJ6pRDGyP42kV'">
                     <div class="flex-grow">
                         <h4 class="font-bold text-sm text-white line-clamp-1">Robux</h4>
-                        <div class="flex items-center space-x-1.5 mt-1"><span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span><span class="text-[11px] text-accentBlue font-medium">Giao ngay</span><span class="text-[10px] text-gray-400 ml-auto">Đã bán: ${getGameSold('robux')}</span></div>
+                        <div class="flex items-center space-x-1.5 mt-1">${robuxStatusHtml}<span class="text-[10px] text-gray-400 ml-auto">Đã bán: ${getGameSold('robux')}</span></div>
                     </div>
                 </div>
             `;
 
             for (const [key, game] of Object.entries(gamesData)) {
                 if (key === 'robux_qt' || key === 'robux_120h') continue;
+                const locked = isGameLocked(key);
+                const cardClass = locked
+                    ? 'game-card game-card-locked p-3.5 rounded-xl border flex items-center space-x-3 shadow'
+                    : 'game-card bg-cardBg hover:bg-cardHover p-3.5 rounded-xl border border-gray-800 cursor-pointer transition flex items-center space-x-3 shadow group';
+                const statusHtml = locked
+                    ? `<span class="text-[11px] text-red-400 font-extrabold">Tạm Ngưng Bán</span>`
+                    : `<span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span><span class="text-[11px] text-accentBlue font-medium">Giao ngay</span>`;
+
                 container.innerHTML += `
-                    <div data-game="${key}" class="game-card bg-cardBg hover:bg-cardHover p-3.5 rounded-xl border border-gray-800 cursor-pointer transition flex items-center space-x-3 shadow group">
-                        <img src="${game.realImg}" alt="${game.name}" class="w-14 h-14 rounded-lg object-cover border border-gray-700 group-hover:border-accentBlue transition" onerror="this.src='https://lh3.googleusercontent.com/d/1S1r9aE9MtmiRDEzw5IkDJ6pRDGyP42kV'">
+                    <div data-game="${key}" data-locked="${locked ? '1' : '0'}" class="${cardClass}">
+                        <img src="${game.realImg}" alt="${game.name}" class="w-14 h-14 rounded-lg object-cover border border-gray-700 ${locked ? 'grayscale' : 'group-hover:border-accentBlue'} transition" onerror="this.src='https://lh3.googleusercontent.com/d/1S1r9aE9MtmiRDEzw5IkDJ6pRDGyP42kV'">
                         <div class="flex-grow">
                             <h4 class="font-bold text-sm text-white line-clamp-1">${game.name}</h4>
-                            <div class="flex items-center space-x-1.5 mt-1"><span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span><span class="text-[11px] text-accentBlue font-medium">Giao ngay</span><span class="text-[10px] text-gray-400 ml-auto">Đã bán: ${getGameSold(key)}</span></div>
+                            <div class="flex items-center space-x-1.5 mt-1">${statusHtml}<span class="text-[10px] text-gray-400 ml-auto">Đã bán: ${getGameSold(key)}</span></div>
                         </div>
                     </div>
                 `;
@@ -1821,12 +2011,39 @@
             document.querySelectorAll('.game-card[data-game]').forEach(card => {
                 card.addEventListener('click', () => {
                     const gameKey = card.getAttribute('data-game');
+                    if (isGameLocked(gameKey)) {
+                        alert('Game này hiện đang Tạm Ngưng Bán!');
+                        return;
+                    }
                     navigateTo('detail', gameKey);
                 });
             });
         }
 
         function openRobuxSelectModal() {
+            if (isGameLocked('robux')) {
+                alert('Robux hiện đang Tạm Ngưng Bán!');
+                return;
+            }
+            const qtLocked = isGameLocked('robux_qt');
+            const h120Locked = isGameLocked('robux_120h');
+
+            const qtCard = document.getElementById('robux-choice-qt');
+            const qtStatus = document.getElementById('robux-choice-qt-status');
+            if (qtCard && qtStatus) {
+                qtCard.classList.toggle('opacity-50', qtLocked);
+                qtCard.classList.toggle('grayscale', qtLocked);
+                qtStatus.classList.toggle('hidden', !qtLocked);
+            }
+
+            const h120Card = document.getElementById('robux-choice-120h');
+            const h120Status = document.getElementById('robux-choice-120h-status');
+            if (h120Card && h120Status) {
+                h120Card.classList.toggle('opacity-50', h120Locked);
+                h120Card.classList.toggle('grayscale', h120Locked);
+                h120Status.classList.toggle('hidden', !h120Locked);
+            }
+
             document.getElementById('robux-select-modal').classList.remove('hidden');
         }
 
@@ -1835,6 +2052,10 @@
         }
 
         function selectRobuxType(typeKey) {
+            if (isGameLocked(typeKey)) {
+                alert('Loại Robux này hiện đang Tạm Ngưng Bán!');
+                return;
+            }
             closeRobuxSelectModal();
             navigateTo('detail', typeKey);
         }
@@ -1903,6 +2124,7 @@
             renderAdminOrders();
             renderAdminPayments();
             renderAdminAllHistory();
+            renderAdminLockGames();
         }
 
         function saveNewUsername(btn) {
@@ -2235,6 +2457,7 @@
                 renderAdminOrders();
                 renderAdminPayments();
                 renderAdminAllHistory();
+                renderAdminLockGames();
             }
 
             if (pushState) {
@@ -2247,6 +2470,11 @@
         }
 
         function openGameDetail(gameKey, pushState = true) {
+            if (isGameLocked(gameKey)) {
+                alert('Game này hiện đang Tạm Ngưng Bán!');
+                switchView('home', pushState);
+                return;
+            }
             triggerGlobalLoader(450);
             currentGameKey = gameKey;
             currentGame = gamesData[gameKey];
@@ -2284,18 +2512,22 @@
             const tabOrdersBtn = document.getElementById('admin-tab-orders');
             const tabPaymentsBtn = document.getElementById('admin-tab-payments');
             const tabAllHistoryBtn = document.getElementById('admin-tab-all-history');
+            const tabLockGamesBtn = document.getElementById('admin-tab-lock-games');
 
             const secOrders = document.getElementById('admin-section-orders');
             const secPayments = document.getElementById('admin-section-payments');
             const secAllHistory = document.getElementById('admin-section-all-history');
+            const secLockGames = document.getElementById('admin-section-lock-games');
 
             tabOrdersBtn.className = "bg-gray-800 text-gray-300 hover:bg-gray-700 font-bold px-3.5 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2";
             tabPaymentsBtn.className = "bg-gray-800 text-gray-300 hover:bg-gray-700 font-bold px-3.5 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2";
             tabAllHistoryBtn.className = "bg-gray-800 text-gray-300 hover:bg-gray-700 font-bold px-3.5 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2";
+            if (tabLockGamesBtn) tabLockGamesBtn.className = "bg-gray-800 text-gray-300 hover:bg-gray-700 font-bold px-3.5 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2";
 
             secOrders.classList.add('hidden');
             secPayments.classList.add('hidden');
             secAllHistory.classList.add('hidden');
+            if (secLockGames) secLockGames.classList.add('hidden');
 
             if (tabName === 'orders') {
                 tabOrdersBtn.className = "bg-accentBlue text-white font-bold px-3.5 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2";
@@ -2307,6 +2539,10 @@
                 tabAllHistoryBtn.className = "bg-green-600 text-white font-bold px-3.5 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2";
                 secAllHistory.classList.remove('hidden');
                 renderAdminAllHistory();
+            } else if (tabName === 'lock_games') {
+                if (tabLockGamesBtn) tabLockGamesBtn.className = "bg-red-600 text-white font-bold px-3.5 py-2 rounded-xl text-xs transition cursor-pointer shadow flex items-center space-x-2";
+                if (secLockGames) secLockGames.classList.remove('hidden');
+                renderAdminLockGames();
             }
         }
 
@@ -2359,9 +2595,13 @@
                         <label class="text-xs text-gray-400 block mb-1">Gamepass <span class="text-red-400">*</span></label>
                         <input type="text" id="input-gamepass" placeholder="Dán Link Gamepass Vào Đây (Bắt buộc)" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
                     </div>
-                    <div class="sm:col-span-2">
+                    <div>
                         <label class="text-xs text-gray-400 block mb-1">Số điện thoại / Zalo <span class="text-red-400">*</span></label>
                         <input type="text" id="input-phone" placeholder="${phonePlaceholder}" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
+                    </div>
+                    <div>
+                        <label class="text-xs text-gray-400 block mb-1">Ghi chú từ khách hàng (Tùy chọn)</label>
+                        <input type="text" id="input-user-note" placeholder="Nhập ghi chú nếu có" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
                     </div>
                 `;
             } else if (currentGameKey === 'robux_qt') {
@@ -2381,14 +2621,18 @@
                 `;
             } else if (currentGameKey === 'garena') {
                 inputContainer.innerHTML = `
-                    <div class="sm:col-span-2">
+                    <div>
                         <label class="text-xs text-gray-400 block mb-1">UID Garena nhận thẻ <span class="text-red-400">*</span></label>
                         <input type="text" id="input-username" placeholder="Nhập UID Garena" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
                         <p class="text-[10px] text-gray-400/80 italic mt-1">Nếu dùng acc Facebook thì nhập chữ "Facebook"</p>
                     </div>
-                    <div class="sm:col-span-2">
+                    <div>
                         <label class="text-xs text-gray-400 block mb-1">Số điện thoại / Zalo (Tùy chọn)</label>
                         <input type="text" id="input-phone" placeholder="${phonePlaceholder}" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label class="text-xs text-gray-400 block mb-1">Ghi chú từ khách hàng (Tùy chọn)</label>
+                        <input type="text" id="input-user-note" placeholder="Nhập ghi chú nếu có" class="w-full bg-gray-900 border border-gray-700 rounded-lg p-2.5 text-xs focus:outline-none focus:border-accentBlue text-gray-100">
                     </div>
                 `;
             } else if (currentGameKey === 'identityv') {
@@ -2490,6 +2734,10 @@
         }
 
         function selectPkg(gameKey, index) {
+            if (isGameLocked(gameKey)) {
+                alert('Game này hiện đang Tạm Ngưng Bán!');
+                return;
+            }
             const game = gamesData[gameKey];
             if (!game || !game.packages[index]) return;
             const pkg = game.packages[index];
@@ -2585,6 +2833,12 @@
         async function payWithBankTransfer(btn) {
             if (!currentUsername) { openAuthModal(); return; }
             if (!cart || cart.length === 0) { alert("Giỏ hàng trống!"); return; }
+
+            const lockedCartItem = cart.find(i => isGameLocked(i.gameKey));
+            if (lockedCartItem || isGameLocked(currentGameKey)) {
+                alert('Game này hiện đang Tạm Ngưng Bán, không thể đặt đơn!');
+                return;
+            }
 
             const inputUser = document.getElementById('input-username');
             const inputPass = document.getElementById('input-password');
@@ -2702,16 +2956,19 @@
                 const charNameEl = document.getElementById('input-char-name');
                 const gamepassEl = document.getElementById('input-gamepass');
 
-                let userNoteRaw = (document.getElementById('input-user-note') ? document.getElementById('input-user-note').value : '').trim() || 'Không có';
+                const optionalNote = (document.getElementById('input-user-note') ? document.getElementById('input-user-note').value : '').trim();
+                let userNoteRaw = optionalNote || 'Không có';
+
                 if (currentGameKey === 'robux_120h') {
                     const gpVal = gamepassEl ? gamepassEl.value.trim() : '';
-                    userNoteRaw = gpVal ? `Gamepass: ${gpVal}` : 'Không có link Gamepass';
+                    const gpPart = gpVal ? `Gamepass: ${gpVal}` : 'Không có link Gamepass';
+                    userNoteRaw = optionalNote ? `${gpPart} | Ghi chú: ${optionalNote}` : gpPart;
                 } else if (currentGameKey === 'robux_qt' && robuxQtSummary) {
                     const rateInfo = `Tổng ${robuxQtSummary.totalRobux} Robux - Áp dụng Rate ${robuxQtSummary.rate} (${robuxQtSummary.rate * 10}k/100rb)`;
-                    userNoteRaw = userNoteRaw !== 'Không có' ? `${rateInfo} | Ghi chú: ${userNoteRaw}` : rateInfo;
+                    userNoteRaw = optionalNote ? `${rateInfo} | Ghi chú: ${optionalNote}` : rateInfo;
                 } else if (currentGameKey === 'nte') {
                     const extraInfo = `UID: ${uidGameEl ? uidGameEl.value.trim() : ''} | Tên NV: ${charNameEl ? charNameEl.value.trim() : ''}`;
-                    userNoteRaw = userNoteRaw !== 'Không có' ? `${extraInfo} | Ghi chú: ${userNoteRaw}` : extraInfo;
+                    userNoteRaw = optionalNote ? `${extraInfo} | Ghi chú: ${optionalNote}` : extraInfo;
                 }
 
                 const customerEmail = accounts[currentUsername].email || currentUsername;
