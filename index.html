@@ -259,7 +259,7 @@
 
     <header class="bg-cardBg border-b border-gray-800 sticky top-0 z-40 transition-colors duration-300">
         <div class="max-w-7xl mx-auto px-3 h-16 flex items-center justify-between">
-            <div class="flex items-center cursor-pointer" onclick="navigateTo('home')">
+            <div id="shopdatzit-logo-btn" class="flex items-center cursor-pointer" onclick="handleLogoReload()">
                 <div class="animated-shop-logo">
                     <div class="flex flex-col leading-tight text-left">
                         <span class="font-black text-sm tracking-wide logo-text-anim">SHOPDATZIT</span>
@@ -363,6 +363,8 @@
                         </div>
                         <div class="relative w-full overflow-hidden rounded-xl border border-gray-700 bg-black" style="padding-top: 56.25%;">
                             <iframe
+                                id="gamepass-guide-iframe"
+                                data-src="https://www.youtube.com/embed/U2t3S4UqIw8?si=My6dwigLR8olLy39"
                                 class="absolute inset-0 w-full h-full"
                                 src="https://www.youtube.com/embed/U2t3S4UqIw8?si=My6dwigLR8olLy39"
                                 title="YouTube video player"
@@ -426,9 +428,9 @@
                 <div class="w-12 h-12 bg-blue-950 text-accentBlue rounded-full flex items-center justify-center mx-auto text-xl border border-blue-800">
                     <i class="fa-solid fa-headset"></i>
                 </div>
-                <h3 class="text-base font-bold text-white">Chăm Sóc Khách Hàng</h3>
+                <h3 class="text-base font-bold text-white">Hỗ Trợ</h3>
                 <div class="space-y-2.5 pt-1">
-                    <a href="https://www.facebook.com/share/1eUqgvpGFf/" target="_blank" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl flex items-center justify-center space-x-2 shadow-md cursor-pointer transition text-xs">
+                    <a href="https://www.facebook.com/share/1Et8oYPEBZ/" target="_blank" rel="noopener noreferrer" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl flex items-center justify-center space-x-2 shadow-md cursor-pointer transition text-xs">
                         <i class="fa-brands fa-facebook text-sm"></i><span>Nhắn tin qua Facebook</span>
                     </a>
                     <a href="https://zalo.me/0358108139" target="_blank" class="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-2.5 rounded-xl flex items-center justify-center space-x-2 shadow-md cursor-pointer transition text-xs">
@@ -839,7 +841,7 @@
                 <a href="javascript:void(0)"><span class="icon"><i class="fa-solid fa-user"></i></span><span class="text">Hồ sơ</span></a>
             </li>
             <li class="list" onclick="navigateTo('cskh')">
-                <a href="javascript:void(0)"><span class="icon"><i class="fa-solid fa-headset"></i></span><span class="text">CSKH</span></a>
+                <a href="javascript:void(0)"><span class="icon"><i class="fa-solid fa-headset"></i></span><span class="text">Hỗ Trợ</span></a>
             </li>
             <li id="nav-admin-item" class="list hidden" onclick="navigateTo('admin')">
                 <a href="javascript:void(0)"><span class="icon text-yellow-400"><i class="fa-solid fa-shield-halved text-yellow-400"></i></span><span class="text text-yellow-400 font-bold">Admin</span></a>
@@ -864,6 +866,71 @@
         window.addEventListener('contextmenu', function(e) {
             e.preventDefault();
             return false;
+        });
+
+        // HÀM DỪNG VIDEO HƯỚNG DẪN TẠO GAMEPASS NGAY LẬP TỨC KHI RỜI TRANG / CHUYỂN VIEW / ẨN TAB
+        function stopGamepassVideo(resetIframeSrc = true) {
+            const videoBox = document.getElementById('gamepass-guide-video-box');
+            const iframe = document.getElementById('gamepass-guide-iframe');
+
+            if (iframe) {
+                const originalSrc = iframe.getAttribute('data-src') || iframe.getAttribute('src') || 'https://www.youtube.com/embed/U2t3S4UqIw8?si=My6dwigLR8olLy39';
+                if (!iframe.getAttribute('data-src')) {
+                    iframe.setAttribute('data-src', originalSrc);
+                }
+                if (resetIframeSrc) {
+                    iframe.src = 'about:blank';
+                }
+            }
+
+            document.querySelectorAll('#detail-view video').forEach(vid => {
+                vid.pause();
+                vid.currentTime = 0;
+            });
+
+            if (videoBox) {
+                videoBox.classList.add('hidden');
+            }
+        }
+
+        function restoreGamepassVideoForView(gameKey) {
+            const videoBox = document.getElementById('gamepass-guide-video-box');
+            const iframe = document.getElementById('gamepass-guide-iframe');
+            if (!videoBox) return;
+
+            if (gameKey === 'robux_120h') {
+                videoBox.classList.remove('hidden');
+                if (iframe) {
+                    const originalSrc = iframe.getAttribute('data-src') || 'https://www.youtube.com/embed/U2t3S4UqIw8?si=My6dwigLR8olLy39';
+                    if (iframe.src !== originalSrc) {
+                        iframe.src = originalSrc;
+                    }
+                }
+            } else {
+                stopGamepassVideo(true);
+            }
+        }
+
+        // BẤM LOGO SHOPDATZIT -> TỰ ĐỘNG F5 (RELOAD) & DỪNG VIDEO
+        function handleLogoReload() {
+            stopGamepassVideo(true);
+            window.location.reload();
+        }
+
+        // TỰ ĐỘNG DỪNG VIDEO KHI BACK TRÌNH DUYỆT / RỜI TAB / THU NHỎ APP
+        window.addEventListener('popstate', () => {
+            stopGamepassVideo(true);
+            handleRoute();
+        });
+
+        window.addEventListener('pagehide', () => {
+            stopGamepassVideo(true);
+        });
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                stopGamepassVideo(true);
+            }
         });
 
         // HÀM HỖ TRỢ HIỆU ỨNG XOAY TRÒN & VÔ HIỆU HÓA NÚT KHI BẤM
@@ -974,8 +1041,6 @@
             return text.replace(regex, '<span class="highlight-match">$1</span>');
         }
 
-        // Tạo danh sách gói Robux Quốc Tế từ 100 đến 2000 Robux
-        // Mặc định hiển thị giá đơn lẻ theo quy tắc: < 500rb là rate 34 (340đ/rb), mốc 500/1000/1500/2000 là rate 30 (300đ/rb), các mức lẻ > 500rb hiển thị rate 34
         function buildRobuxQtPackages() {
             const pkgs = [];
             for (let rb = 100; rb <= 2000; rb += 100) {
@@ -991,9 +1056,6 @@
             return pkgs;
         }
 
-        // Tính tổng tiền giỏ hàng cho Robux Quốc Tế:
-        // Nếu tổng số Robux trong giỏ hàng >= 500 và chia hết cho 500 (500, 1000, 1500, 2000... kể cả mua dồn nhiều gói như 200 + 200 + 100 = 500) -> áp dụng Rate 30 (300đ/rb)
-        // Ngược lại -> áp dụng Rate 34 (340đ/rb)
         function calculateRobuxQtCartSummary(items) {
             let totalRobux = 0;
             let fallbackTotal = 0;
@@ -1255,11 +1317,8 @@
             }
         }
 
-        window.addEventListener('popstate', () => {
-            handleRoute();
-        });
-
         function navigateTo(target, gameKey = null) {
+            stopGamepassVideo(true);
             if (target === 'detail' && gameKey) {
                 openGameDetail(gameKey, true);
             } else {
@@ -2121,6 +2180,7 @@
         }
 
         async function switchView(viewName, pushState = true) {
+            stopGamepassVideo(true);
             triggerGlobalLoader(viewName === 'home' ? 800 : 450);
             if (pushState) {
                 const url = viewName === 'home' ? '/' : `/${viewName}`;
@@ -2144,6 +2204,7 @@
         }
 
         function openGameDetail(gameKey, pushState = true) {
+            stopGamepassVideo(true);
             triggerGlobalLoader(450);
             currentGameKey = gameKey;
             currentGame = gamesData[gameKey];
@@ -2168,14 +2229,7 @@
                 noteEl.classList.add('hidden');
             }
 
-            const videoBox = document.getElementById('gamepass-guide-video-box');
-            if (videoBox) {
-                if (gameKey === 'robux_120h') {
-                    videoBox.classList.remove('hidden');
-                } else {
-                    videoBox.classList.add('hidden');
-                }
-            }
+            restoreGamepassVideoForView(gameKey);
 
             renderPackageGrid();
             renderOrderInputs();
