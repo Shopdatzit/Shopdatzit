@@ -14,7 +14,6 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Thư viện Google Identity Services chính thức -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 
     <script>
@@ -310,8 +309,8 @@
         </div>
 
         <div id="detail-view" class="view-section hidden space-y-5">
-            <button onclick="navigateTo('home')" class="text-xs bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded-lg transition flex items-center w-max border border-gray-700 cursor-pointer">
-                <i class="fa-solid fa-arrow-left mr-2"></i> Quay lại trang chủ
+            <button onclick="goBackPreviousPage()" class="text-xs bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded-lg transition flex items-center w-max border border-gray-700 cursor-pointer">
+                <i class="fa-solid fa-arrow-left mr-2"></i> Quay lại
             </button>
 
             <div class="bg-cardBg p-4 rounded-xl border border-gray-800 flex items-center space-x-4 shadow-md">
@@ -366,7 +365,7 @@
                                 id="gamepass-guide-iframe"
                                 data-src="https://www.youtube.com/embed/U2t3S4UqIw8?si=My6dwigLR8olLy39"
                                 class="absolute inset-0 w-full h-full"
-                                src="https://www.youtube.com/embed/U2t3S4UqIw8?si=My6dwigLR8olLy39"
+                                src="about:blank"
                                 title="YouTube video player"
                                 frameborder="0"
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -766,7 +765,6 @@
                 </div>
                 <button onclick="handleLogin(this)" class="w-full bg-accentBlue hover:bg-blue-600 text-white font-bold py-2.5 rounded-xl text-xs cursor-pointer transition">ĐĂNG NHẬP</button>
                 
-                <!-- NÚT ĐĂNG NHẬP BẰNG GOOGLE CHÍNH THỨC -->
                 <button onclick="triggerGoogleSignIn(this)" class="w-full bg-white hover:bg-gray-100 text-gray-800 font-bold py-2.5 rounded-xl text-xs cursor-pointer transition shadow flex items-center justify-center space-x-2 border border-gray-300">
                     <i class="fa-brands fa-google text-red-500"></i>
                     <span>Đăng nhập bằng Google</span>
@@ -868,83 +866,103 @@
             return false;
         });
 
-        // HÀM DỪNG VIDEO ĐANG PHÁT NGAY LẬP TỨC (YOUTUBE IFRAME + THẺ VIDEO NẾU CÓ)
-        function stopGamepassVideo(resetIframeSrc = true) {
-            const videoBox = document.getElementById('gamepass-guide-video-box');
-            const iframe = document.getElementById('gamepass-guide-iframe');
+        const GAMEPASS_VIDEO_EMBED_URL = 'https://www.youtube.com/embed/U2t3S4UqIw8?si=My6dwigLR8olLy39';
 
-            if (iframe) {
-                const originalSrc = iframe.getAttribute('data-src') || iframe.getAttribute('src') || 'https://www.youtube.com/embed/U2t3S4UqIw8?si=My6dwigLR8olLy39';
-                if (!iframe.getAttribute('data-src')) {
-                    iframe.setAttribute('data-src', originalSrc);
-                }
-                if (resetIframeSrc) {
-                    iframe.src = 'about:blank';
-                }
-            }
-
-            document.querySelectorAll('video').forEach(vid => {
-                try {
-                    vid.pause();
-                    vid.currentTime = 0;
-                } catch (e) {}
-            });
-
-            if (videoBox) {
-                videoBox.classList.add('hidden');
-            }
+        // KIỂM TRA ĐÚNG DANH MỤC robux_120h VÀ ĐÚNG LINK robux-120h
+        function isRobux120hRouteActive(expectedGameKey = null) {
+            const path = window.location.pathname.toLowerCase();
+            const isRobux120hUrl = path === '/danh-muc/robux-120h' || path.endsWith('/robux-120h') || path.includes('robux-120h');
+            const detailView = document.getElementById('detail-view');
+            const isDetailVisible = detailView && !detailView.classList.contains('hidden');
+            const activeKey = expectedGameKey || currentGameKey;
+            return isDetailVisible && activeKey === 'robux_120h' && isRobux120hUrl;
         }
 
-        function restoreGamepassVideoForView(gameKey) {
+        // CHỈ PHÁT VIDEO KHI Ở ĐÚNG DANH MỤC / LINK ROBUX-120H, SANG DANH MỤC HOẶC LINK KHÁC SẼ NGỪNG NGAY LẬP TỨC
+        function syncGamepassVideoState(expectedGameKey = null) {
             const videoBox = document.getElementById('gamepass-guide-video-box');
             const iframe = document.getElementById('gamepass-guide-iframe');
-            if (!videoBox) return;
+            const shouldPlay = isRobux120hRouteActive(expectedGameKey);
 
-            if (gameKey === 'robux_120h') {
-                videoBox.classList.remove('hidden');
+            if (shouldPlay) {
+                if (videoBox) videoBox.classList.remove('hidden');
                 if (iframe) {
-                    const originalSrc = iframe.getAttribute('data-src') || iframe.getAttribute('src') || 'https://www.youtube.com/embed/U2t3S4UqIw8?si=My6dwigLR8olLy39';
-                    if (iframe.src !== originalSrc) {
-                        iframe.src = originalSrc;
+                    const targetSrc = iframe.getAttribute('data-src') || GAMEPASS_VIDEO_EMBED_URL;
+                    if (iframe.getAttribute('src') !== targetSrc) {
+                        iframe.setAttribute('src', targetSrc);
                     }
                 }
             } else {
-                stopGamepassVideo(true);
+                if (iframe && iframe.getAttribute('src') !== 'about:blank') {
+                    iframe.setAttribute('src', 'about:blank');
+                }
+                document.querySelectorAll('video').forEach(vid => {
+                    try {
+                        vid.pause();
+                        vid.currentTime = 0;
+                    } catch (e) {}
+                });
+                if (videoBox) videoBox.classList.add('hidden');
             }
         }
 
-        // BẤM NÚT SHOPDATZIT -> TẮT VIDEO + QUAY VỀ TRANG CHỦ VÀ F5 NGAY LẬP TỨC
+        // THEO DÕI MỌI THAY ĐỔI URL (pushState / replaceState / popstate) ĐỂ NGẮT VIDEO NGAY KHI RỜI LINK ROBUX-120H
+        (function hookHistoryRouteChanges() {
+            const origPushState = history.pushState;
+            const origReplaceState = history.replaceState;
+
+            history.pushState = function() {
+                const ret = origPushState.apply(this, arguments);
+                syncGamepassVideoState();
+                return ret;
+            };
+
+            history.replaceState = function() {
+                const ret = origReplaceState.apply(this, arguments);
+                syncGamepassVideoState();
+                return ret;
+            };
+        })();
+
+        // NÚT SHOPDATZIT -> QUAY VỀ TRANG CHỦ VÀ F5 NGAY LẬP TỨC
         function handleLogoReload() {
-            stopGamepassVideo(true);
+            syncGamepassVideoState('none');
             window.location.replace('/');
         }
 
-        // NÚT TRỞ VỀ TRÊN ĐIỆN THOẠI / TRÌNH DUYỆT -> TẮT VIDEO + QUAY VỀ TRANG TRƯỚC ĐÓ
-        window.addEventListener('popstate', function(event) {
-            stopGamepassVideo(true);
+        // NÚT QUAY LẠI TRÊN GIAO DIỆN -> QUAY VỀ TRANG TRƯỚC ĐÓ NHƯ BÌNH THƯỜNG
+        function goBackPreviousPage() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                navigateTo('home');
+            }
+        }
 
+        // NÚT TRỞ VỀ TRÊN ĐIỆN THOẠI / PC -> QUAY VỀ TRANG TRƯỚC ĐÓ NHƯ BÌNH THƯỜNG + ĐỒNG BỘ VIDEO THEO LINK
+        window.addEventListener('popstate', function(event) {
             if (event && event.state && event.state.view === 'detail' && event.state.gameKey) {
                 openGameDetail(event.state.gameKey, false);
-                return;
-            }
-            if (event && event.state && event.state.view) {
+            } else if (event && event.state && event.state.view) {
                 switchView(event.state.view, false);
-                return;
+            } else {
+                handleRoute();
             }
-            handleRoute();
+            syncGamepassVideoState();
         });
 
         window.addEventListener('pagehide', () => {
-            stopGamepassVideo(true);
+            syncGamepassVideoState('none');
         });
 
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
-                stopGamepassVideo(true);
+                syncGamepassVideoState('none');
+            } else {
+                syncGamepassVideoState();
             }
         });
 
-        // HÀM HỖ TRỢ HIỆU ỨNG XOAY TRÒN & VÔ HIỆU HÓA NÚT KHI BẤM
         function setButtonLoading(btn, isLoading, customText = '') {
             if (!btn) return;
             if (isLoading) {
@@ -1310,7 +1328,6 @@
         };
 
         function handleRoute() {
-            stopGamepassVideo(true);
             const path = window.location.pathname.replace(/^\/+/, ''); 
             if (!path || path === 'home' || path === '') {
                 switchView('home', false);
@@ -1327,10 +1344,10 @@
             } else {
                 switchView('home', false);
             }
+            syncGamepassVideoState();
         }
 
         function navigateTo(target, gameKey = null) {
-            stopGamepassVideo(true);
             if (target === 'detail' && gameKey) {
                 openGameDetail(gameKey, true);
             } else {
@@ -2204,18 +2221,13 @@
         }
 
         async function switchView(viewName, pushState = true) {
-            stopGamepassVideo(true);
             triggerGlobalLoader(viewName === 'home' ? 800 : 450);
-            if (pushState) {
-                const url = viewName === 'home' ? '/' : `/${viewName}`;
-                history.pushState({ view: viewName }, '', url);
-            }
             document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
             document.getElementById('user-dropdown').classList.add('hidden');
             
             if (viewName === 'home') { await fetchAndCalculateSolds(); renderGameList(); document.getElementById('home-view').classList.remove('hidden'); }
-            else if (viewName === 'profile') { if (!currentUsername) { openAuthModal(); return; } document.getElementById('profile-view').classList.remove('hidden'); }
-            else if (viewName === 'history') { if (!currentUsername) { openAuthModal(); return; } document.getElementById('history-view').classList.remove('hidden'); renderHistory(); }
+            else if (viewName === 'profile') { if (!currentUsername) { syncGamepassVideoState('none'); openAuthModal(); return; } document.getElementById('profile-view').classList.remove('hidden'); }
+            else if (viewName === 'history') { if (!currentUsername) { syncGamepassVideoState('none'); openAuthModal(); return; } document.getElementById('history-view').classList.remove('hidden'); renderHistory(); }
             else if (viewName === 'cskh') { document.getElementById('cskh-view').classList.remove('hidden'); }
             else if (viewName === 'admin') {
                 if (checkIsIpBanned() > 0 || !isAdmin()) { alert('Không có quyền!'); navigateTo('home'); return; }
@@ -2224,20 +2236,21 @@
                 renderAdminPayments();
                 renderAdminAllHistory();
             }
-            syncNavActive(viewName); window.scrollTo(0, 0);
+
+            if (pushState) {
+                const url = viewName === 'home' ? '/' : `/${viewName}`;
+                history.pushState({ view: viewName }, '', url);
+            }
+            syncGamepassVideoState('none');
+            syncNavActive(viewName);
+            window.scrollTo(0, 0);
         }
 
         function openGameDetail(gameKey, pushState = true) {
-            stopGamepassVideo(true);
             triggerGlobalLoader(450);
             currentGameKey = gameKey;
             currentGame = gamesData[gameKey];
             if (!currentGame) return;
-
-            if (pushState) {
-                const slug = gameKeyToSlugMap[gameKey] || gameKey;
-                history.pushState({ view: 'detail', gameKey: gameKey }, '', `/danh-muc/${slug}`);
-            }
 
             document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
             document.getElementById('detail-view').classList.remove('hidden');
@@ -2253,7 +2266,12 @@
                 noteEl.classList.add('hidden');
             }
 
-            restoreGamepassVideoForView(gameKey);
+            if (pushState) {
+                const slug = gameKeyToSlugMap[gameKey] || gameKey;
+                history.pushState({ view: 'detail', gameKey: gameKey }, '', `/danh-muc/${slug}`);
+            }
+
+            syncGamepassVideoState(gameKey);
 
             renderPackageGrid();
             renderOrderInputs();
